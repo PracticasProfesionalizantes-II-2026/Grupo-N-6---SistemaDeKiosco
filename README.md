@@ -11,4 +11,4 @@ Buffa Tomás, Busso Mateo, Cravero Agustín.
 
 [Caso de uso](https://docs.google.com/document/d/1lIpIEmkaDhYlYZRhHv_M385H1rd5F0JMZVHL44hwzOE/edit?tab=t.0)
 
-2026
+

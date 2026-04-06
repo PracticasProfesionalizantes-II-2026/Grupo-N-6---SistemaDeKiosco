@@ -1,0 +1,14 @@
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\bin\Debug\net8.0\Clases-KioPlus.deps.json
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\bin\Debug\net8.0\Clases-KioPlus.runtimeconfig.json
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\bin\Debug\net8.0\Clases-KioPlus.dll
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\bin\Debug\net8.0\Clases-KioPlus.pdb
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.csproj.AssemblyReference.cache
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.AssemblyInfoInputs.cache
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.AssemblyInfo.cs
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.csproj.CoreCompileInputs.cache
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.dll
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\refint\Clases-KioPlus.dll
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.pdb
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\Clases-KioPlus.genruntimeconfig.cache
+C:\Users\buffa\OneDrive\Documentos\PracticaProf\Clases-KioPlus\obj\Debug\net8.0\ref\Clases-KioPlus.dll

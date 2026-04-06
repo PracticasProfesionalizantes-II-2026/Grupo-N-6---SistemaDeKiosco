@@ -1,0 +1,259 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\productoproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\productoproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\notificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\notificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\lote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\lote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\formapago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\formapago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\detalleventa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\detalleventa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\cuentacorrientecliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\cuentacorrientecliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\models\\caja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\caja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\users\\usuario\\downloads\\clases-kioplus2\\clases-kioplus\\clases-kioplus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:clases-kioplus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 9,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DetalleVenta.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\DetalleVenta.cs",
+              "RelativeDocumentMoniker": "Models\\DetalleVenta.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\DetalleVenta.cs",
+              "RelativeToolTip": "Models\\DetalleVenta.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAxwBYAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:06:25.633Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Lote.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Lote.cs",
+              "RelativeDocumentMoniker": "Models\\Lote.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Lote.cs",
+              "RelativeToolTip": "Models\\Lote.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAIwA4AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:06:10.353Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Notificacion.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Notificacion.cs",
+              "RelativeDocumentMoniker": "Models\\Notificacion.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Notificacion.cs",
+              "RelativeToolTip": "Models\\Notificacion.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAwwBQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T02:30:57.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FormaPago.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\FormaPago.cs",
+              "RelativeDocumentMoniker": "Models\\FormaPago.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\FormaPago.cs",
+              "RelativeToolTip": "Models\\FormaPago.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABEAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:07:10.798Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Producto.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Producto.cs",
+              "RelativeDocumentMoniker": "Models\\Producto.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Producto.cs",
+              "RelativeToolTip": "Models\\Producto.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAmwAwAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:02:10.936Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProductoProveedor.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\ProductoProveedor.cs",
+              "RelativeDocumentMoniker": "Models\\ProductoProveedor.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\ProductoProveedor.cs",
+              "RelativeToolTip": "Models\\ProductoProveedor.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBYAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:05:57.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Proveedor.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Proveedor.cs",
+              "RelativeDocumentMoniker": "Models\\Proveedor.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Proveedor.cs",
+              "RelativeToolTip": "Models\\Proveedor.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAwA4AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:05:12.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "Models\\Usuario.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Usuario.cs",
+              "RelativeToolTip": "Models\\Usuario.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAA8wBgAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:07:46.859Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Venta.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Venta.cs",
+              "RelativeDocumentMoniker": "Models\\Venta.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Venta.cs",
+              "RelativeToolTip": "Models\\Venta.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwBUAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:06:38.126Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CuentaCorrienteCliente.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\CuentaCorrienteCliente.cs",
+              "RelativeDocumentMoniker": "Models\\CuentaCorrienteCliente.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\CuentaCorrienteCliente.cs",
+              "RelativeToolTip": "Models\\CuentaCorrienteCliente.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAsAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:07:36.111Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Categoria.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Categoria.cs",
+              "RelativeDocumentMoniker": "Models\\Categoria.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Categoria.cs",
+              "RelativeToolTip": "Models\\Categoria.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAmwBQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:08:05.69Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Caja.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Caja.cs",
+              "RelativeDocumentMoniker": "Models\\Caja.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Models\\Caja.cs",
+              "RelativeToolTip": "Models\\Caja.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T02:33:42.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwA4AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T02:41:36.817Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Clases-KioPlus.csproj",
+              "DocumentMoniker": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Clases-KioPlus.csproj",
+              "RelativeDocumentMoniker": "Clases-KioPlus.csproj",
+              "ToolTip": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2\\Clases-KioPlus\\Clases-KioPlus.csproj",
+              "RelativeToolTip": "Clases-KioPlus.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-29T02:33:27.841Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4697,11 +4697,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2 (2)\\Clases-KioPlus2\\Clases-KioPlus\\Clases-KioPlus.csproj",
+      "projectUniqueName": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
       "projectName": "Clases-KioPlus",
-      "projectPath": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2 (2)\\Clases-KioPlus2\\Clases-KioPlus\\Clases-KioPlus.csproj",
+      "projectPath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
       "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2 (2)\\Clases-KioPlus2\\Clases-KioPlus\\obj\\",
+      "outputPath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4734,7 +4734,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -4771,7 +4771,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,61 +1,57 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\",
+  "WorkspaceRootPath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\productoproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\productoproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\notificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\notificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\notificacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\lote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\lote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\formapago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\formapago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\detalleventa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\detalleventa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\cuentacorrientecliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\cuentacorrientecliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\caja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\caja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agust\u00EDn cravero - desarrollo de software\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\clases-kioplus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\caja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\caja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\proveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\productoproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\productoproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\lote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\lote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\detalleventa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\detalleventa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\models\\cuentacorrientecliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:models\\cuentacorrientecliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|c:\\agustincravero-desarrollodesoftware\\practicaprof2026\\grupo-n-6---sistemadekiosco\\2026\\clases-kioplus_2026\\clases-kioplus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{BB9414E6-350D-41DE-A89F-B2B568180242}|Clases-KioPlus.csproj|solutionrelative:clases-kioplus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
@@ -66,83 +62,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 8,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "DetalleVenta.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\DetalleVenta.cs",
-              "RelativeDocumentMoniker": "Models\\DetalleVenta.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\DetalleVenta.cs",
-              "RelativeToolTip": "Models\\DetalleVenta.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAxwBYAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T14:06:25.633Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Lote.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Lote.cs",
-              "RelativeDocumentMoniker": "Models\\Lote.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Lote.cs",
-              "RelativeToolTip": "Models\\Lote.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAIwA4AAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T14:06:10.353Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Notificacion.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Notificacion.cs",
-              "RelativeDocumentMoniker": "Models\\Notificacion.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Notificacion.cs",
-              "RelativeToolTip": "Models\\Notificacion.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAwwBQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T02:30:57.15Z"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "FormaPago.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\FormaPago.cs",
-              "RelativeDocumentMoniker": "Models\\FormaPago.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\FormaPago.cs",
-              "RelativeToolTip": "Models\\FormaPago.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAAABEAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T14:07:10.798Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Producto.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Producto.cs",
-              "RelativeDocumentMoniker": "Models\\Producto.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Producto.cs",
-              "RelativeToolTip": "Models\\Producto.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAmwAwAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T14:02:10.936Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "ProductoProveedor.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\ProductoProveedor.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\ProductoProveedor.cs",
               "RelativeDocumentMoniker": "Models\\ProductoProveedor.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\ProductoProveedor.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\ProductoProveedor.cs",
               "RelativeToolTip": "Models\\ProductoProveedor.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAgwBYAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -150,11 +78,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "Proveedor.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Proveedor.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Proveedor.cs",
               "RelativeDocumentMoniker": "Models\\Proveedor.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Proveedor.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Proveedor.cs",
               "RelativeToolTip": "Models\\Proveedor.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAwA4AAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -162,11 +90,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "Usuario.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Usuario.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Usuario.cs",
               "RelativeDocumentMoniker": "Models\\Usuario.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Usuario.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Usuario.cs",
               "RelativeToolTip": "Models\\Usuario.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAA8wBgAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -174,24 +102,108 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Venta.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Venta.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Venta.cs",
               "RelativeDocumentMoniker": "Models\\Venta.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Venta.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Venta.cs",
               "RelativeToolTip": "Models\\Venta.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABUAAABKAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T14:06:38.126Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T14:06:38.126Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Caja.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Caja.cs",
+              "RelativeDocumentMoniker": "Models\\Caja.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Caja.cs",
+              "RelativeToolTip": "Models\\Caja.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T02:33:42.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Categoria.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Categoria.cs",
+              "RelativeDocumentMoniker": "Models\\Categoria.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Categoria.cs",
+              "RelativeToolTip": "Models\\Categoria.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAA6wBQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:08:05.69Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
+              "Title": "Lote.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Lote.cs",
+              "RelativeDocumentMoniker": "Models\\Lote.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Lote.cs",
+              "RelativeToolTip": "Models\\Lote.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAIwA4AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:06:10.353Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T02:41:36.817Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Notificacion.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Notificacion.cs",
+              "RelativeDocumentMoniker": "Models\\Notificacion.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Notificacion.cs",
+              "RelativeToolTip": "Models\\Notificacion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T02:30:57.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Producto.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Producto.cs",
+              "RelativeDocumentMoniker": "Models\\Producto.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Producto.cs",
+              "RelativeToolTip": "Models\\Producto.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAmwAwAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:02:10.936Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DetalleVenta.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\DetalleVenta.cs",
+              "RelativeDocumentMoniker": "Models\\DetalleVenta.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\DetalleVenta.cs",
+              "RelativeToolTip": "Models\\DetalleVenta.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAxwBYAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-23T14:06:25.633Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "CuentaCorrienteCliente.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\CuentaCorrienteCliente.cs",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\CuentaCorrienteCliente.cs",
               "RelativeDocumentMoniker": "Models\\CuentaCorrienteCliente.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\CuentaCorrienteCliente.cs",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\CuentaCorrienteCliente.cs",
               "RelativeToolTip": "Models\\CuentaCorrienteCliente.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAAAsAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -199,47 +211,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Categoria.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Categoria.cs",
-              "RelativeDocumentMoniker": "Models\\Categoria.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Categoria.cs",
-              "RelativeToolTip": "Models\\Categoria.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAmwBQAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T14:08:05.69Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Caja.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Caja.cs",
-              "RelativeDocumentMoniker": "Models\\Caja.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Models\\Caja.cs",
-              "RelativeToolTip": "Models\\Caja.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T02:33:42.98Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAQwA4AAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T02:41:36.817Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
               "Title": "Clases-KioPlus.csproj",
-              "DocumentMoniker": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
+              "DocumentMoniker": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
               "RelativeDocumentMoniker": "Clases-KioPlus.csproj",
-              "ToolTip": "C:\\Agust\u00EDn Cravero - Desarrollo de Software\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
+              "ToolTip": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
               "RelativeToolTip": "Clases-KioPlus.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",

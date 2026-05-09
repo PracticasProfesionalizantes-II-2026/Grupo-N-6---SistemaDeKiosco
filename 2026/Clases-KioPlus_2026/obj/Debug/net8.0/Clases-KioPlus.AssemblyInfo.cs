@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Clases-KioPlus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8a8ee6b32070d43661cf033b8a1eb2eabc9eeeb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+caa757e549b886b430da319ee52a4f3a08065e10")]
 [assembly: System.Reflection.AssemblyProductAttribute("Clases-KioPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Clases-KioPlus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

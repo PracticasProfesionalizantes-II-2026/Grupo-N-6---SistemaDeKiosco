@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "69+ZZbRAY20=",
+  "dgSpecHash": "zX8rLNk+kSg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Usuario\\Downloads\\Clases-KioPlus2 (2)\\Clases-KioPlus2\\Clases-KioPlus\\Clases-KioPlus.csproj",
+  "projectFilePath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

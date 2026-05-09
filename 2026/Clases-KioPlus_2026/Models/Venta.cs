@@ -22,8 +22,7 @@ namespace Clases_KioPlus.Models
         public CuentaCorrienteCliente CuentaCorrienteCliente { get; set; }
 
         // Relación con la forma de pago utilizada en la venta
-        [Required] public int FormaPagoId { get; set; }
-        public FormaPago FormaPago { get; set; }
+        [Required] public FormaPago FormaPago { get; set; }
         public DateTime FechaPago { get; set; }
 
         // Estado actual de la venta (Pagado / NoPagado)
@@ -32,6 +31,12 @@ namespace Clases_KioPlus.Models
         {
             Pagado,  // venta pagada
             NoPagado // venta no pagada
+        }
+
+        public enum FormaPago
+        {
+            CuentaCorriente, // pago a través de la cuenta corriente del cliente
+            PagadoAlMomento  // pago en efectivo
         }
 
         // Relación uno a muchos con DetalleVenta

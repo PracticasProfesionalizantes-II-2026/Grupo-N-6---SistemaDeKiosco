@@ -15,7 +15,7 @@ namespace Clases_KioPlus.Models
         [Required] public int Dni { get; set; }
         [Required] public string Telefono { get; set; }
         [Required] public string Direccion { get; set; }
-        public string Email { get; set; }
+        public string CorreoElectronico { get; set; }
 
         // Monto total que el cliente adeuda
         [Required] public double MontoAdeudado { get; set; }

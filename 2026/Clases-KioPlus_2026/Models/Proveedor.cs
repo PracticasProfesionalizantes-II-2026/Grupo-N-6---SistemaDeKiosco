@@ -13,7 +13,7 @@ namespace Clases_KioPlus.Models
         [Required] public string  NombreRazonSocial { get; set; }
         [Required] public string Telefono { get; set; }
         [Required] public string Direccion { get; set; }
-        public string Email { get; set; }
+        public string CorreoElectronico { get; set; }
         public string Observaciones { get; set; }
 
         // Relación uno a muchos con los productos que provee

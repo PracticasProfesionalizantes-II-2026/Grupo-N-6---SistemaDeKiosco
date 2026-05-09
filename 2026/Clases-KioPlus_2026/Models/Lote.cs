@@ -10,7 +10,7 @@ namespace Clases_KioPlus.Models
     public class Lote
     {
         public int Id { get; set; }
-        [Required] public int NroLote { get; set; }
+        [Required] public string NroLote { get; set; }
 
         // Fecha de vencimiento del lote
         [Required] public DateTime FechaVencimiento { get; set; }

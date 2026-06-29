@@ -59,6 +59,30 @@ namespace Clases_KioPlus.Migrations
                     b.ToTable("Categorias");
                 });
 
+            modelBuilder.Entity("Clases_KioPlus.Models.CompraProveedor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("FechaHora")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("MontoTotal")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProveedorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProveedorId");
+
+                    b.ToTable("Compras");
+                });
+
             modelBuilder.Entity("Clases_KioPlus.Models.CuentaCorrienteCliente", b =>
                 {
                     b.Property<int>("Id")
@@ -71,16 +95,16 @@ namespace Clases_KioPlus.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CorreoElectronico")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Direccion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Dni")
                         .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Estado")
                         .HasColumnType("int");
@@ -99,6 +123,38 @@ namespace Clases_KioPlus.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CuentasCorrientesClientes");
+                });
+
+            modelBuilder.Entity("Clases_KioPlus.Models.DetalleCompra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompraProveedorId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrecioCompra")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Subtotal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraProveedorId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("DetallesCompras");
                 });
 
             modelBuilder.Entity("Clases_KioPlus.Models.DetalleVenta", b =>
@@ -133,23 +189,6 @@ namespace Clases_KioPlus.Migrations
                     b.ToTable("DetallesVentas");
                 });
 
-            modelBuilder.Entity("Clases_KioPlus.Models.FormaPago", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FormasPagos");
-                });
-
             modelBuilder.Entity("Clases_KioPlus.Models.Lote", b =>
                 {
                     b.Property<int>("Id")
@@ -163,6 +202,10 @@ namespace Clases_KioPlus.Migrations
 
                     b.Property<DateTime>("FechaVencimiento")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("NroLote")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductoId")
                         .HasColumnType("int");
@@ -266,11 +309,11 @@ namespace Clases_KioPlus.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Direccion")
+                    b.Property<string>("CorreoElectronico")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Direccion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -299,7 +342,7 @@ namespace Clases_KioPlus.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ContrasenaUsuario")
+                    b.Property<string>("ContraseniaUsuario")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -346,7 +389,7 @@ namespace Clases_KioPlus.Migrations
                     b.Property<DateTime>("FechaPago")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FormaPagoId")
+                    b.Property<int>("FormaPago")
                         .HasColumnType("int");
 
                     b.Property<double>("MontoTotal")
@@ -359,11 +402,39 @@ namespace Clases_KioPlus.Migrations
 
                     b.HasIndex("CuentaCorrienteClienteId");
 
-                    b.HasIndex("FormaPagoId");
-
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Ventas");
+                });
+
+            modelBuilder.Entity("Clases_KioPlus.Models.CompraProveedor", b =>
+                {
+                    b.HasOne("Clases_KioPlus.Models.Proveedor", "Proveedor")
+                        .WithMany()
+                        .HasForeignKey("ProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Proveedor");
+                });
+
+            modelBuilder.Entity("Clases_KioPlus.Models.DetalleCompra", b =>
+                {
+                    b.HasOne("Clases_KioPlus.Models.CompraProveedor", "CompraProveedor")
+                        .WithMany("DetallesCompra")
+                        .HasForeignKey("CompraProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Clases_KioPlus.Models.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CompraProveedor");
+
+                    b.Navigation("Producto");
                 });
 
             modelBuilder.Entity("Clases_KioPlus.Models.DetalleVenta", b =>
@@ -434,12 +505,6 @@ namespace Clases_KioPlus.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Clases_KioPlus.Models.FormaPago", "FormaPago")
-                        .WithMany("Ventas")
-                        .HasForeignKey("FormaPagoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Clases_KioPlus.Models.Usuario", "Usuario")
                         .WithMany("Ventas")
                         .HasForeignKey("UsuarioId")
@@ -447,8 +512,6 @@ namespace Clases_KioPlus.Migrations
                         .IsRequired();
 
                     b.Navigation("CuentaCorrienteCliente");
-
-                    b.Navigation("FormaPago");
 
                     b.Navigation("Usuario");
                 });
@@ -458,12 +521,12 @@ namespace Clases_KioPlus.Migrations
                     b.Navigation("Productos");
                 });
 
-            modelBuilder.Entity("Clases_KioPlus.Models.CuentaCorrienteCliente", b =>
+            modelBuilder.Entity("Clases_KioPlus.Models.CompraProveedor", b =>
                 {
-                    b.Navigation("Ventas");
+                    b.Navigation("DetallesCompra");
                 });
 
-            modelBuilder.Entity("Clases_KioPlus.Models.FormaPago", b =>
+            modelBuilder.Entity("Clases_KioPlus.Models.CuentaCorrienteCliente", b =>
                 {
                     b.Navigation("Ventas");
                 });

@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Clases_KioPlus.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Clases_KioPlus.Data
-{
-    public class ApplicationDbContext : DbContext
-    {
-        public DbSet<Producto> Productos { get; set; }
-        public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Lote> Lotes { get; set; }
-        public DbSet<Proveedor> Proveedores { get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Venta> Ventas { get; set; }
-        public DbSet<DetalleVenta> DetallesVentas { get; set; }
-        public DbSet<CuentaCorrienteCliente> CuentasCorrientesClientes { get; set; }
-        public DbSet<FormaPago> FormasPagos { get; set; }
-        public DbSet<ProductoProveedor> ProductoProveedores { get; set; }
-        public DbSet<Notificacion> Notificaciones { get; set; }
-        public DbSet<Caja> Cajas { get; set; }
+namespace Clases_KioPlus.Data;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                "Server=TOMµS;Database=KioPlusDB;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
-        }
-    }
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+    public DbSet<Producto> Productos => Set<Producto>();
+    public DbSet<Categoria> Categorias => Set<Categoria>();
+    public DbSet<Lote> Lotes => Set<Lote>();
+    public DbSet<Proveedor> Proveedores => Set<Proveedor>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<Venta> Ventas => Set<Venta>();
+    public DbSet<DetalleVenta> DetallesVentas => Set<DetalleVenta>();
+    public DbSet<CuentaCorrienteCliente> CuentasCorrientesClientes => Set<CuentaCorrienteCliente>();
+    public DbSet<ProductoProveedor> ProductoProveedores => Set<ProductoProveedor>();
+    public DbSet<Notificacion> Notificaciones => Set<Notificacion>();
+    public DbSet<Caja> Cajas => Set<Caja>();
+    public DbSet<CompraProveedor> Compras => Set<CompraProveedor>();
+    public DbSet<DetalleCompra> DetallesCompras => Set<DetalleCompra>();
 }

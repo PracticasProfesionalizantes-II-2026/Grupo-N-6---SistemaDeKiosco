@@ -4,11 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clases_KioPlus.Repositorios;
 
-public interface INotificacionRepositorio
-{
-    Task<IEnumerable<Notificacion>> ObtenerTodas(Notificacion.TipoNotificacion? tipo);
-}
-
 public class NotificacionRepositorio : INotificacionRepositorio
 {
     private readonly ApplicationDbContext _db;

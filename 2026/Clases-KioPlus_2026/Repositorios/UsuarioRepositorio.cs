@@ -4,15 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clases_KioPlus.Repositorios;
 
-public interface IUsuarioRepositorio
-{
-    Task<IEnumerable<Usuario>> ObtenerTodos();
-    Task<Usuario?> ObtenerPorId(int id);
-    Task<Usuario> Agregar(Usuario usuario);
-    Task Actualizar(Usuario usuario);
-    Task Eliminar(Usuario usuario);
-}
-
 public class UsuarioRepositorio : IUsuarioRepositorio
 {
     private readonly ApplicationDbContext _db;

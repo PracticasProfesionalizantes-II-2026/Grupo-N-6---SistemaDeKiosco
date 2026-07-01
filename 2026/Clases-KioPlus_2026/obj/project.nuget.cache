@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8mq34rMq3MM=",
+  "dgSpecHash": "dIIaXXDE2s0=",
   "success": true,
-  "projectFilePath": "C:\\AgustinCravero-DesarrolloDeSoftware\\CarpetaClaude\\PruebaClaude\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
+  "projectFilePath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
@@ -56,5 +56,18 @@
     "C:\\Users\\Usuario\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
     "C:\\Users\\Usuario\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "El paquete \"Microsoft.OpenApi\" 2.0.0 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Clases-KioPlus_2026\\Clases-KioPlus.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

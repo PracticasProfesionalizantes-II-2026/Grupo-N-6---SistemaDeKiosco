@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -24,19 +25,19 @@ public static class DetalleCompraEndpoints
             return id is null
                 ? Results.NotFound(new { mensaje = "compra no encontrada" })
                 : Results.Created($"/compras/{idCompra}/detalles/{id}", new { idDetalleCompra = id });
-        }).WithTags("DetalleCompra");
+        }).WithTags("DetalleCompra").AddEndpointFilter<ValidationFilter<DetalleCompraCreateDto>>();
 
         // Editar / eliminar detalle de compra directamente por su id
         app.MapPut("/detallecompras/{id:int}", async (int id, DetalleCompraUpdateDto dto, IDetalleCompraLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "detalle compra actualizado" }) : Results.NotFound();
-        }).WithTags("DetalleCompra");
+        }).WithTags("DetalleCompra").AddEndpointFilter<ValidationFilter<DetalleCompraUpdateDto>>();
 
         app.MapDelete("/detallecompras/{id:int}", async (int id, IDetalleCompraLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "detalle compra eliminado" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         }).WithTags("DetalleCompra");
     }
 }

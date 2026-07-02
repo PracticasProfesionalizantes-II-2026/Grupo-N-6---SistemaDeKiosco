@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -24,18 +25,18 @@ public static class CompraEndpoints
             return id is null
                 ? Results.NotFound(new { mensaje = "proveedor no encontrado" })
                 : Results.Created($"/compras/{id}", new { idCompraProveedor = id });
-        });
+        }).AddEndpointFilter<ValidationFilter<CompraCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, CompraCreateDto dto, ICompraLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "compra actualizada" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<CompraCreateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int id, ICompraLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "compra eliminada" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

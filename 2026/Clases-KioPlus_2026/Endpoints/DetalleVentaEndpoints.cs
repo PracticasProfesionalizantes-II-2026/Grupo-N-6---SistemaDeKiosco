@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -24,18 +25,18 @@ public static class DetalleVentaEndpoints
             return id is null
                 ? Results.NotFound(new { mensaje = "venta o producto no encontrados" })
                 : Results.Created($"/ventas/{idVenta}/detalles/{id}", new { idDetalle = id });
-        });
+        }).AddEndpointFilter<ValidationFilter<DetalleVentaCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int idVenta, int id, DetalleVentaUpdateDto dto, IDetalleVentaLogica logica) =>
         {
             var ok = await logica.Actualizar(idVenta, id, dto);
             return ok ? Results.Ok(new { mensaje = "detalle de venta actualizado" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<DetalleVentaUpdateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int idVenta, int id, IDetalleVentaLogica logica) =>
         {
             var ok = await logica.Eliminar(idVenta, id);
-            return ok ? Results.Ok(new { mensaje = "detalle de venta eliminado" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

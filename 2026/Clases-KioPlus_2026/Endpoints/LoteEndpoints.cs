@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -24,19 +25,19 @@ public static class LoteEndpoints
             return id is null
                 ? Results.NotFound(new { mensaje = "producto no encontrado" })
                 : Results.Created($"/productos/{idProducto}/lotes/{id}", new { idLote = id });
-        }).WithTags("Lotes");
+        }).WithTags("Lotes").AddEndpointFilter<ValidationFilter<LoteCreateDto>>();
 
         // Editar / eliminar lote directamente por su id
         app.MapPut("/lotes/{id:int}", async (int id, LoteCreateDto dto, ILoteLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "lote actualizado" }) : Results.NotFound();
-        }).WithTags("Lotes");
+        }).WithTags("Lotes").AddEndpointFilter<ValidationFilter<LoteCreateDto>>();
 
         app.MapDelete("/lotes/{id:int}", async (int id, ILoteLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "lote eliminado" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         }).WithTags("Lotes");
     }
 }

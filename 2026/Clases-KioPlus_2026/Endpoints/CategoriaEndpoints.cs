@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -22,18 +23,18 @@ public static class CategoriaEndpoints
         {
             var id = await logica.Crear(dto);
             return Results.Created($"/categorias/{id}", new { idCategoria = id });
-        });
+        }).AddEndpointFilter<ValidationFilter<CategoriaCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, CategoriaCreateDto dto, ICategoriaLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "categoría actualizada" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<CategoriaCreateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int id, ICategoriaLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "categoría eliminada" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

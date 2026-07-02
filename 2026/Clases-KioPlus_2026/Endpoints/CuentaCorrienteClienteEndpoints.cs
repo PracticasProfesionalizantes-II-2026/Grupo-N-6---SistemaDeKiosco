@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 using Clases_KioPlus.Models;
@@ -36,18 +37,18 @@ public static class CuentaCorrienteClienteEndpoints
         {
             var id = await logica.Crear(dto);
             return Results.Created($"/cuentas-corrientes-clientes/{id}", new { idCuentaCorrienteCliente = id });
-        });
+        }).AddEndpointFilter<ValidationFilter<CuentaCorrienteClienteCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, CuentaCorrienteClienteCreateDto dto, ICuentaCorrienteClienteLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "cuenta corriente actualizada" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<CuentaCorrienteClienteCreateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int id, ICuentaCorrienteClienteLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "cuenta corriente eliminada" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

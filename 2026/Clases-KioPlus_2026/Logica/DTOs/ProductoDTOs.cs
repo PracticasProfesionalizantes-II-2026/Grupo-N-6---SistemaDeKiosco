@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Clases_KioPlus.Logica.DTOs;
 
 public record ProductoDto(
@@ -10,11 +12,11 @@ public record ProductoDto(
     int StockDisponible);
 
 public record ProductoCreateDto(
-    string Nombre,
-    string Marca,
-    int IdCategoria,
-    double PrecioVenta,
-    int DiasAvisoVencimiento);
+    [property: Required] string Nombre,
+    [property: Required] string Marca,
+    [property: Range(1, int.MaxValue, ErrorMessage = "idCategoria inválido")] int IdCategoria,
+    [property: Range(0.01, double.MaxValue, ErrorMessage = "precioVenta debe ser mayor a 0")] double PrecioVenta,
+    [property: Range(0, int.MaxValue, ErrorMessage = "diasAvisoVencimiento no puede ser negativo")] int DiasAvisoVencimiento);
 
 // Resumen de lote usado dentro del detalle de un producto
 public record LoteResumenDto(int IdLote, DateTime FechaVencimiento, int Cantidad);

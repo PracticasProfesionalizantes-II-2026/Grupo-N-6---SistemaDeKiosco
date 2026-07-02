@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Clases_KioPlus.Models;
 
 namespace Clases_KioPlus.Logica.DTOs;
@@ -14,8 +15,8 @@ public record VentaDto(
 
 public record VentaCreateDto(
     DateTime FechaHora,
-    int IdUsuario,
-    int IdCuentaCorrienteCliente,
+    [property: Range(1, int.MaxValue, ErrorMessage = "idUsuario inválido")] int IdUsuario,
+    [property: Range(1, int.MaxValue, ErrorMessage = "idCuentaCorrienteCliente inválido")] int IdCuentaCorrienteCliente,
     Venta.FormaDePago FormaPago,
     DateTime FechaPago);
 

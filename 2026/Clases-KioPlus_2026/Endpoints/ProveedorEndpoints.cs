@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -23,18 +24,18 @@ public static class ProveedorEndpoints
         {
             var id = await logica.Crear(dto);
             return Results.Created($"/proveedores/{id}", new { idProveedor = id });
-        });
+        }).AddEndpointFilter<ValidationFilter<ProveedorCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, ProveedorCreateDto dto, IProveedorLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "proveedor actualizado" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<ProveedorCreateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int id, IProveedorLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "proveedor eliminado" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

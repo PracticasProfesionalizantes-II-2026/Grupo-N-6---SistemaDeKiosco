@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Clases_KioPlus.Data;
 using Clases_KioPlus.Endpoints;
 using Clases_KioPlus.Logica;
+using Clases_KioPlus.Middleware;
 using Clases_KioPlus.Repositorios;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -60,6 +61,9 @@ builder.Services.AddScoped<ICajaLogica, CajaLogica>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Manejo global de excepciones: 503 ante fallas de conexión a la BD, 500 en cualquier otro caso
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapOpenApi();
 app.MapScalarApiReference();

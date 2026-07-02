@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Clases_KioPlus.Models;
 
 namespace Clases_KioPlus.Logica.DTOs;
@@ -12,9 +13,9 @@ public record UsuarioDto(
     bool Estado);
 
 public record UsuarioCreateDto(
-    string NombreApellido,
-    string Telefono,
-    string NombreUsuario,
-    string ContraseniaUsuario,
+    [property: Required] string NombreApellido,
+    [property: Required] string Telefono,
+    [property: Required] string NombreUsuario,
+    [property: Required] string ContraseniaUsuario,
     Usuario.TipoDeUsuario TipoUsuario,
     bool Estado);

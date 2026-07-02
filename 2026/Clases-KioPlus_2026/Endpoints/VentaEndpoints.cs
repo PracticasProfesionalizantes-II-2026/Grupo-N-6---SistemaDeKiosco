@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -36,18 +37,18 @@ public static class VentaEndpoints
             return id is null
                 ? Results.NotFound(new { mensaje = "usuario o cuenta corriente no encontrados" })
                 : Results.Created($"/ventas/{id}", new { idVenta = id, idUsuario = dto.IdUsuario });
-        });
+        }).AddEndpointFilter<ValidationFilter<VentaCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, VentaCreateDto dto, IVentaLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "venta actualizada" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<VentaCreateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int id, IVentaLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "venta eliminada" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

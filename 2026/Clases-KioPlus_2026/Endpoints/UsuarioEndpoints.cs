@@ -1,3 +1,4 @@
+using Clases_KioPlus.Filters;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Logica.DTOs;
 
@@ -22,18 +23,18 @@ public static class UsuarioEndpoints
         {
             var id = await logica.Crear(dto);
             return Results.Created($"/usuarios/{id}", new { idUsuario = id });
-        });
+        }).AddEndpointFilter<ValidationFilter<UsuarioCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, UsuarioCreateDto dto, IUsuarioLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);
             return ok ? Results.Ok(new { mensaje = "usuario actualizado" }) : Results.NotFound();
-        });
+        }).AddEndpointFilter<ValidationFilter<UsuarioCreateDto>>();
 
         grupo.MapDelete("/{id:int}", async (int id, IUsuarioLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.Ok(new { mensaje = "usuario eliminado" }) : Results.NotFound();
+            return ok ? Results.NoContent() : Results.NotFound();
         });
     }
 }

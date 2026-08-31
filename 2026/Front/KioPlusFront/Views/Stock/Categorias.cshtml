@@ -1,0 +1,73 @@
+@model CategoriaFormViewModel
+@{
+    ViewData["Title"] = "Categorías";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Categorías</h1>
+    <a class="btn btn-kp-outline" asp-action="Productos">Volver a productos</a>
+</div>
+
+<form asp-action="CrearCategoria" method="post" class="kp-filtros">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger small"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Descripcion" class="form-label"></label>
+            <input asp-for="Descripcion" class="form-control" />
+            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-kp w-100">Agregar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Categorias.Count == 0)
+{
+    <p class="kp-vacio">Todavía no hay categorías cargadas.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:60px"></th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var categoria in Model.Categorias)
+                {
+                    <tr>
+                        <td>
+                            <form asp-action="EliminarCategoria" method="post"
+                                  onsubmit="return confirm('¿Eliminar la categoría @categoria.Nombre?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@categoria.IdCategoria" />
+                                <button type="submit" class="kp-icon-btn" title="Eliminar categoría">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td>@categoria.Nombre</td>
+                        <td>@categoria.Descripcion</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -12,5 +12,6 @@ public interface ICuentaCorrienteClienteLogica
     Task<CuentaCorrienteClienteDto?> ObtenerPorId(int id);
     Task<int> Crear(CuentaCorrienteClienteCreateDto dto);
     Task<bool> Actualizar(int id, CuentaCorrienteClienteCreateDto dto);
-    Task<bool> Eliminar(int id);
+    Task<ResultadoOperacion> Eliminar(int id);
+    Task<ResultadoOperacion> RegistrarPago(int id, PagoCuentaCorrienteDto dto);
 }

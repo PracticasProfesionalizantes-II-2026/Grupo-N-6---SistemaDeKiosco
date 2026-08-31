@@ -1,0 +1,121 @@
+@model NuevaCompraViewModel
+@{
+    ViewData["Title"] = "Nueva compra";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Nueva compra</h1>
+    <a class="btn btn-kp-outline" asp-controller="Stock" asp-action="CrearProducto">Nuevo Producto</a>
+</div>
+
+@* --- Alta de renglones --- *@
+<form asp-action="AgregarItem" method="post" class="kp-filtros">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+            <label class="form-label" for="idProducto">Producto</label>
+            <select class="form-select" id="idProducto" name="idProducto" required>
+                <option value="">— Elegí el producto —</option>
+                @foreach (var p in Model.Productos)
+                {
+                    <option value="@p.IdProducto">@p.Nombre - @p.Marca (stock @p.StockDisponible)</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label" for="cantidad">Cantidad</label>
+            <input class="form-control" type="number" id="cantidad" name="cantidad" min="1" value="1" required />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label" for="precioUnitario">Precio de compra</label>
+            <input class="form-control" type="number" id="precioUnitario" name="precioUnitario"
+                   step="0.01" min="0.01" required />
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-kp w-100">Agregar</button>
+        </div>
+    </div>
+</form>
+
+@* --- Renglones cargados --- *@
+@if (Model.Items.Count == 0)
+{
+    <p class="kp-vacio">Todavía no cargaste productos en esta compra.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-end">Precio de compra</th>
+                    <th class="text-end">Subtotal</th>
+                    <th style="width:70px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Producto</td>
+                        <td class="text-center">@item.Cantidad</td>
+                        <td class="text-end">$@item.PrecioUnitario.ToString("N2")</td>
+                        <td class="text-end">$@item.Subtotal.ToString("N2")</td>
+                        <td>
+                            <form asp-action="QuitarItem" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="idProducto" value="@item.IdProducto" />
+                                <button type="submit" class="kp-icon-btn" title="Quitar de la compra">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="9" />
+                                        <path d="m9 9 6 6M15 9l-6 6" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kp-total">Total: $@Model.Total.ToString("N2")</div>
+}
+
+@* --- Cierre de la compra --- *@
+<form asp-action="Finalizar" method="post" class="mt-4">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label asp-for="IdProveedor" class="form-label"></label>
+            <select asp-for="IdProveedor" class="form-select">
+                <option value="0">— Elegí el proveedor —</option>
+                @foreach (var p in Model.Proveedores)
+                {
+                    <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="FechaHora" class="form-label"></label>
+            <input asp-for="FechaHora" type="date" class="form-control" />
+        </div>
+    </div>
+
+    <p class="form-text mt-3">Al registrar la compra, la cantidad comprada se suma al stock de cada producto.</p>
+
+    <div class="kp-form-acciones">
+        <button type="submit" class="btn btn-kp-outline" formaction="@Url.Action("Cancelar")">
+            Cancelar compra
+        </button>
+        <button type="submit" class="btn btn-kp">Registrar compra</button>
+    </div>
+</form>

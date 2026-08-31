@@ -1,0 +1,21 @@
+@model ProveedorFormViewModel
+@{
+    ViewData["Title"] = "Nuevo proveedor";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Nuevo proveedor</h1>
+</div>
+
+<form asp-action="Crear" method="post" class="kp-form">
+    <partial name="_ProveedorForm" model="Model" />
+
+    <div class="kp-form-acciones">
+        <a class="btn btn-kp-outline" asp-action="Index">Cancelar</a>
+        <button type="submit" class="btn btn-kp">Agregar proveedor</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

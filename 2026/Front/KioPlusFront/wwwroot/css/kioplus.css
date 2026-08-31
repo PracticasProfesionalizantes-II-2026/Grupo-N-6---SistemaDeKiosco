@@ -1,0 +1,425 @@
+/* Identidad visual de KioPlus, tomada de los mockups de Figma. */
+
+:root {
+    --kp-navy: #0B2C4E;
+    --kp-navy-dark: #071E36;
+    --kp-navy-soft: #14406C;
+    --kp-row: #F4EAE6;
+    --kp-row-alt: #EFE1DC;
+    --kp-border: #DECFC9;
+    --kp-text: #16202B;
+    --kp-muted: #6B7785;
+    --kp-danger: #B3261E;
+    --kp-success: #1B5E20;
+    --kp-sidebar-width: 232px;
+}
+
+body {
+    background-color: #FFFFFF;
+    color: var(--kp-text);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- Sidebar ---------- */
+
+.kp-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--kp-sidebar-width);
+    background-color: var(--kp-navy);
+    padding: 26px 0;
+    overflow-y: auto;
+    z-index: 1030;
+}
+
+.kp-brand {
+    color: #FFFFFF;
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    padding: 0 22px 22px;
+    display: block;
+    text-decoration: none;
+}
+
+.kp-brand:hover {
+    color: #FFFFFF;
+}
+
+.kp-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kp-nav-item a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 22px;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    border-radius: 0 12px 12px 0;
+    margin-right: 10px;
+}
+
+.kp-nav-item a:hover {
+    background-color: var(--kp-navy-soft);
+}
+
+.kp-nav-item a.active {
+    background-color: #FFFFFF;
+    color: var(--kp-navy);
+    font-weight: 600;
+}
+
+.kp-nav-item svg {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+}
+
+.kp-sidebar-footer {
+    padding: 18px 22px 0;
+    margin-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+}
+
+/* ---------- Contenido ---------- */
+
+.kp-content {
+    margin-left: var(--kp-sidebar-width);
+    padding: 30px 42px 60px;
+    min-height: 100vh;
+}
+
+.kp-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+}
+
+.kp-page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.kp-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+/* ---------- Botones ---------- */
+
+.btn-kp {
+    background-color: var(--kp-navy);
+    color: #FFFFFF;
+    border: 1px solid var(--kp-navy);
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 22px;
+}
+
+.btn-kp:hover,
+.btn-kp:focus {
+    background-color: var(--kp-navy-dark);
+    border-color: var(--kp-navy-dark);
+    color: #FFFFFF;
+}
+
+.btn-kp-outline {
+    background-color: transparent;
+    color: var(--kp-navy);
+    border: 1px solid var(--kp-navy);
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 22px;
+}
+
+.btn-kp-outline:hover {
+    background-color: var(--kp-navy);
+    color: #FFFFFF;
+}
+
+/* Botonera vertical de los submenús (Ventas, Stock) */
+.kp-menu-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 560px;
+    margin: 40px auto 0;
+}
+
+.kp-menu-acciones .btn-kp {
+    padding: 18px 24px;
+    font-size: 1.15rem;
+}
+
+/* Tarjetas del menú principal */
+.kp-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+    max-width: 760px;
+    margin: 30px auto 0;
+}
+
+.kp-card {
+    background-color: var(--kp-navy);
+    color: #FFFFFF;
+    border-radius: 6px;
+    padding: 28px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 150px;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.kp-card:hover {
+    background-color: var(--kp-navy-dark);
+    color: #FFFFFF;
+}
+
+.kp-card svg {
+    width: 42px;
+    height: 42px;
+}
+
+/* ---------- Tablas ---------- */
+
+.kp-table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--kp-border);
+}
+
+table.kp-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background-color: var(--kp-row);
+}
+
+table.kp-table thead th {
+    background-color: var(--kp-navy);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 14px 12px;
+    vertical-align: middle;
+    border: none;
+}
+
+table.kp-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid var(--kp-border);
+    vertical-align: middle;
+    font-size: 0.92rem;
+}
+
+table.kp-table tbody tr:nth-child(even) {
+    background-color: var(--kp-row-alt);
+}
+
+table.kp-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table.kp-table a {
+    color: var(--kp-navy);
+    font-weight: 600;
+}
+
+.kp-acciones {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.kp-icon-btn {
+    background: none;
+    border: none;
+    padding: 3px;
+    color: var(--kp-navy);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.kp-icon-btn:hover {
+    color: var(--kp-danger);
+}
+
+.kp-icon-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* ---------- Formularios ---------- */
+
+.kp-form {
+    max-width: 720px;
+}
+
+.kp-form label,
+.kp-filtros label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.kp-form .form-control,
+.kp-form .form-select,
+.kp-filtros .form-control,
+.kp-filtros .form-select {
+    border: 1px solid var(--kp-navy);
+    border-radius: 6px;
+    padding: 9px 12px;
+}
+
+.kp-form .form-control:focus,
+.kp-form .form-select:focus,
+.kp-filtros .form-control:focus,
+.kp-filtros .form-select:focus {
+    border-color: var(--kp-navy);
+    box-shadow: 0 0 0 0.2rem rgba(11, 44, 78, 0.15);
+}
+
+.kp-form-acciones {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 32px;
+}
+
+.kp-filtros {
+    background-color: #FFFFFF;
+    border: 1px solid var(--kp-border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 22px;
+}
+
+.kp-total {
+    text-align: right;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 14px;
+}
+
+.kp-vacio {
+    color: var(--kp-muted);
+    text-align: center;
+    padding: 34px 0;
+}
+
+/* ---------- Estados ---------- */
+
+.kp-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.kp-badge-moroso {
+    background-color: #F8D7DA;
+    color: var(--kp-danger);
+}
+
+.kp-badge-aldia {
+    background-color: #D8EDDA;
+    color: var(--kp-success);
+}
+
+.kp-badge-inactivo {
+    background-color: #E2E3E5;
+    color: #41464B;
+}
+
+/* ---------- Login ---------- */
+
+.kp-login-page {
+    min-height: 100vh;
+    padding: 44px 56px;
+}
+
+.kp-login-brand {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--kp-text);
+    margin-bottom: 60px;
+}
+
+.kp-login-box {
+    max-width: 430px;
+    margin: 0 auto;
+}
+
+.kp-login-title {
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 34px;
+}
+
+.kp-login-box .form-control {
+    background-color: #F1F1F1;
+    border: 1px solid #E2E2E2;
+    border-radius: 4px;
+    padding: 10px 12px;
+}
+
+.kp-login-box .btn-kp {
+    width: 100%;
+    border-radius: 4px;
+}
+
+.kp-login-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--kp-text);
+    font-size: 0.9rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 991.98px) {
+    .kp-sidebar {
+        position: static;
+        width: 100%;
+        padding: 16px 0;
+    }
+
+    .kp-nav {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .kp-nav-item a {
+        border-radius: 8px;
+        margin: 0 6px;
+    }
+
+    .kp-content {
+        margin-left: 0;
+        padding: 22px 18px 48px;
+    }
+}

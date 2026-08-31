@@ -20,4 +20,10 @@ public record CuentaCorrienteClienteCreateDto(
     [property: Range(1, int.MaxValue, ErrorMessage = "dni inválido")] int Dni,
     [property: Required] string Telefono,
     [property: Required] string Direccion,
-    [property: Required, EmailAddress] string CorreoElectronico);
+    // El correo es opcional en el formulario; si viene, debe ser válido.
+    [property: EmailAddress(ErrorMessage = "correoElectronico inválido")] string? CorreoElectronico,
+    [property: Range(0, double.MaxValue, ErrorMessage = "montoAdeudado no puede ser negativo")] double MontoAdeudado);
+
+// Pago parcial o total de la deuda del cliente
+public record PagoCuentaCorrienteDto(
+    [property: Range(0.01, double.MaxValue, ErrorMessage = "monto debe ser mayor a 0")] double Monto);

@@ -1,0 +1,53 @@
+@model IReadOnlyList<DetalleCompraListadoDto>
+@{
+    ViewData["Title"] = "Productos de la compra";
+    var compra = ViewBag.Compra as CompraDto;
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Compra #@(compra?.IdCompraProveedor)</h1>
+    <a class="btn btn-kp-outline" asp-action="Index">Volver</a>
+</div>
+
+@if (compra is not null)
+{
+    <div class="kp-filtros">
+        <div class="row">
+            <div class="col-md-6"><strong>Fecha:</strong> @compra.FechaHora.ToString("dd/MM/yyyy HH:mm")</div>
+            <div class="col-md-6"><strong>Monto total:</strong> $@compra.MontoTotal.ToString("N2")</div>
+        </div>
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <p class="kp-vacio">Esta compra no tiene productos cargados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-end">Precio de compra</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detalle in Model)
+                {
+                    <tr>
+                        <td>@detalle.Producto</td>
+                        <td class="text-center">@detalle.Cantidad</td>
+                        <td class="text-end">$@detalle.PrecioUnitario.ToString("N2")</td>
+                        <td class="text-end">$@detalle.Subtotal.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kp-total">Total: $@Model.Sum(d => d.Subtotal).ToString("N2")</div>
+}

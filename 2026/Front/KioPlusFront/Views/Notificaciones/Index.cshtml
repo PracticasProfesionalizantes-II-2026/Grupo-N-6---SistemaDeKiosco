@@ -1,0 +1,48 @@
+@model IReadOnlyList<NotificacionDto>
+@{
+    ViewData["Title"] = "Avisos";
+    var tipo = ViewBag.Tipo as string;
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Avisos</h1>
+
+    <div class="d-flex gap-2">
+        <a class="btn @(string.IsNullOrEmpty(tipo) ? "btn-kp" : "btn-kp-outline")" asp-action="Index">Todos</a>
+        <a class="btn @(tipo == "stock" ? "btn-kp" : "btn-kp-outline")" asp-action="Index" asp-route-tipo="stock">Stock bajo</a>
+        <a class="btn @(tipo == "vencimiento" ? "btn-kp" : "btn-kp-outline")" asp-action="Index" asp-route-tipo="vencimiento">Próximos a vencer</a>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <p class="kp-vacio">No hay avisos pendientes. El stock y los vencimientos están en orden.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:190px">Tipo</th>
+                    <th>Mensaje</th>
+                    <th style="width:180px">Generado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var aviso in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="kp-badge @(aviso.Tipo == TipoNotificacion.StockBajo ? "kp-badge-moroso" : "kp-badge-inactivo")">
+                                @(aviso.Tipo == TipoNotificacion.StockBajo ? "Stock bajo" : "Próximo vencimiento")
+                            </span>
+                        </td>
+                        <td>@aviso.Mensaje</td>
+                        <td>@aviso.FechaGeneracion.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

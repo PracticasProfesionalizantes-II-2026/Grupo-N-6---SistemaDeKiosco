@@ -55,4 +55,17 @@ public class CuentaCorrienteClienteRepositorio : ICuentaCorrienteClienteReposito
         _db.CuentasCorrientesClientes.Remove(cuenta);
         await _db.SaveChangesAsync();
     }
+
+    // Mueve el saldo adeudado y deja el estado consistente con el nuevo monto.
+    public async Task AjustarDeuda(int id, double delta)
+    {
+        var cuenta = await _db.CuentasCorrientesClientes.FindAsync(id);
+        if (cuenta is null) return;
+
+        cuenta.MontoAdeudado = Math.Max(0, cuenta.MontoAdeudado + delta);
+        cuenta.Estado = cuenta.MontoAdeudado > 0
+            ? CuentaCorrienteCliente.EstadoDeuda.Moroso
+            : CuentaCorrienteCliente.EstadoDeuda.AlDia;
+        await _db.SaveChangesAsync();
+    }
 }

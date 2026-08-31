@@ -9,9 +9,12 @@ public interface IDetalleVentaRepositorio
     Task<bool> VentaExiste(int idVenta);
     Task<Producto?> ObtenerProducto(int idProducto);
     Task<IEnumerable<DetalleVenta>> ObtenerPorVenta(int idVenta);
+    Task<IEnumerable<(DetalleVenta Detalle, string Producto)>> ObtenerPorVentaConProducto(int idVenta);
     Task<DetalleVenta?> ObtenerPorId(int id);
     Task<DetalleVenta> Agregar(DetalleVenta detalle);
     Task Actualizar(DetalleVenta detalle);
     Task Eliminar(DetalleVenta detalle);
     Task RecalcularMontoVenta(int idVenta);
+    // delta negativo descuenta stock (venta), positivo lo devuelve (anulación)
+    Task AjustarStock(int idProducto, int delta);
 }

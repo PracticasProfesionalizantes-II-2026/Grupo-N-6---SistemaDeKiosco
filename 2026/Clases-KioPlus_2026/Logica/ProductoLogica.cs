@@ -7,7 +7,8 @@ namespace Clases_KioPlus.Logica;
 
 public class ProductoLogica : IProductoLogica
 {
-    private const int UmbralStockCritico = 5;
+    // Umbral compartido con la generación de notificaciones de stock bajo
+    public const int UmbralStockCritico = 5;
     private readonly IProductoRepositorio _repo;
     public ProductoLogica(IProductoRepositorio repo) => _repo = repo;
 

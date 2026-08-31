@@ -1,0 +1,35 @@
+@model ProveedorFormViewModel
+
+@Html.AntiForgeryToken()
+<input type="hidden" asp-for="IdProveedor" />
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+<div class="mb-3">
+    <label asp-for="NombreRazonSocial" class="form-label"></label>
+    <input asp-for="NombreRazonSocial" class="form-control" />
+    <span asp-validation-for="NombreRazonSocial" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Telefono" class="form-label"></label>
+    <input asp-for="Telefono" class="form-control" />
+    <span asp-validation-for="Telefono" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Direccion" class="form-label"></label>
+    <input asp-for="Direccion" class="form-control" />
+    <span asp-validation-for="Direccion" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="CorreoElectronico" class="form-label"></label>
+    <input asp-for="CorreoElectronico" type="email" class="form-control" />
+    <span asp-validation-for="CorreoElectronico" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Observaciones" class="form-label"></label>
+    <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+</div>

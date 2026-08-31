@@ -1,0 +1,75 @@
+@model ProductosAsociadosViewModel
+@{
+    ViewData["Title"] = $"Proveedores de {Model.NombreProducto}";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Proveedores — @Model.NombreProducto</h1>
+    <a class="btn btn-kp-outline" asp-action="Productos">Volver</a>
+</div>
+
+<form asp-action="AsociarProveedor" method="post" class="kp-filtros">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdProducto" />
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-6">
+            <label asp-for="IdProveedor" class="form-label"></label>
+            <select asp-for="IdProveedor" class="form-select">
+                <option value="0">— Elegí un proveedor —</option>
+                @foreach (var p in Model.Proveedores)
+                {
+                    <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="PrecioCompra" class="form-label"></label>
+            <input asp-for="PrecioCompra" type="number" step="0.01" min="0.01" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-kp w-100">Asociar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Asociaciones.Count == 0)
+{
+    <p class="kp-vacio">Este producto todavía no tiene proveedores asociados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:60px"></th>
+                    <th>Proveedor</th>
+                    <th class="text-end">Precio de compra</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var asociacion in Model.Asociaciones)
+                {
+                    <tr>
+                        <td>
+                            <form asp-action="DesasociarProveedor" method="post"
+                                  onsubmit="return confirm('¿Quitar este proveedor del producto?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="idProducto" value="@Model.IdProducto" />
+                                <input type="hidden" name="idAsociacion" value="@asociacion.IdProductoProveedor" />
+                                <button type="submit" class="kp-icon-btn" title="Quitar proveedor">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td>@Model.NombreProveedor(asociacion.IdProveedor)</td>
+                        <td class="text-end">$@asociacion.PrecioCompra.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

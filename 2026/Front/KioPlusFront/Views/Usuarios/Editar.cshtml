@@ -1,0 +1,21 @@
+@model UsuarioFormViewModel
+@{
+    ViewData["Title"] = "Editar usuario";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Editar usuario</h1>
+</div>
+
+<form asp-action="Editar" method="post" class="kp-form">
+    <partial name="_UsuarioForm" model="Model" />
+
+    <div class="kp-form-acciones">
+        <a class="btn btn-kp-outline" asp-action="Index">Cancelar</a>
+        <button type="submit" class="btn btn-kp">Confirmar cambios</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

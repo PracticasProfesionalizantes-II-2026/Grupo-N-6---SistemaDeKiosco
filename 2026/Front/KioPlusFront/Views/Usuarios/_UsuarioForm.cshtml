@@ -1,0 +1,45 @@
+@model UsuarioFormViewModel
+
+@Html.AntiForgeryToken()
+<input type="hidden" asp-for="IdUsuario" />
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+<div class="mb-3">
+    <label asp-for="NombreApellido" class="form-label"></label>
+    <input asp-for="NombreApellido" class="form-control" />
+    <span asp-validation-for="NombreApellido" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Telefono" class="form-label"></label>
+    <input asp-for="Telefono" class="form-control" />
+    <span asp-validation-for="Telefono" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="NombreUsuario" class="form-label"></label>
+    <input asp-for="NombreUsuario" class="form-control" autocomplete="off" />
+    <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="ContraseniaUsuario" class="form-label"></label>
+    <input asp-for="ContraseniaUsuario" class="form-control" autocomplete="new-password" />
+    <span asp-validation-for="ContraseniaUsuario" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="TipoUsuario" class="form-label"></label>
+    <select asp-for="TipoUsuario" class="form-select">
+        <option value="@TipoDeUsuario.SuperAdmin">SuperAdmin</option>
+        <option value="@TipoDeUsuario.Administrador">Administrador</option>
+        <option value="@TipoDeUsuario.Empleado">Empleado</option>
+    </select>
+</div>
+
+<div class="form-check mb-3">
+    <input asp-for="Estado" class="form-check-input" type="checkbox" />
+    <label asp-for="Estado" class="form-check-label"></label>
+    <div class="form-text">Un usuario bloqueado no puede iniciar sesión.</div>
+</div>

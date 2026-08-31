@@ -12,8 +12,25 @@ public class DetalleCompraRepositorio : IDetalleCompraRepositorio
     public async Task<bool> CompraExiste(int idCompra) =>
         await _db.Compras.AnyAsync(c => c.Id == idCompra);
 
+    public async Task<Producto?> ObtenerProducto(int idProducto) =>
+        await _db.Productos.FindAsync(idProducto);
+
     public async Task<IEnumerable<DetalleCompra>> ObtenerPorCompra(int idCompra) =>
         await _db.DetallesCompras.Where(d => d.CompraProveedorId == idCompra).ToListAsync();
+
+    // Trae el detalle junto al nombre del producto para el listado del front
+    public async Task<IEnumerable<(DetalleCompra Detalle, string Producto)>> ObtenerPorCompraConProducto(int idCompra)
+    {
+        var filas = await (
+            from d in _db.DetallesCompras
+            join p in _db.Productos on d.ProductoId equals p.Id into gp
+            from p in gp.DefaultIfEmpty()
+            where d.CompraProveedorId == idCompra
+            select new { Detalle = d, Nombre = p != null ? p.Nombre : "(producto eliminado)" }
+        ).ToListAsync();
+
+        return filas.Select(f => (f.Detalle, f.Nombre));
+    }
 
     public async Task<DetalleCompra?> ObtenerPorId(int id) =>
         await _db.DetallesCompras.FindAsync(id);
@@ -46,6 +63,16 @@ public class DetalleCompraRepositorio : IDetalleCompraRepositorio
         compra.MontoTotal = await _db.DetallesCompras
             .Where(d => d.CompraProveedorId == idCompra)
             .SumAsync(d => d.Subtotal);
+        await _db.SaveChangesAsync();
+    }
+
+    // Mueve el stock disponible del producto. Nunca lo deja por debajo de cero.
+    public async Task AjustarStock(int idProducto, int delta)
+    {
+        var producto = await _db.Productos.FindAsync(idProducto);
+        if (producto is null) return;
+
+        producto.StockDisponible = Math.Max(0, producto.StockDisponible + delta);
         await _db.SaveChangesAsync();
     }
 }

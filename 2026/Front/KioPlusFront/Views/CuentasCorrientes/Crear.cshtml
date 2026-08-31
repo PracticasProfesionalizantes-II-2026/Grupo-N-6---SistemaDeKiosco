@@ -1,0 +1,21 @@
+@model CuentaCorrienteFormViewModel
+@{
+    ViewData["Title"] = "Nueva cuenta corriente";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Nueva cuenta corriente</h1>
+</div>
+
+<form asp-action="Crear" method="post" class="kp-form">
+    <partial name="_CuentaForm" model="Model" />
+
+    <div class="kp-form-acciones">
+        <a class="btn btn-kp-outline" asp-action="Index">Cancelar</a>
+        <button type="submit" class="btn btn-kp">Crear Cuenta Corriente</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

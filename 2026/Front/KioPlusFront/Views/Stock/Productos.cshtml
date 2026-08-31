@@ -1,0 +1,102 @@
+@model ListadoProductosViewModel
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Productos</h1>
+    <div class="d-flex gap-2">
+        <a class="btn btn-kp-outline" asp-action="Categorias">Categoría</a>
+        <a class="btn btn-kp" asp-action="CrearProducto">Agregar producto</a>
+    </div>
+</div>
+
+<form asp-action="Productos" method="get" class="kp-filtros">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" placeholder="Nombre del producto" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Marca" class="form-label"></label>
+            <input asp-for="Marca" class="form-control" placeholder="Marca" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="IdCategoria" class="form-label"></label>
+            <select asp-for="IdCategoria" class="form-select">
+                <option value="">Todas</option>
+                @foreach (var c in Model.Categorias)
+                {
+                    <option value="@c.IdCategoria">@c.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-kp w-100">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Productos.Count == 0)
+{
+    <p class="kp-vacio">No hay productos cargados con esos filtros.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:70px"></th>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Categoría</th>
+                    <th>Proveedor/es</th>
+                    <th class="text-end">Precio de venta</th>
+                    <th class="text-center">Stock disponible</th>
+                    <th class="text-center">Lote</th>
+                    <th class="text-center">Días de aviso por vencimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Productos)
+                {
+                    <tr>
+                        <td>
+                            <div class="kp-acciones">
+                                <a class="kp-icon-btn" asp-action="EditarProducto" asp-route-id="@p.IdProducto" title="Editar">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 20h4l10-10-4-4L4 16z" />
+                                        <path d="m14 6 4 4" />
+                                    </svg>
+                                </a>
+                                <form asp-action="EliminarProducto" method="post"
+                                      onsubmit="return confirm('¿Eliminar el producto @p.Nombre?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@p.IdProducto" />
+                                    <button type="submit" class="kp-icon-btn" title="Eliminar">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>@p.Nombre</td>
+                        <td>@p.Marca</td>
+                        <td>@Model.NombreCategoria(p.IdCategoria)</td>
+                        <td>
+                            <a asp-action="ProveedoresDelProducto" asp-route-id="@p.IdProducto">Proveedor/es</a>
+                        </td>
+                        <td class="text-end">$@p.PrecioVenta.ToString("N2")</td>
+                        <td class="text-center">@p.StockDisponible</td>
+                        <td class="text-center">
+                            <a asp-action="Lotes" asp-route-id="@p.IdProducto">Lote</a>
+                        </td>
+                        <td class="text-center">@p.DiasAvisoVencimiento</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

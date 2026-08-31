@@ -13,10 +13,12 @@ public class CompraLogica : ICompraLogica
     private static CompraDto AMapa(CompraProveedor c) =>
         new(c.Id, c.FechaHora, c.ProveedorId, c.MontoTotal);
 
-    public async Task<IEnumerable<CompraDto>> ObtenerTodas()
+    public async Task<IEnumerable<CompraListadoDto>> ObtenerTodas(
+        DateTime? fechaDesde, DateTime? fechaHasta, int? idProveedor)
     {
-        var compras = await _repo.ObtenerTodas();
-        return compras.Select(AMapa);
+        var filas = await _repo.ObtenerTodasConProveedor(fechaDesde, fechaHasta, idProveedor);
+        return filas.Select(f => new CompraListadoDto(
+            f.Compra.Id, f.Compra.FechaHora, f.Compra.ProveedorId, f.Proveedor, f.Compra.MontoTotal));
     }
 
     public async Task<CompraDto?> ObtenerPorId(int id)
@@ -32,7 +34,7 @@ public class CompraLogica : ICompraLogica
 
         var compra = new CompraProveedor
         {
-            FechaHora = dto.FechaHora,
+            FechaHora = dto.FechaHora == default ? DateTime.Now : dto.FechaHora,
             ProveedorId = dto.IdProveedor,
             MontoTotal = 0
         };

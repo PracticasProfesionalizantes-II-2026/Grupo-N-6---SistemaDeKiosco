@@ -25,8 +25,11 @@ public class UsuarioLogica : IUsuarioLogica
         return u is null ? null : AMapa(u);
     }
 
-    public async Task<int> Crear(UsuarioCreateDto dto)
+    public async Task<ResultadoOperacion> Crear(UsuarioCreateDto dto)
     {
+        if (await _repo.NombreUsuarioEnUso(dto.NombreUsuario, null))
+            return ResultadoOperacion.Invalido("el nombre de usuario ya está en uso");
+
         var usuario = new Usuario
         {
             NombreApellido = dto.NombreApellido,
@@ -37,13 +40,16 @@ public class UsuarioLogica : IUsuarioLogica
             Estado = dto.Estado
         };
         await _repo.Agregar(usuario);
-        return usuario.Id;
+        return ResultadoOperacion.Exito(usuario.Id);
     }
 
-    public async Task<bool> Actualizar(int id, UsuarioCreateDto dto)
+    public async Task<ResultadoOperacion> Actualizar(int id, UsuarioCreateDto dto)
     {
         var usuario = await _repo.ObtenerPorId(id);
-        if (usuario is null) return false;
+        if (usuario is null) return ResultadoOperacion.NoEncontrado("usuario no encontrado");
+
+        if (await _repo.NombreUsuarioEnUso(dto.NombreUsuario, id))
+            return ResultadoOperacion.Invalido("el nombre de usuario ya está en uso");
 
         usuario.NombreApellido = dto.NombreApellido;
         usuario.Telefono = dto.Telefono;
@@ -52,7 +58,7 @@ public class UsuarioLogica : IUsuarioLogica
         usuario.TipoUsuario = dto.TipoUsuario;
         usuario.Estado = dto.Estado;
         await _repo.Actualizar(usuario);
-        return true;
+        return ResultadoOperacion.Exito(usuario.Id);
     }
 
     public async Task<bool> Eliminar(int id)
@@ -62,5 +68,28 @@ public class UsuarioLogica : IUsuarioLogica
 
         await _repo.Eliminar(usuario);
         return true;
+    }
+
+    // Habilita o bloquea el acceso del usuario sin borrar su historial de ventas
+    public async Task<bool> CambiarEstado(int id, bool estado)
+    {
+        var usuario = await _repo.ObtenerPorId(id);
+        if (usuario is null) return false;
+
+        usuario.Estado = estado;
+        await _repo.Actualizar(usuario);
+        return true;
+    }
+
+    // Devuelve null si las credenciales no coinciden o el usuario está bloqueado
+    public async Task<LoginResultadoDto?> Login(LoginDto dto)
+    {
+        var usuario = await _repo.ObtenerPorNombreUsuario(dto.NombreUsuario);
+        if (usuario is null) return null;
+        if (!usuario.Estado) return null;
+        if (usuario.ContraseniaUsuario != dto.ContraseniaUsuario) return null;
+
+        return new LoginResultadoDto(
+            usuario.Id, usuario.NombreApellido, usuario.NombreUsuario, usuario.TipoUsuario);
     }
 }

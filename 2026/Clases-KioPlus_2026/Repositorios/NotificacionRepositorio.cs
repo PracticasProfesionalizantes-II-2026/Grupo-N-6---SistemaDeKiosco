@@ -14,6 +14,21 @@ public class NotificacionRepositorio : INotificacionRepositorio
         var query = _db.Notificaciones.AsQueryable();
         if (tipo.HasValue)
             query = query.Where(n => n.Tipo == tipo.Value);
-        return await query.ToListAsync();
+        return await query.OrderByDescending(n => n.FechaGeneracion).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Producto>> ObtenerProductosConStockCritico(int umbral) =>
+        await _db.Productos.Where(p => p.StockDisponible <= umbral).ToListAsync();
+
+    public async Task<IEnumerable<Lote>> ObtenerLotesConProducto() =>
+        await _db.Lotes.Include(l => l.Producto).ToListAsync();
+
+    // Los avisos son un reflejo del estado actual: se recalculan enteros en cada consulta
+    // para que no queden alertas viejas de productos que ya se repusieron.
+    public async Task Regenerar(IEnumerable<Notificacion> notificaciones)
+    {
+        _db.Notificaciones.RemoveRange(_db.Notificaciones);
+        await _db.Notificaciones.AddRangeAsync(notificaciones);
+        await _db.SaveChangesAsync();
     }
 }

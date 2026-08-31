@@ -1,0 +1,52 @@
+@model CuentaCorrienteFormViewModel
+
+@Html.AntiForgeryToken()
+<input type="hidden" asp-for="IdCuentaCorrienteCliente" />
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+<div class="mb-3">
+    <label asp-for="Nombre" class="form-label"></label>
+    <input asp-for="Nombre" class="form-control" />
+    <span asp-validation-for="Nombre" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Apellido" class="form-label"></label>
+    <input asp-for="Apellido" class="form-control" />
+    <span asp-validation-for="Apellido" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Dni" class="form-label"></label>
+    <input asp-for="Dni" type="number" class="form-control" />
+    <span asp-validation-for="Dni" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Telefono" class="form-label"></label>
+    <input asp-for="Telefono" class="form-control" />
+    <span asp-validation-for="Telefono" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Direccion" class="form-label"></label>
+    <input asp-for="Direccion" class="form-control" />
+    <span asp-validation-for="Direccion" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="CorreoElectronico" class="form-label"></label>
+    <input asp-for="CorreoElectronico" type="email" class="form-control" />
+    <span asp-validation-for="CorreoElectronico" class="text-danger small"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="MontoAdeudado" class="form-label"></label>
+    <input asp-for="MontoAdeudado" type="number" step="0.01" min="0" class="form-control" />
+    <span asp-validation-for="MontoAdeudado" class="text-danger small"></span>
+    <div class="form-text">
+        El estado (Moroso / Al día) se calcula solo a partir de este monto.
+        Las ventas en cuenta corriente lo aumentan y los pagos lo descuentan.
+    </div>
+</div>

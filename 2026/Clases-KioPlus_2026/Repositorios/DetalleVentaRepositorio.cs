@@ -18,6 +18,20 @@ public class DetalleVentaRepositorio : IDetalleVentaRepositorio
     public async Task<IEnumerable<DetalleVenta>> ObtenerPorVenta(int idVenta) =>
         await _db.DetallesVentas.Where(d => d.VentaId == idVenta).ToListAsync();
 
+    // Trae el detalle junto al nombre del producto para el listado del front
+    public async Task<IEnumerable<(DetalleVenta Detalle, string Producto)>> ObtenerPorVentaConProducto(int idVenta)
+    {
+        var filas = await (
+            from d in _db.DetallesVentas
+            join p in _db.Productos on d.ProductoId equals p.Id into gp
+            from p in gp.DefaultIfEmpty()
+            where d.VentaId == idVenta
+            select new { Detalle = d, Nombre = p != null ? p.Nombre : "(producto eliminado)" }
+        ).ToListAsync();
+
+        return filas.Select(f => (f.Detalle, f.Nombre));
+    }
+
     public async Task<DetalleVenta?> ObtenerPorId(int id) =>
         await _db.DetallesVentas.FindAsync(id);
 
@@ -49,6 +63,16 @@ public class DetalleVentaRepositorio : IDetalleVentaRepositorio
         venta.MontoTotal = await _db.DetallesVentas
             .Where(d => d.VentaId == idVenta)
             .SumAsync(d => d.Subtotal);
+        await _db.SaveChangesAsync();
+    }
+
+    // Mueve el stock disponible del producto. Nunca lo deja por debajo de cero.
+    public async Task AjustarStock(int idProducto, int delta)
+    {
+        var producto = await _db.Productos.FindAsync(idProducto);
+        if (producto is null) return;
+
+        producto.StockDisponible = Math.Max(0, producto.StockDisponible + delta);
         await _db.SaveChangesAsync();
     }
 }

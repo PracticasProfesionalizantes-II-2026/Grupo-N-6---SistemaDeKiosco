@@ -14,4 +14,6 @@ public interface ICuentaCorrienteClienteRepositorio
     Task<CuentaCorrienteCliente> Agregar(CuentaCorrienteCliente cuenta);
     Task Actualizar(CuentaCorrienteCliente cuenta);
     Task Eliminar(CuentaCorrienteCliente cuenta);
+    // delta positivo suma deuda (venta a cuenta corriente), negativo la cancela (pago)
+    Task AjustarDeuda(int id, double delta);
 }

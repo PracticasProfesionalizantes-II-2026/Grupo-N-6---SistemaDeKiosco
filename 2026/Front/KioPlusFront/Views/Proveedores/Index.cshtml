@@ -1,0 +1,72 @@
+@model IReadOnlyList<ProveedorDto>
+@{
+    ViewData["Title"] = "Proveedores";
+    var busqueda = ViewBag.Busqueda as string;
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Proveedores</h1>
+
+    <form asp-action="Index" method="get" class="d-flex gap-2">
+        <input class="form-control" name="busqueda" value="@busqueda" placeholder="Ingrese un proveedor" />
+        <button type="submit" class="btn btn-kp">Buscar</button>
+    </form>
+</div>
+
+@if (Model.Count == 0)
+{
+    <p class="kp-vacio">No hay proveedores cargados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:70px"></th>
+                    <th>Nombre/Razón social</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Email</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="kp-acciones">
+                                <a class="kp-icon-btn" asp-action="Editar" asp-route-id="@p.IdProveedor" title="Editar">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 20h4l10-10-4-4L4 16z" />
+                                        <path d="m14 6 4 4" />
+                                    </svg>
+                                </a>
+                                <form asp-action="Eliminar" method="post"
+                                      onsubmit="return confirm('¿Eliminar el proveedor @p.NombreRazonSocial?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@p.IdProveedor" />
+                                    <button type="submit" class="kp-icon-btn" title="Eliminar">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>@p.NombreRazonSocial</td>
+                        <td>@p.Telefono</td>
+                        <td>@p.Direccion</td>
+                        <td>@p.CorreoElectronico</td>
+                        <td>@p.Observaciones</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="d-flex justify-content-end mt-4">
+    <a class="btn btn-kp" asp-action="Crear">Agregar proveedor</a>
+</div>

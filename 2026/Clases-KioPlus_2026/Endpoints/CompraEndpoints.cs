@@ -10,8 +10,11 @@ public static class CompraEndpoints
     {
         var grupo = app.MapGroup("/compras").WithTags("Compras");
 
-        grupo.MapGet("/", async (ICompraLogica logica) =>
-            Results.Ok(await logica.ObtenerTodas()));
+        // Listado con nombre de proveedor y filtros opcionales
+        grupo.MapGet("/", async (
+            DateTime? fechaDesde, DateTime? fechaHasta, int? idProveedor,
+            ICompraLogica logica) =>
+            Results.Ok(await logica.ObtenerTodas(fechaDesde, fechaHasta, idProveedor)));
 
         grupo.MapGet("/{id:int}", async (int id, ICompraLogica logica) =>
         {
@@ -24,7 +27,7 @@ public static class CompraEndpoints
             var id = await logica.Crear(dto);
             return id is null
                 ? Results.NotFound(new { mensaje = "proveedor no encontrado" })
-                : Results.Created($"/compras/{id}", new { idCompraProveedor = id });
+                : Results.Created($"/compras/{id}", new { idCompraProveedor = id, idProveedor = dto.IdProveedor });
         }).AddEndpointFilter<ValidationFilter<CompraCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, CompraCreateDto dto, ICompraLogica logica) =>
@@ -36,7 +39,7 @@ public static class CompraEndpoints
         grupo.MapDelete("/{id:int}", async (int id, ICompraLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.NoContent() : Results.NotFound();
+            return ok ? Results.Ok(new { mensaje = "compra eliminada" }) : Results.NotFound();
         });
     }
 }

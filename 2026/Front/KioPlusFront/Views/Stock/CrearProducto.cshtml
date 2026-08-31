@@ -1,0 +1,21 @@
+@model ProductoFormViewModel
+@{
+    ViewData["Title"] = "Nuevo producto";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Nuevo producto</h1>
+</div>
+
+<form asp-action="CrearProducto" method="post" class="kp-form">
+    <partial name="_ProductoForm" model="Model" />
+
+    <div class="kp-form-acciones">
+        <a class="btn btn-kp-outline" asp-action="Productos">Cancelar</a>
+        <button type="submit" class="btn btn-kp">Agregar producto</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

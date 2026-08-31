@@ -14,6 +14,12 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
         new(c.Id, c.Nombre, c.Apellido, c.Dni, c.Telefono, c.Direccion,
             c.CorreoElectronico, c.MontoAdeudado, c.Estado);
 
+    // El estado nunca se carga a mano: se deduce del saldo adeudado.
+    private static CuentaCorrienteCliente.EstadoDeuda EstadoSegunDeuda(double monto) =>
+        monto > 0
+            ? CuentaCorrienteCliente.EstadoDeuda.Moroso
+            : CuentaCorrienteCliente.EstadoDeuda.AlDia;
+
     public async Task<IEnumerable<CuentaCorrienteClienteDto>> ObtenerTodas(
         string? nombre, string? apellido, int? dni,
         CuentaCorrienteCliente.EstadoDeuda? estado,
@@ -38,9 +44,9 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
             Dni = dto.Dni,
             Telefono = dto.Telefono,
             Direccion = dto.Direccion,
-            CorreoElectronico = dto.CorreoElectronico,
-            MontoAdeudado = 0,
-            Estado = CuentaCorrienteCliente.EstadoDeuda.AlDia
+            CorreoElectronico = dto.CorreoElectronico ?? string.Empty,
+            MontoAdeudado = dto.MontoAdeudado,
+            Estado = EstadoSegunDeuda(dto.MontoAdeudado)
         };
         await _repo.Agregar(cuenta);
         return cuenta.Id;
@@ -56,17 +62,40 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
         cuenta.Dni = dto.Dni;
         cuenta.Telefono = dto.Telefono;
         cuenta.Direccion = dto.Direccion;
-        cuenta.CorreoElectronico = dto.CorreoElectronico;
+        cuenta.CorreoElectronico = dto.CorreoElectronico ?? string.Empty;
+        cuenta.MontoAdeudado = dto.MontoAdeudado;
+        cuenta.Estado = EstadoSegunDeuda(dto.MontoAdeudado);
         await _repo.Actualizar(cuenta);
         return true;
     }
 
-    public async Task<bool> Eliminar(int id)
+    // Consumidor Final es la cuenta por defecto de las ventas: no se puede borrar.
+    public async Task<ResultadoOperacion> Eliminar(int id)
     {
+        if (id == CuentaCorrienteCliente.IdConsumidorFinal)
+            return ResultadoOperacion.Invalido("no se puede eliminar la cuenta Consumidor Final");
+
         var cuenta = await _repo.ObtenerPorId(id);
-        if (cuenta is null) return false;
+        if (cuenta is null) return ResultadoOperacion.NoEncontrado("cuenta corriente no encontrada");
 
         await _repo.Eliminar(cuenta);
-        return true;
+        return ResultadoOperacion.Exito(id);
+    }
+
+    // Cancela total o parcialmente la deuda del cliente.
+    public async Task<ResultadoOperacion> RegistrarPago(int id, PagoCuentaCorrienteDto dto)
+    {
+        var cuenta = await _repo.ObtenerPorId(id);
+        if (cuenta is null) return ResultadoOperacion.NoEncontrado("cuenta corriente no encontrada");
+
+        if (cuenta.MontoAdeudado <= 0)
+            return ResultadoOperacion.Invalido("la cuenta no tiene deuda pendiente");
+
+        if (dto.Monto > cuenta.MontoAdeudado)
+            return ResultadoOperacion.Invalido(
+                $"el pago supera la deuda actual de {cuenta.MontoAdeudado:0.##}");
+
+        await _repo.AjustarDeuda(id, -dto.Monto);
+        return ResultadoOperacion.Exito(id);
     }
 }

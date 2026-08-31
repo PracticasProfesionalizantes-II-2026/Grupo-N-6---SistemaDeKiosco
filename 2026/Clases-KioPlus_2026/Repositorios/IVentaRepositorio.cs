@@ -9,8 +9,9 @@ public interface IVentaRepositorio
     Task<bool> UsuarioExiste(int idUsuario);
     Task<bool> CuentaExiste(int idCuenta);
     Task<IEnumerable<Venta>> ObtenerTodas();
-    Task<IEnumerable<Venta>> Filtrar(
-        DateTime? fechaHora, int? idUsuario, int? idCliente,
+    // Listado con los nombres de vendedor y cliente ya resueltos
+    Task<IEnumerable<(Venta Venta, string Vendedor, string Cliente)>> ObtenerTodasConNombres(
+        DateTime? fechaDesde, DateTime? fechaHasta, int? idUsuario, int? idCliente,
         double? importeMayorA, double? importeMenorA);
     Task<Venta?> ObtenerPorId(int id);
     Task<Venta> Agregar(Venta venta);

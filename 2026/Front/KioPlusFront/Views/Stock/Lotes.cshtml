@@ -1,0 +1,75 @@
+@model LotesProductoViewModel
+@{
+    ViewData["Title"] = $"Lotes de {Model.NombreProducto}";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Lotes — @Model.NombreProducto</h1>
+    <a class="btn btn-kp-outline" asp-action="Productos">Volver</a>
+</div>
+
+<form asp-action="AgregarLote" method="post" class="kp-filtros">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdProducto" />
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label asp-for="NroLote" class="form-label"></label>
+            <input asp-for="NroLote" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="FechaVencimiento" class="form-label"></label>
+            <input asp-for="FechaVencimiento" type="date" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Cantidad" class="form-label"></label>
+            <input asp-for="Cantidad" type="number" min="1" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-kp w-100">Agregar lote</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Lotes.Count == 0)
+{
+    <p class="kp-vacio">Este producto todavía no tiene lotes registrados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:60px"></th>
+                    <th>Nº de lote</th>
+                    <th>Fecha de vencimiento</th>
+                    <th class="text-center">Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var lote in Model.Lotes.OrderBy(l => l.FechaVencimiento))
+                {
+                    <tr>
+                        <td>
+                            <form asp-action="EliminarLote" method="post"
+                                  onsubmit="return confirm('¿Eliminar el lote @lote.NroLote?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="idLote" value="@lote.IdLote" />
+                                <input type="hidden" name="idProducto" value="@Model.IdProducto" />
+                                <button type="submit" class="kp-icon-btn" title="Eliminar lote">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td>@lote.NroLote</td>
+                        <td>@lote.FechaVencimiento.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@lote.Cantidad</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

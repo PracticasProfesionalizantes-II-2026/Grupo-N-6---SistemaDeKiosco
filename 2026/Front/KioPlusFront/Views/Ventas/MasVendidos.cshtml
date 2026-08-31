@@ -1,0 +1,106 @@
+@model MasVendidosViewModel
+@{
+    ViewData["Title"] = "Productos más vendidos";
+    var porMonto = Model.Criterio == "monto";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Productos más vendidos</h1>
+    <a class="btn btn-kp-outline" asp-action="Index">Volver</a>
+</div>
+
+<form asp-action="MasVendidos" method="get" class="kp-filtros">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label asp-for="FechaDesde" class="form-label"></label>
+            <input asp-for="FechaDesde" type="date" class="form-control" />
+            <span asp-validation-for="FechaDesde" class="text-danger small"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="FechaHasta" class="form-label"></label>
+            <input asp-for="FechaHasta" type="date" class="form-control" />
+            <span asp-validation-for="FechaHasta" class="text-danger small"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Criterio" class="form-label"></label>
+            <select asp-for="Criterio" class="form-select">
+                <option value="cantidad">Por cantidad vendida</option>
+                <option value="monto">Por monto generado</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label asp-for="Limite" class="form-label"></label>
+            <input asp-for="Limite" type="number" min="1" max="50" class="form-control" />
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-kp w-100">Ver</button>
+        </div>
+    </div>
+</form>
+
+@if (porMonto)
+{
+    @if (Model.PorMonto.Count == 0)
+    {
+        <p class="kp-vacio">No hubo ventas en el período seleccionado.</p>
+    }
+    else
+    {
+        <div class="kp-table-wrapper">
+            <table class="kp-table">
+                <thead>
+                    <tr>
+                        <th style="width:80px">#</th>
+                        <th>Producto</th>
+                        <th class="text-end">Monto generado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var posicion = 1; }
+                    @foreach (var item in Model.PorMonto)
+                    {
+                        <tr>
+                            <td>@posicion</td>
+                            <td>@item.Nombre</td>
+                            <td class="text-end">$@item.MontoGenerado.ToString("N2")</td>
+                        </tr>
+                        posicion++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+else
+{
+    @if (Model.PorCantidad.Count == 0)
+    {
+        <p class="kp-vacio">No hubo ventas en el período seleccionado.</p>
+    }
+    else
+    {
+        <div class="kp-table-wrapper">
+            <table class="kp-table">
+                <thead>
+                    <tr>
+                        <th style="width:80px">#</th>
+                        <th>Producto</th>
+                        <th class="text-end">Unidades vendidas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var posicion = 1; }
+                    @foreach (var item in Model.PorCantidad)
+                    {
+                        <tr>
+                            <td>@posicion</td>
+                            <td>@item.Nombre</td>
+                            <td class="text-end">@item.Cantidad</td>
+                        </tr>
+                        posicion++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

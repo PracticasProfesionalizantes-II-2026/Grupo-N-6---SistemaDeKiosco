@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "c:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj": {}
+    "C:\\DesarrollodeSoftware\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj": {}
   },
   "projects": {
-    "c:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj": {
+    "C:\\DesarrollodeSoftware\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj",
+        "projectUniqueName": "C:\\DesarrollodeSoftware\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj",
         "projectName": "KioPlusFront",
-        "projectPath": "c:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj",
-        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "c:\\AgustinCravero-DesarrolloDeSoftware\\PracticaProf2026\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\obj\\",
+        "projectPath": "C:\\DesarrollodeSoftware\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\KioPlusFront.csproj",
+        "packagesPath": "C:\\Users\\buffa\\.nuget\\packages\\",
+        "outputPath": "C:\\DesarrollodeSoftware\\Grupo-N-6---SistemaDeKiosco\\2026\\Front\\KioPlusFront\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\buffa\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -30,6 +30,7 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -44,10 +45,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -68,7 +70,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

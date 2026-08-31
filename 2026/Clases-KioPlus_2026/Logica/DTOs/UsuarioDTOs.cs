@@ -19,3 +19,18 @@ public record UsuarioCreateDto(
     [property: Required] string ContraseniaUsuario,
     Usuario.TipoDeUsuario TipoUsuario,
     bool Estado);
+
+// Credenciales enviadas por la pantalla de inicio de sesión
+public record LoginDto(
+    [property: Required] string NombreUsuario,
+    [property: Required] string ContraseniaUsuario);
+
+// Datos de la sesión iniciada. Nunca incluye la contraseña.
+public record LoginResultadoDto(
+    int IdUsuario,
+    string NombreApellido,
+    string NombreUsuario,
+    Usuario.TipoDeUsuario TipoUsuario);
+
+// Alta/baja lógica del usuario (candado en el listado)
+public record CambiarEstadoUsuarioDto(bool Estado);

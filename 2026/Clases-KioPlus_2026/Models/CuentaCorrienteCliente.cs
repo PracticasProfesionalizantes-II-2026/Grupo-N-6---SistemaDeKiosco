@@ -9,6 +9,10 @@ namespace Clases_KioPlus.Models
 {
     public class CuentaCorrienteCliente
     {
+        // Cliente reservado para las ventas sin cuenta corriente ("Consumidor Final").
+        // Lo crea DbSeeder al arrancar y no puede eliminarse.
+        public const int IdConsumidorFinal = 1;
+
         public int Id { get; set; }
         [Required] public string Nombre { get; set; }
         [Required] public string Apellido { get; set; }

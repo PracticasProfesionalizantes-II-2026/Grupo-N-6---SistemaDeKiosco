@@ -8,7 +8,13 @@ namespace Clases_KioPlus.Logica;
 public class VentaLogica : IVentaLogica
 {
     private readonly IVentaRepositorio _repo;
-    public VentaLogica(IVentaRepositorio repo) => _repo = repo;
+    private readonly ICuentaCorrienteClienteRepositorio _repoCuentas;
+
+    public VentaLogica(IVentaRepositorio repo, ICuentaCorrienteClienteRepositorio repoCuentas)
+    {
+        _repo = repo;
+        _repoCuentas = repoCuentas;
+    }
 
     private static VentaDto AMapa(Venta v) =>
         new(v.Id, v.UsuarioId, v.FechaHora, v.MontoTotal, v.CuentaCorrienteClienteId,
@@ -19,19 +25,17 @@ public class VentaLogica : IVentaLogica
             ? Venta.EstadoVenta.Pagado
             : Venta.EstadoVenta.NoPagado;
 
-    public async Task<IEnumerable<VentaDto>> ObtenerTodas()
-    {
-        var ventas = await _repo.ObtenerTodas();
-        return ventas.Select(AMapa);
-    }
-
-    public async Task<IEnumerable<VentaFiltroDto>> Filtrar(
-        DateTime? fechaHora, int? idUsuario, int? idCliente,
+    public async Task<IEnumerable<VentaListadoDto>> ObtenerTodas(
+        DateTime? fechaDesde, DateTime? fechaHasta, int? idUsuario, int? idCliente,
         double? importeMayorA, double? importeMenorA)
     {
-        var ventas = await _repo.Filtrar(fechaHora, idUsuario, idCliente, importeMayorA, importeMenorA);
-        return ventas.Select(v => new VentaFiltroDto(
-            v.FechaHora, v.UsuarioId, v.CuentaCorrienteClienteId, v.MontoTotal));
+        var filas = await _repo.ObtenerTodasConNombres(
+            fechaDesde, fechaHasta, idUsuario, idCliente, importeMayorA, importeMenorA);
+
+        return filas.Select(f => new VentaListadoDto(
+            f.Venta.Id, f.Venta.FechaHora, f.Venta.UsuarioId, f.Vendedor,
+            f.Venta.CuentaCorrienteClienteId, f.Cliente, f.Venta.MontoTotal,
+            f.Venta.FormaPago, f.Venta.Estado));
     }
 
     public async Task<VentaDto?> ObtenerPorId(int id)
@@ -40,24 +44,37 @@ public class VentaLogica : IVentaLogica
         return v is null ? null : AMapa(v);
     }
 
-    // Devuelve null si el usuario o la cuenta corriente no existen
-    public async Task<int?> Crear(VentaCreateDto dto)
+    // Una venta sin cliente explícito se registra contra Consumidor Final.
+    // Una venta a cuenta corriente exige un cliente real.
+    public async Task<ResultadoOperacion> Crear(VentaCreateDto dto)
     {
-        if (!await _repo.UsuarioExiste(dto.IdUsuario)) return null;
-        if (!await _repo.CuentaExiste(dto.IdCuentaCorrienteCliente)) return null;
+        if (!await _repo.UsuarioExiste(dto.IdUsuario))
+            return ResultadoOperacion.NoEncontrado("usuario no encontrado");
+
+        var idCliente = dto.IdCuentaCorrienteCliente <= 0
+            ? CuentaCorrienteCliente.IdConsumidorFinal
+            : dto.IdCuentaCorrienteCliente;
+
+        if (!await _repo.CuentaExiste(idCliente))
+            return ResultadoOperacion.NoEncontrado("cuenta corriente no encontrada");
+
+        if (dto.FormaPago == Venta.FormaDePago.CuentaCorriente &&
+            idCliente == CuentaCorrienteCliente.IdConsumidorFinal)
+            return ResultadoOperacion.Invalido(
+                "una venta en cuenta corriente necesita un cliente registrado");
 
         var venta = new Venta
         {
-            FechaHora = dto.FechaHora,
+            FechaHora = dto.FechaHora == default ? DateTime.Now : dto.FechaHora,
             UsuarioId = dto.IdUsuario,
-            CuentaCorrienteClienteId = dto.IdCuentaCorrienteCliente,
+            CuentaCorrienteClienteId = idCliente,
             FormaPago = dto.FormaPago,
             FechaPago = dto.FechaPago,
             MontoTotal = 0,
             Estado = EstadoSegunPago(dto.FormaPago)
         };
         await _repo.Agregar(venta);
-        return venta.Id;
+        return ResultadoOperacion.Exito(venta.Id);
     }
 
     public async Task<bool> Actualizar(int id, VentaCreateDto dto)
@@ -67,12 +84,33 @@ public class VentaLogica : IVentaLogica
 
         venta.FechaHora = dto.FechaHora;
         venta.UsuarioId = dto.IdUsuario;
-        venta.CuentaCorrienteClienteId = dto.IdCuentaCorrienteCliente;
+        venta.CuentaCorrienteClienteId = dto.IdCuentaCorrienteCliente <= 0
+            ? CuentaCorrienteCliente.IdConsumidorFinal
+            : dto.IdCuentaCorrienteCliente;
         venta.FormaPago = dto.FormaPago;
         venta.FechaPago = dto.FechaPago;
         venta.Estado = EstadoSegunPago(dto.FormaPago);
         await _repo.Actualizar(venta);
         return true;
+    }
+
+    // Cierra la venta: si fue en cuenta corriente, impacta el saldo del cliente.
+    // El front lo llama una sola vez, al confirmar "Finalizar venta".
+    public async Task<ResultadoOperacion> Finalizar(int id)
+    {
+        var venta = await _repo.ObtenerPorId(id);
+        if (venta is null) return ResultadoOperacion.NoEncontrado("venta no encontrada");
+
+        if (venta.MontoTotal <= 0)
+            return ResultadoOperacion.Invalido("la venta no tiene productos cargados");
+
+        if (venta.FormaPago == Venta.FormaDePago.CuentaCorriente &&
+            venta.CuentaCorrienteClienteId != CuentaCorrienteCliente.IdConsumidorFinal)
+        {
+            await _repoCuentas.AjustarDeuda(venta.CuentaCorrienteClienteId, venta.MontoTotal);
+        }
+
+        return ResultadoOperacion.Exito(venta.Id);
     }
 
     public async Task<bool> Eliminar(int id)

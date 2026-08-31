@@ -62,6 +62,22 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Aplica migraciones pendientes y crea los datos mínimos (Consumidor Final + usuario inicial).
+// Si la base no está disponible se avisa y se sigue: el middleware ya responde 503 por pedido.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DbSeeder");
+    try
+    {
+        await DbSeeder.SembrarAsync(db, logger);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "No se pudo preparar la base de datos. La API arranca igual, pero los endpoints van a responder 503.");
+    }
+}
+
 // Manejo global de excepciones: 503 ante fallas de conexión a la BD, 500 en cualquier otro caso
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

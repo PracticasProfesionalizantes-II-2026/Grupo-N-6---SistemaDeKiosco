@@ -1,0 +1,159 @@
+@model ListadoCuentasCorrientesViewModel
+@{
+    ViewData["Title"] = "Cuenta corriente de clientes";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Cuenta corriente de clientes</h1>
+    <button class="btn btn-kp" type="button" data-bs-toggle="collapse" data-bs-target="#filtros">Filtrar</button>
+</div>
+
+<div class="collapse @(Model.Nombre is not null || Model.Dni.HasValue || Model.Estado.HasValue ? "show" : "")" id="filtros">
+    <form asp-action="Index" method="get" class="kp-filtros">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Apellido" class="form-label"></label>
+                <input asp-for="Apellido" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="Dni" class="form-label"></label>
+                <input asp-for="Dni" type="number" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="Estado" class="form-label"></label>
+                <select asp-for="Estado" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="@EstadoDeuda.Moroso">Moroso</option>
+                    <option value="@EstadoDeuda.AlDia">Al día</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="MontoMin" class="form-label"></label>
+                <input asp-for="MontoMin" type="number" step="0.01" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="MontoMax" class="form-label"></label>
+                <input asp-for="MontoMax" type="number" step="0.01" class="form-control" />
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-kp">Aplicar</button>
+                <a class="btn btn-kp-outline" asp-action="Index">Limpiar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.Cuentas.Count == 0)
+{
+    <p class="kp-vacio">No hay cuentas corrientes para los filtros seleccionados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:90px"></th>
+                    <th>Nombre y Apellido</th>
+                    <th>DNI</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th class="text-end">Monto adeudado</th>
+                    <th class="text-center">Estado</th>
+                    <th>Correo electrónico</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Cuentas)
+                {
+                    var esConsumidorFinal = c.IdCuentaCorrienteCliente == CuentaCorrienteService.IdConsumidorFinal;
+                    <tr>
+                        <td>
+                            <div class="kp-acciones">
+                                <a class="kp-icon-btn" asp-action="Editar" asp-route-id="@c.IdCuentaCorrienteCliente" title="Editar">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 20h4l10-10-4-4L4 16z" />
+                                        <path d="m14 6 4 4" />
+                                    </svg>
+                                </a>
+
+                                @if (!esConsumidorFinal)
+                                {
+                                    <form asp-action="Eliminar" method="post"
+                                          onsubmit="return confirm('¿Eliminar la cuenta de @c.Nombre @c.Apellido?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@c.IdCuentaCorrienteCliente" />
+                                        <button type="submit" class="kp-icon-btn" title="Eliminar">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                            </svg>
+                                        </button>
+                                    </form>
+
+                                    <button type="button" class="kp-icon-btn" title="Registrar pago"
+                                            data-bs-toggle="modal" data-bs-target="#pago-@c.IdCuentaCorrienteCliente">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+                                            <path d="M12 3v18" />
+                                            <path d="M16 7.5a3.5 3.5 0 0 0-3.5-2.5h-1A3 3 0 0 0 11 11h2a3 3 0 0 1 .5 6h-1A3.5 3.5 0 0 1 8 16.5" />
+                                        </svg>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                        <td>@c.Nombre @c.Apellido</td>
+                        <td>@(esConsumidorFinal ? "-" : c.Dni.ToString())</td>
+                        <td>@c.Telefono</td>
+                        <td>@c.Direccion</td>
+                        <td class="text-end">$@c.MontoAdeudado.ToString("N2")</td>
+                        <td class="text-center">
+                            <span class="kp-badge @(c.Estado == EstadoDeuda.Moroso ? "kp-badge-moroso" : "kp-badge-aldia")">
+                                @(c.Estado == EstadoDeuda.Moroso ? "Moroso" : "Al día")
+                            </span>
+                        </td>
+                        <td>@c.CorreoElectronico</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="d-flex justify-content-end mt-4">
+    <a class="btn btn-kp" asp-action="Crear">Nueva cuenta corriente</a>
+</div>
+
+@* Un modal de pago por cliente con deuda *@
+@foreach (var c in Model.Cuentas.Where(c => c.IdCuentaCorrienteCliente != CuentaCorrienteService.IdConsumidorFinal))
+{
+    <div class="modal fade" id="pago-@c.IdCuentaCorrienteCliente" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" asp-action="RegistrarPago" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@c.IdCuentaCorrienteCliente" />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar pago — @c.Nombre @c.Apellido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-3">Deuda actual: <strong>$@c.MontoAdeudado.ToString("N2")</strong></p>
+                    <label class="form-label" for="monto-@c.IdCuentaCorrienteCliente">Monto del pago</label>
+                    <input class="form-control" id="monto-@c.IdCuentaCorrienteCliente" name="monto"
+                           type="number" step="0.01" min="0.01"
+                           max="@c.MontoAdeudado.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                           value="@c.MontoAdeudado.ToString(System.Globalization.CultureInfo.InvariantCulture)" required />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-kp-outline" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-kp">Registrar pago</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

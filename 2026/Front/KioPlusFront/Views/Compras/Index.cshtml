@@ -1,0 +1,83 @@
+@model ListadoComprasViewModel
+@{
+    ViewData["Title"] = "Compras a proveedor";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Compras a proveedor</h1>
+    <a class="btn btn-kp" asp-action="Nueva">Nueva compra</a>
+</div>
+
+<form asp-action="Index" method="get" class="kp-filtros">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label asp-for="FechaDesde" class="form-label"></label>
+            <input asp-for="FechaDesde" type="date" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="FechaHasta" class="form-label"></label>
+            <input asp-for="FechaHasta" type="date" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="IdProveedor" class="form-label"></label>
+            <select asp-for="IdProveedor" class="form-select">
+                <option value="">Todos</option>
+                @foreach (var p in Model.Proveedores)
+                {
+                    <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-kp w-100">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Compras.Count == 0)
+{
+    <p class="kp-vacio">No hay compras registradas para los filtros seleccionados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:60px"></th>
+                    <th>Fecha</th>
+                    <th>Proveedor</th>
+                    <th>Productos</th>
+                    <th class="text-end">Monto total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var compra in Model.Compras)
+                {
+                    <tr>
+                        <td>
+                            <form asp-action="Eliminar" method="post"
+                                  onsubmit="return confirm('¿Eliminar la compra #@compra.IdCompraProveedor? El stock ingresado no se revierte automáticamente.');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@compra.IdCompraProveedor" />
+                                <button type="submit" class="kp-icon-btn" title="Eliminar compra">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td>@compra.FechaHora.ToString("dd/MM/yy - HH:mm")</td>
+                        <td>@compra.Proveedor</td>
+                        <td>
+                            <a asp-action="Detalle" asp-route-id="@compra.IdCompraProveedor">Productos de la compra</a>
+                        </td>
+                        <td class="text-end">$@compra.MontoTotal.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kp-total">Total listado: $@Model.TotalListado.ToString("N2")</div>
+}

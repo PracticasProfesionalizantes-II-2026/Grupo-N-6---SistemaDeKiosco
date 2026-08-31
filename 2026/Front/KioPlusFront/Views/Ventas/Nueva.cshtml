@@ -1,0 +1,150 @@
+@model NuevaVentaViewModel
+@{
+    ViewData["Title"] = "Nueva venta";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Nueva venta</h1>
+    <a class="btn btn-kp" asp-controller="Stock" asp-action="CrearProducto">Nuevo Producto</a>
+</div>
+
+@* --- Alta de renglones --- *@
+<form asp-action="AgregarItem" method="post" class="kp-filtros">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-6">
+            <label class="form-label" for="idProducto">Producto</label>
+            <input class="form-control" list="listaProductos" id="buscadorProducto"
+                   placeholder="Ingrese un producto" autocomplete="off" />
+            <datalist id="listaProductos">
+                @foreach (var p in Model.Productos)
+                {
+                    <option value="@p.Nombre - @p.Marca (stock @p.StockDisponible)" data-id="@p.IdProducto"></option>
+                }
+            </datalist>
+            <select class="form-select mt-2" id="idProducto" name="idProducto" required>
+                <option value="">— Elegí el producto —</option>
+                @foreach (var p in Model.Productos)
+                {
+                    <option value="@p.IdProducto" data-precio="@p.PrecioVenta.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                        @p.Nombre - @p.Marca — $@p.PrecioVenta.ToString("N2") (stock @p.StockDisponible)
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label" for="cantidad">Cantidad</label>
+            <input class="form-control" type="number" id="cantidad" name="cantidad" min="1" value="1" required />
+        </div>
+
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-kp w-100">Agregar</button>
+        </div>
+    </div>
+</form>
+
+@* --- Carrito --- *@
+@if (Model.Items.Count == 0)
+{
+    <p class="kp-vacio">Todavía no cargaste productos en esta venta.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-end">Precio Unitario</th>
+                    <th class="text-end">Subtotal</th>
+                    <th style="width:70px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Producto</td>
+                        <td class="text-center">@item.Cantidad</td>
+                        <td class="text-end">$@item.PrecioUnitario.ToString("N2")</td>
+                        <td class="text-end">$@item.Subtotal.ToString("N2")</td>
+                        <td>
+                            <form asp-action="QuitarItem" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="idProducto" value="@item.IdProducto" />
+                                <button type="submit" class="kp-icon-btn" title="Quitar de la venta">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="9" />
+                                        <path d="m9 9 6 6M15 9l-6 6" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kp-total">Total: $@Model.Total.ToString("N2")</div>
+}
+
+@* --- Cierre de la venta --- *@
+<form asp-action="Finalizar" method="post" class="mt-4">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <h2 class="kp-section-title">Forma de pago</h2>
+            <select class="form-select" name="formaPago" id="formaPago">
+                <option value="@FormaDePago.PagadoAlMomento">Pagado al momento</option>
+                <option value="@FormaDePago.CuentaCorriente">Cuenta Corriente</option>
+            </select>
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label" for="idCliente">Cliente</label>
+            <select class="form-select" name="idCliente" id="idCliente">
+                @foreach (var c in Model.Clientes)
+                {
+                    var etiqueta = c.IdCuentaCorrienteCliente == CuentaCorrienteService.IdConsumidorFinal
+                        ? "Consumidor final"
+                        : $"{c.Dni} - {c.Nombre} {c.Apellido}";
+
+                    <option value="@c.IdCuentaCorrienteCliente">@etiqueta</option>
+                }
+            </select>
+            <div class="form-text">
+                Una venta en cuenta corriente necesita un cliente registrado distinto de Consumidor final.
+            </div>
+        </div>
+    </div>
+
+    <div class="kp-form-acciones">
+        <button type="submit" class="btn btn-kp-outline" formaction="@Url.Action("Cancelar")">
+            Cancelar venta
+        </button>
+        <button type="submit" class="btn btn-kp">Finalizar venta</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // El buscador con datalist es solo una ayuda visual: al elegir una opción
+        // sincroniza el select real, que es el que viaja en el formulario.
+        (function () {
+            const buscador = document.getElementById('buscadorProducto');
+            const select = document.getElementById('idProducto');
+            if (!buscador || !select) return;
+
+            buscador.addEventListener('input', function () {
+                const opcion = Array.from(document.querySelectorAll('#listaProductos option'))
+                    .find(o => o.value === buscador.value);
+                if (opcion) select.value = opcion.dataset.id;
+            });
+        })();
+    </script>
+}

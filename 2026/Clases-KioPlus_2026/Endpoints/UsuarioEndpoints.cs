@@ -10,6 +10,15 @@ public static class UsuarioEndpoints
     {
         var grupo = app.MapGroup("/usuarios").WithTags("Usuarios");
 
+        // Inicio de sesión. 401 si las credenciales no coinciden o el usuario está bloqueado.
+        grupo.MapPost("/login", async (LoginDto dto, IUsuarioLogica logica) =>
+        {
+            var sesion = await logica.Login(dto);
+            return sesion is null
+                ? Results.Unauthorized()
+                : Results.Ok(sesion);
+        }).AddEndpointFilter<ValidationFilter<LoginDto>>();
+
         grupo.MapGet("/", async (IUsuarioLogica logica) =>
             Results.Ok(await logica.ObtenerTodos()));
 
@@ -21,20 +30,32 @@ public static class UsuarioEndpoints
 
         grupo.MapPost("/", async (UsuarioCreateDto dto, IUsuarioLogica logica) =>
         {
-            var id = await logica.Crear(dto);
-            return Results.Created($"/usuarios/{id}", new { idUsuario = id });
+            var resultado = await logica.Crear(dto);
+            return resultado.Ok
+                ? Results.Created($"/usuarios/{resultado.Id}", new { idUsuario = resultado.Id })
+                : Results.BadRequest(new { mensaje = resultado.Error });
         }).AddEndpointFilter<ValidationFilter<UsuarioCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int id, UsuarioCreateDto dto, IUsuarioLogica logica) =>
         {
-            var ok = await logica.Actualizar(id, dto);
-            return ok ? Results.Ok(new { mensaje = "usuario actualizado" }) : Results.NotFound();
+            var resultado = await logica.Actualizar(id, dto);
+            if (resultado.Ok) return Results.Ok(new { mensaje = "usuario actualizado" });
+            return resultado.Error == "usuario no encontrado"
+                ? Results.NotFound()
+                : Results.BadRequest(new { mensaje = resultado.Error });
         }).AddEndpointFilter<ValidationFilter<UsuarioCreateDto>>();
+
+        // Bloqueo / desbloqueo del acceso (candado del listado)
+        grupo.MapPatch("/{id:int}/estado", async (int id, CambiarEstadoUsuarioDto dto, IUsuarioLogica logica) =>
+        {
+            var ok = await logica.CambiarEstado(id, dto.Estado);
+            return ok ? Results.Ok(new { mensaje = "estado actualizado" }) : Results.NotFound();
+        });
 
         grupo.MapDelete("/{id:int}", async (int id, IUsuarioLogica logica) =>
         {
             var ok = await logica.Eliminar(id);
-            return ok ? Results.NoContent() : Results.NotFound();
+            return ok ? Results.Ok(new { mensaje = "usuario eliminado" }) : Results.NotFound();
         });
     }
 }

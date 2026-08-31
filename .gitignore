@@ -1,0 +1,21 @@
+# Compilados de .NET
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+
+# Carpetas de Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+
+# Bases de datos locales y logs
+*.mdf
+*.ldf
+*.log
+
+# Configuración con datos sensibles (cadenas de conexión reales, claves)
+appsettings.Production.json
+appsettings.Local.json

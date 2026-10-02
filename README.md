@@ -14,3 +14,11 @@ Buffa Tomás, Busso Mateo, Cravero Agustín.
 2026
 
 [Documentación APIs](https://docs.google.com/document/d/1kW0MEYZHqrKZ12gkLfu86HXn-jW_cFbOCT3Nof6wAos/edit?tab=t.0)
+
+[Documentación V2](https://docs.google.com/document/d/10ncOhnYhkIW_X90J6iYzczu4dtzzp8oIE_vT6Qpumvs/edit?tab=t.0)
+
+[Casos de uso V2](https://docs.google.com/document/d/1ga1Ll_4lrU4gLvkWSL_ndGHYVr-KfgnZnPIMl2YNeUs/edit?tab=t.0)
+
+[Diagrama de clases V2](https://miro.com/app/board/uXjVHhgoiUk=/)
+
+[Mockups Figma V2](https://www.figma.com/design/JpbQxmfW68KuHxXXxHUyDL/KioPlus-V2?node-id=2008-123&p=f&t=mFqEOSksrjg6TCNA-0)

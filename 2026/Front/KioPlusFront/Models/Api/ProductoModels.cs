@@ -16,7 +16,12 @@ public record ProductoCreateDto(
     double PrecioVenta,
     int DiasAvisoVencimiento);
 
-public record LoteResumenDto(int IdLote, DateTime FechaVencimiento, int Cantidad);
+public record LoteResumenDto(
+    int IdLote,
+    string NroLote,
+    DateTime? FechaVencimiento,
+    int CantidadInicial,
+    int Cantidad);
 
 public record ProductoDetalleDto(
     int IdProducto,
@@ -28,7 +33,7 @@ public record ProductoDetalleDto(
     int StockDisponible,
     IEnumerable<LoteResumenDto> Lotes);
 
-public record StockCriticoDto(string Nombre, int StockDisponible);
+public record StockCriticoDto(string Nombre, string Marca, int StockDisponible);
 
 public record ProximoVencimientoDto(string Nombre, string NroLote, int Cantidad, int DiasParaQueVenza);
 
@@ -36,10 +41,16 @@ public record MasVendidoCantidadDto(string Nombre, int Cantidad);
 
 public record MasVendidoMontoDto(string Nombre, double MontoGenerado);
 
-public record CategoriaDto(int IdCategoria, string Nombre, string Descripcion);
+public record CategoriaDto(int IdCategoria, string Nombre, string? Descripcion);
 
-public record CategoriaCreateDto(string Nombre, string Descripcion);
+public record CategoriaCreateDto(string Nombre, string? Descripcion);
 
-public record LoteDto(int IdLote, int IdProducto, string NroLote, DateTime FechaVencimiento, int Cantidad);
+public record LoteDto(
+    int IdLote,
+    int IdProducto,
+    string NroLote,
+    DateTime? FechaVencimiento,
+    int CantidadInicial,
+    int Cantidad);
 
-public record LoteCreateDto(string NroLote, DateTime FechaVencimiento, int Cantidad);
+public record LoteCreateDto(string NroLote, DateTime? FechaVencimiento, int Cantidad);

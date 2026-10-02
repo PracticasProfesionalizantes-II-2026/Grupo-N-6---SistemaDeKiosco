@@ -9,18 +9,14 @@
     <a class="btn btn-kp-outline" asp-action="Index">Volver</a>
 </div>
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger py-2" role="alert"></div>
+}
+
 <form asp-action="MasVendidos" method="get" class="kp-filtros">
     <div class="row g-3 align-items-end">
-        <div class="col-md-3">
-            <label asp-for="FechaDesde" class="form-label"></label>
-            <input asp-for="FechaDesde" type="date" class="form-control" />
-            <span asp-validation-for="FechaDesde" class="text-danger small"></span>
-        </div>
-        <div class="col-md-3">
-            <label asp-for="FechaHasta" class="form-label"></label>
-            <input asp-for="FechaHasta" type="date" class="form-control" />
-            <span asp-validation-for="FechaHasta" class="text-danger small"></span>
-        </div>
+        <partial name="_FiltroPeriodo" model="Model" />
         <div class="col-md-3">
             <label asp-for="Criterio" class="form-label"></label>
             <select asp-for="Criterio" class="form-select">
@@ -30,10 +26,11 @@
         </div>
         <div class="col-md-2">
             <label asp-for="Limite" class="form-label"></label>
-            <input asp-for="Limite" type="number" min="1" max="50" class="form-control" />
+            <input asp-for="Limite" type="number" class="form-control" />
+            <span asp-validation-for="Limite" class="text-danger small"></span>
         </div>
         <div class="col-md-1">
-            <button type="submit" class="btn btn-kp w-100">Ver</button>
+            <button type="submit" class="btn btn-kp w-100">Filtrar</button>
         </div>
     </div>
 </form>
@@ -103,4 +100,8 @@ else
             </table>
         </div>
     }
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

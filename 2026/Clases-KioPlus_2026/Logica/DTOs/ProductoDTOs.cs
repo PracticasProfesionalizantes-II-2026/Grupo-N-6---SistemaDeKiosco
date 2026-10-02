@@ -12,14 +12,19 @@ public record ProductoDto(
     int StockDisponible);
 
 public record ProductoCreateDto(
-    [property: Required] string Nombre,
-    [property: Required] string Marca,
-    [property: Range(1, int.MaxValue, ErrorMessage = "idCategoria inválido")] int IdCategoria,
-    [property: Range(0.01, double.MaxValue, ErrorMessage = "precioVenta debe ser mayor a 0")] double PrecioVenta,
-    [property: Range(0, int.MaxValue, ErrorMessage = "diasAvisoVencimiento no puede ser negativo")] int DiasAvisoVencimiento);
+    [property: Required(ErrorMessage = "Ingresá el nombre")] string Nombre,
+    [property: Required(ErrorMessage = "Ingresá la marca")] string Marca,
+    [property: Range(1, int.MaxValue, ErrorMessage = "Elegí una categoría")] int IdCategoria,
+    [property: Range(0.01, double.MaxValue, ErrorMessage = "El precio de venta debe ser mayor a 0")] double PrecioVenta,
+    [property: Range(0, int.MaxValue, ErrorMessage = "Los días de aviso no pueden ser negativos")] int DiasAvisoVencimiento);
 
 // Resumen de lote usado dentro del detalle de un producto
-public record LoteResumenDto(int IdLote, DateTime FechaVencimiento, int Cantidad);
+public record LoteResumenDto(
+    int IdLote,
+    string NroLote,
+    DateTime? FechaVencimiento,
+    int CantidadInicial,
+    int Cantidad);
 
 public record ProductoDetalleDto(
     int IdProducto,
@@ -31,7 +36,7 @@ public record ProductoDetalleDto(
     int StockDisponible,
     IEnumerable<LoteResumenDto> Lotes);
 
-public record StockCriticoDto(string Nombre, int StockDisponible);
+public record StockCriticoDto(string Nombre, string Marca, int StockDisponible);
 
 public record ProximoVencimientoDto(string Nombre, string NroLote, int Cantidad, int DiasParaQueVenza);
 

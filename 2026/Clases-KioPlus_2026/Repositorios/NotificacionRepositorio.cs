@@ -18,7 +18,7 @@ public class NotificacionRepositorio : INotificacionRepositorio
     }
 
     public async Task<IEnumerable<Producto>> ObtenerProductosConStockCritico(int umbral) =>
-        await _db.Productos.Where(p => p.StockDisponible <= umbral).ToListAsync();
+        await _db.Productos.Where(p => p.StockDisponible < umbral).ToListAsync();
 
     public async Task<IEnumerable<Lote>> ObtenerLotesConProducto() =>
         await _db.Lotes.Include(l => l.Producto).ToListAsync();

@@ -15,10 +15,13 @@ public interface IVentaService
     Task<ApiResultado<VentaDto>> ObtenerPorIdAsync(int id);
     Task<ApiResultado<VentaCreadaDto>> CrearAsync(VentaCreateDto dto);
     Task<ApiResultado> FinalizarAsync(int idVenta);
+    Task<ApiResultado> RegistrarPagoAsync(int idVenta, DateTime? fechaPago = null);
+    Task<ApiResultado> ActualizarAsync(int idVenta, VentaCreateDto dto);
     Task<ApiResultado> EliminarAsync(int idVenta);
 
     Task<IReadOnlyList<DetalleVentaListadoDto>> ObtenerDetallesAsync(int idVenta);
     Task<ApiResultado> AgregarDetalleAsync(int idVenta, DetalleVentaCreateDto dto);
+    Task<ApiResultado> ActualizarDetalleAsync(int idVenta, int idDetalle, DetalleVentaUpdateDto dto);
     Task<ApiResultado> EliminarDetalleAsync(int idVenta, int idDetalle);
 }
 
@@ -53,6 +56,12 @@ public class VentaService : IVentaService
     public Task<ApiResultado> FinalizarAsync(int idVenta) =>
         _api.PostAsync<object?>($"/ventas/{idVenta}/finalizar", null);
 
+    public Task<ApiResultado> RegistrarPagoAsync(int idVenta, DateTime? fechaPago = null) =>
+        _api.PostAsync($"/ventas/{idVenta}/pagar", new PagoVentaDto(fechaPago));
+
+    public Task<ApiResultado> ActualizarAsync(int idVenta, VentaCreateDto dto) =>
+        _api.PutAsync($"/ventas/{idVenta}", dto);
+
     public Task<ApiResultado> EliminarAsync(int idVenta) =>
         _api.DeleteAsync($"/ventas/{idVenta}");
 
@@ -61,6 +70,9 @@ public class VentaService : IVentaService
 
     public Task<ApiResultado> AgregarDetalleAsync(int idVenta, DetalleVentaCreateDto dto) =>
         _api.PostAsync($"/ventas/{idVenta}/detalles", dto);
+
+    public Task<ApiResultado> ActualizarDetalleAsync(int idVenta, int idDetalle, DetalleVentaUpdateDto dto) =>
+        _api.PutAsync($"/ventas/{idVenta}/detalles/{idDetalle}", dto);
 
     public Task<ApiResultado> EliminarDetalleAsync(int idVenta, int idDetalle) =>
         _api.DeleteAsync($"/ventas/{idVenta}/detalles/{idDetalle}");

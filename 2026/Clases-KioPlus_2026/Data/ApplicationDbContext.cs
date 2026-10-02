@@ -20,4 +20,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<Caja> Cajas => Set<Caja>();
     public DbSet<CompraProveedor> Compras => Set<CompraProveedor>();
     public DbSet<DetalleCompra> DetallesCompras => Set<DetalleCompra>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Un producto no puede estar asociado dos veces al mismo proveedor: si
+        // cambia el precio se edita la asociación que ya existe, no se crea otra.
+        modelBuilder.Entity<ProductoProveedor>()
+            .HasIndex(pp => new { pp.ProductoId, pp.ProveedorId })
+            .IsUnique();
+    }
 }

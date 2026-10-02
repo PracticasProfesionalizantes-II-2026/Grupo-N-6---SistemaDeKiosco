@@ -11,6 +11,7 @@ public interface IProveedorService
     Task<ApiResultado> EliminarAsync(int id);
 
     Task<IReadOnlyList<ProductoProveedorDto>> ObtenerProveedoresDeProductoAsync(int idProducto);
+    Task<IReadOnlyList<ProductoDelProveedorDto>> ObtenerProductosDelProveedorAsync(int idProveedor);
     Task<ApiResultado> AsociarProductoAsync(int idProducto, ProductoProveedorCreateDto dto);
     Task<ApiResultado> ActualizarPrecioAsync(int idProducto, int idAsociacion, double precioCompra);
     Task<ApiResultado> DesasociarProductoAsync(int idProducto, int idAsociacion);
@@ -43,6 +44,9 @@ public class ProveedorService : IProveedorService
 
     public Task<IReadOnlyList<ProductoProveedorDto>> ObtenerProveedoresDeProductoAsync(int idProducto) =>
         _api.ObtenerListaAsync<ProductoProveedorDto>($"/productos/{idProducto}/proveedores");
+
+    public Task<IReadOnlyList<ProductoDelProveedorDto>> ObtenerProductosDelProveedorAsync(int idProveedor) =>
+        _api.ObtenerListaAsync<ProductoDelProveedorDto>($"/proveedores/{idProveedor}/productos");
 
     public Task<ApiResultado> AsociarProductoAsync(int idProducto, ProductoProveedorCreateDto dto) =>
         _api.PostAsync($"/productos/{idProducto}/proveedores", dto);

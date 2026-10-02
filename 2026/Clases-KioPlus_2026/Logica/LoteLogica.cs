@@ -11,7 +11,7 @@ public class LoteLogica : ILoteLogica
     public LoteLogica(ILoteRepositorio repo) => _repo = repo;
 
     private static LoteDto AMapa(Lote l) =>
-        new(l.Id, l.ProductoId, l.NroLote, l.FechaVencimiento, l.Cantidad);
+        new(l.Id, l.ProductoId, l.NroLote, l.FechaVencimiento, l.CantidadInicial, l.Cantidad);
 
     public async Task<IEnumerable<LoteDto>> ObtenerPorProducto(int idProducto)
     {
@@ -25,7 +25,8 @@ public class LoteLogica : ILoteLogica
         return l is null ? null : AMapa(l);
     }
 
-    // Devuelve null si el producto no existe
+    // Dar de alta un lote es la forma de ingresar mercadería al stock.
+    // Devuelve null si el producto no existe.
     public async Task<int?> Crear(int idProducto, LoteCreateDto dto)
     {
         if (!await _repo.ProductoExiste(idProducto)) return null;
@@ -35,12 +36,16 @@ public class LoteLogica : ILoteLogica
             ProductoId = idProducto,
             NroLote = dto.NroLote,
             FechaVencimiento = dto.FechaVencimiento,
+            CantidadInicial = dto.Cantidad,
             Cantidad = dto.Cantidad
         };
         await _repo.Agregar(lote);
+        await _repo.RecalcularStockProducto(idProducto);
         return lote.Id;
     }
 
+    // Editar un lote corrige la cantidad que queda disponible. La cantidad inicial
+    // solo crece, para seguir sirviendo de tope cuando se anula una venta.
     public async Task<bool> Actualizar(int id, LoteCreateDto dto)
     {
         var lote = await _repo.ObtenerPorId(id);
@@ -49,7 +54,9 @@ public class LoteLogica : ILoteLogica
         lote.NroLote = dto.NroLote;
         lote.FechaVencimiento = dto.FechaVencimiento;
         lote.Cantidad = dto.Cantidad;
+        lote.CantidadInicial = Math.Max(lote.CantidadInicial, dto.Cantidad);
         await _repo.Actualizar(lote);
+        await _repo.RecalcularStockProducto(lote.ProductoId);
         return true;
     }
 
@@ -58,7 +65,9 @@ public class LoteLogica : ILoteLogica
         var lote = await _repo.ObtenerPorId(id);
         if (lote is null) return false;
 
+        var idProducto = lote.ProductoId;
         await _repo.Eliminar(lote);
+        await _repo.RecalcularStockProducto(idProducto);
         return true;
     }
 }

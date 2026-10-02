@@ -25,9 +25,10 @@ public static class ProductoEndpoints
             return Results.Ok(await logica.ObtenerTodos(nombre, idCategoria, marca));
         });
 
-        // Productos más vendidos en un rango de fechas (criterio = cantidad | monto)
+        // Productos más vendidos (criterio = cantidad | monto). Sin fechas
+        // el ranking sale sobre todo el historial.
         grupo.MapGet("/mas-vendidos", async (
-            DateTime fechaDesde, DateTime fechaHasta, string? criterio, int? limite,
+            DateTime? fechaDesde, DateTime? fechaHasta, string? criterio, int? limite,
             IProductoLogica logica) =>
         {
             var resultado = await logica.MasVendidos(

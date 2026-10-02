@@ -1,0 +1,15 @@
+@* Los dos íconos del ojo, uno encima del otro: el script muestra uno solo.
+   Ojo abierto mientras la contraseña está oculta (tocarlo la muestra) y ojo
+   tachado mientras está a la vista (tocarlo la vuelve a ocultar).
+   Es la única copia de estos dibujos: cualquier botón que muestre u oculte una
+   contraseña incluye esta partial, así todos se comportan igual. *@
+
+<svg data-kp-ojo-abierto viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" />
+    <circle cx="12" cy="12" r="2.6" />
+</svg>
+<svg data-kp-ojo-tachado viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" />
+    <circle cx="12" cy="12" r="2.6" />
+    <path d="m4 20 16-16" />
+</svg>

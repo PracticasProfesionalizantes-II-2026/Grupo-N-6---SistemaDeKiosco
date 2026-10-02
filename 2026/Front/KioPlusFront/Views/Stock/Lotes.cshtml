@@ -8,7 +8,7 @@
     <a class="btn btn-kp-outline" asp-action="Productos">Volver</a>
 </div>
 
-<form asp-action="AgregarLote" method="post" class="kp-filtros">
+<form asp-action="AgregarLote" method="post" class="kp-filtros" novalidate>
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="IdProducto" />
 
@@ -16,14 +16,17 @@
         <div class="col-md-4">
             <label asp-for="NroLote" class="form-label"></label>
             <input asp-for="NroLote" class="form-control" />
+            <span asp-validation-for="NroLote" class="text-danger small"></span>
         </div>
         <div class="col-md-3">
             <label asp-for="FechaVencimiento" class="form-label"></label>
             <input asp-for="FechaVencimiento" type="date" class="form-control" />
+            <span asp-validation-for="FechaVencimiento" class="text-danger small"></span>
         </div>
         <div class="col-md-3">
             <label asp-for="Cantidad" class="form-label"></label>
-            <input asp-for="Cantidad" type="number" min="1" class="form-control" />
+            <input asp-for="Cantidad" type="number" class="form-control" />
+            <span asp-validation-for="Cantidad" class="text-danger small"></span>
         </div>
         <div class="col-md-2">
             <button type="submit" class="btn btn-kp w-100">Agregar lote</button>
@@ -44,16 +47,18 @@ else
                     <th style="width:60px"></th>
                     <th>Nº de lote</th>
                     <th>Fecha de vencimiento</th>
-                    <th class="text-center">Cantidad</th>
+                    <th class="text-center">Ingresaron</th>
+                    <th class="text-center">Disponibles</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var lote in Model.Lotes.OrderBy(l => l.FechaVencimiento))
+                @* Mismo orden en el que se consume: primero lo que vence antes *@
+                @foreach (var lote in Model.Lotes)
                 {
                     <tr>
                         <td>
                             <form asp-action="EliminarLote" method="post"
-                                  onsubmit="return confirm('¿Eliminar el lote @lote.NroLote?');">
+                                  onsubmit="return confirm('¿Eliminar el lote @lote.NroLote?');" novalidate>
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="idLote" value="@lote.IdLote" />
                                 <input type="hidden" name="idProducto" value="@Model.IdProducto" />
@@ -65,11 +70,25 @@ else
                             </form>
                         </td>
                         <td>@lote.NroLote</td>
-                        <td>@lote.FechaVencimiento.ToString("dd/MM/yyyy")</td>
-                        <td class="text-center">@lote.Cantidad</td>
+                        <td>@(lote.FechaVencimiento?.ToString("dd/MM/yyyy") ?? "No vence")</td>
+                        <td class="text-center">@lote.CantidadInicial</td>
+                        <td class="text-center">
+                            @if (lote.Cantidad == 0)
+                            {
+                                <span class="kp-badge kp-badge-moroso">Agotado</span>
+                            }
+                            else
+                            {
+                                @lote.Cantidad
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -20,12 +20,13 @@ else
                 <tr>
                     <th>Producto</th>
                     <th>Nº de lote</th>
-                    <th class="text-center">Cantidad</th>
+                    <th class="text-center">Unidades sin vender</th>
                     <th class="text-center">Días para vencer</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var lote in Model.OrderBy(l => l.DiasParaQueVenza))
+                @* Solo aparecen lotes con unidades sin vender *@
+                @foreach (var lote in Model)
                 {
                     <tr>
                         <td>@lote.Nombre</td>

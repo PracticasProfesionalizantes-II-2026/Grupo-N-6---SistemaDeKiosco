@@ -16,7 +16,7 @@ public class ValidationFilter<T> : IEndpointFilter where T : class
             if (!Validator.TryValidateObject(dto, contexto, resultados, validateAllProperties: true))
             {
                 var errores = resultados.Select(r => r.ErrorMessage).ToArray();
-                return Results.BadRequest(new { mensaje = "datos inválidos", errores });
+                return Results.BadRequest(new { mensaje = "Revisá los datos cargados", errores });
             }
         }
 

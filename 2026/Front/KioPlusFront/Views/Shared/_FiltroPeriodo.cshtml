@@ -1,0 +1,24 @@
+@model IFiltroPorPeriodo
+@* Período de los filtros con calendario. Arranca en histórico, que no tiene
+   fechas límite. Al elegir "Entre fechas" se habilitan los dos calendarios;
+   si se los vacía, el filtro vuelve al histórico en lugar de dar error. *@
+
+<div class="col-md-2">
+    <label class="form-label" for="Periodo">Período</label>
+    <select class="form-select" id="Periodo" name="Periodo" data-kp-periodo>
+        <option value="@Periodos.Historico" selected="@(Model.Periodo != Periodos.Rango)">Histórico</option>
+        <option value="@Periodos.Rango" selected="@(Model.Periodo == Periodos.Rango)">Entre fechas</option>
+    </select>
+</div>
+
+<div class="col-md-2">
+    <label class="form-label" for="FechaDesde">Desde</label>
+    <input class="form-control" id="FechaDesde" name="FechaDesde" type="date"
+           value="@(Model.FechaDesde?.ToString("yyyy-MM-dd"))" data-kp-periodo-fecha />
+</div>
+
+<div class="col-md-2">
+    <label class="form-label" for="FechaHasta">Hasta</label>
+    <input class="form-control" id="FechaHasta" name="FechaHasta" type="date"
+           value="@(Model.FechaHasta?.ToString("yyyy-MM-dd"))" data-kp-periodo-fecha />
+</div>

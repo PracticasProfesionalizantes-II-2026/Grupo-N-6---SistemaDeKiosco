@@ -43,10 +43,12 @@ public class NotificacionLogica : INotificacionLogica
             });
         }
 
+        // Un lote sin unidades ya se vendió y un lote sin fecha no vence:
+        // en ninguno de los dos casos corresponde avisar.
         var lotes = await _repo.ObtenerLotesConProducto();
-        foreach (var l in lotes.Where(l => l.Producto is not null))
+        foreach (var l in lotes.Where(l => l.Producto is not null && l.Cantidad > 0 && l.FechaVencimiento.HasValue))
         {
-            var dias = (l.FechaVencimiento.Date - hoy).Days;
+            var dias = (l.FechaVencimiento!.Value.Date - hoy).Days;
             if (dias < 0 || dias > l.Producto.DiasAvisoVencimiento) continue;
 
             var cuando = dias == 0 ? "vence hoy" : $"vence en {dias} día(s)";

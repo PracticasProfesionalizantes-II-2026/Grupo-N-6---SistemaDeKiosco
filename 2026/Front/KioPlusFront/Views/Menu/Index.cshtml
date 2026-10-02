@@ -1,6 +1,11 @@
+@using KioPlusFront.Models.Api
+@using KioPlusFront.Services
 @{
     ViewData["Title"] = "Menú";
     var avisos = ViewBag.CantidadAvisos as int? ?? 0;
+    var avisosStock = ViewBag.AvisosStock as List<NotificacionDto> ?? new List<NotificacionDto>();
+    var avisosVencimiento = ViewBag.AvisosVencimiento as List<NotificacionDto> ?? new List<NotificacionDto>();
+    var saldoCaja = ViewBag.SaldoCaja as double?;
 }
 
 <div class="kp-page-header">
@@ -13,6 +18,14 @@
         </a>
     }
 </div>
+
+@if (saldoCaja.HasValue)
+{
+    <div class="kp-caja">
+        <span class="kp-caja-rotulo">Saldo de caja</span>
+        <span class="kp-caja-monto">$@saldoCaja.Value.ToString("N2")</span>
+    </div>
+}
 
 <div class="kp-cards">
     <a class="kp-card" asp-controller="Ventas" asp-action="Index">
@@ -59,11 +72,101 @@
         </svg>
     </a>
 
-    <a class="kp-card" asp-controller="Usuarios" asp-action="Index">
-        <span>Usuarios</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="8.5" r="3.5" />
-            <path d="M5 20a7 7 0 0 1 14 0" />
-        </svg>
-    </a>
+    @* La gestión de usuarios es solo para administradores *@
+    @if (Context.Session.ObtenerUsuario()?.EsAdministrador == true)
+    {
+        <a class="kp-card" asp-controller="Usuarios" asp-action="Index">
+            <span>Usuarios</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8.5" r="3.5" />
+                <path d="M5 20a7 7 0 0 1 14 0" />
+            </svg>
+        </a>
+    }
 </div>
+
+@* Alertas automáticas: saltan al entrar al menú aunque no se consulten los listados *@
+@if (avisosStock.Count > 0)
+{
+    <div class="modal fade" id="alerta-stock" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alerta — Stock bajo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Hay @avisosStock.Count producto(s) con stock bajo:</p>
+                    <ul class="mb-0">
+                        @foreach (var aviso in avisosStock.Take(5))
+                        {
+                            <li>@aviso.Mensaje</li>
+                        }
+                    </ul>
+                    @if (avisosStock.Count > 5)
+                    {
+                        <p class="form-text mb-0">y @(avisosStock.Count - 5) más.</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-kp-outline" data-bs-dismiss="modal">Cerrar</button>
+                    <a class="btn btn-kp" asp-controller="Stock" asp-action="Listado">Ir al listado de stock</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (avisosVencimiento.Count > 0)
+{
+    <div class="modal fade" id="alerta-vencimiento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alerta — Productos próximos a vencer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Hay @avisosVencimiento.Count lote(s) próximos a vencer:</p>
+                    <ul class="mb-0">
+                        @foreach (var aviso in avisosVencimiento.Take(5))
+                        {
+                            <li>@aviso.Mensaje</li>
+                        }
+                    </ul>
+                    @if (avisosVencimiento.Count > 5)
+                    {
+                        <p class="form-text mb-0">y @(avisosVencimiento.Count - 5) más.</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-kp-outline" data-bs-dismiss="modal">Cerrar</button>
+                    <a class="btn btn-kp" asp-controller="Stock" asp-action="ProximosAVencer">Ir al listado</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Las alertas se muestran una vez por sesión del navegador: avisan sin
+        // molestar cada vez que el usuario vuelve al menú.
+        (function () {
+            const alertas = ['alerta-stock', 'alerta-vencimiento'];
+
+            for (const id of alertas) {
+                const elemento = document.getElementById(id);
+                if (!elemento) continue;
+
+                let yaVisto = false;
+                try { yaVisto = sessionStorage.getItem('kioplus.' + id) === '1'; } catch { }
+                if (yaVisto) continue;
+
+                try { sessionStorage.setItem('kioplus.' + id, '1'); } catch { }
+                new bootstrap.Modal(elemento).show();
+                break; // una alerta por vez: la otra queda en la pantalla de Avisos
+            }
+        })();
+    </script>
+}

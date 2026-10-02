@@ -19,15 +19,18 @@ public record VentaDto(
     double MontoTotal,
     int IdCuentaCorrienteCliente,
     FormaDePago FormaPago,
-    DateTime FechaPago,
-    EstadoVenta Estado);
+    DateTime? FechaPago,
+    EstadoVenta Estado,
+    bool Finalizada,
+    double MontoPagado);
 
 public record VentaCreateDto(
     DateTime FechaHora,
     int IdUsuario,
     int IdCuentaCorrienteCliente,
     FormaDePago FormaPago,
-    DateTime FechaPago);
+    // Vacía mientras la venta no se haya cobrado
+    DateTime? FechaPago);
 
 public record VentaListadoDto(
     int IdVenta,
@@ -49,3 +52,17 @@ public record DetalleVentaListadoDto(
     double Subtotal);
 
 public record DetalleVentaCreateDto(int IdProducto, int Cantidad);
+
+public record DetalleVentaUpdateDto(int Cantidad);
+
+// Cobro de una venta adeudada. Sin fecha se toma la de hoy.
+public record PagoVentaDto(DateTime? FechaPago);
+
+// Venta en cuenta corriente todavía impaga, para la pantalla de deuda del cliente
+public record VentaAdeudadaDto(
+    int IdVenta,
+    DateTime FechaHora,
+    string Vendedor,
+    double MontoTotal,
+    double MontoPagado,
+    double SaldoPendiente);

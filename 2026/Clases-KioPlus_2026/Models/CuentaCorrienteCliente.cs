@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,10 +19,16 @@ namespace Clases_KioPlus.Models
         [Required] public int Dni { get; set; }
         [Required] public string Telefono { get; set; }
         [Required] public string Direccion { get; set; }
-        public string CorreoElectronico { get; set; }
+        // Opcional: el cliente puede no tener correo
+        public string? CorreoElectronico { get; set; }
 
-        // Monto total que el cliente adeuda
+        // Monto total que el cliente adeuda. Es un valor derivado: siempre equivale
+        // al saldo inicial más lo pendiente de sus ventas en cuenta corriente.
         [Required] public double MontoAdeudado { get; set; }
+
+        // Deuda cargada a mano al dar de alta la cuenta, que no corresponde a
+        // ninguna venta registrada en el sistema.
+        [Required] public double SaldoInicial { get; set; }
 
         // Estado actual de la deuda del cliente (Moroso o Al Día)
         [Required] public EstadoDeuda Estado { get; set; }

@@ -45,7 +45,23 @@ public static class CuentaCorrienteClienteEndpoints
             return ok ? Results.Ok(new { mensaje = "cuenta corriente actualizada" }) : Results.NotFound();
         }).AddEndpointFilter<ValidationFilter<CuentaCorrienteClienteCreateDto>>();
 
-        // Registro de pago (icono $ del listado): cancela total o parcialmente la deuda
+        // Ventas en cuenta corriente que el cliente todavía no pagó
+        grupo.MapGet("/{id:int}/ventas-adeudadas", async (int id, IVentaLogica logicaVentas) =>
+            Results.Ok(await logicaVentas.ObtenerAdeudadasPorCliente(id)));
+
+        // Cancela la deuda completa y marca como pagadas todas las ventas adeudadas.
+        // El cuerpo es opcional: sin fechaPago se toma la fecha de hoy.
+        grupo.MapPost("/{id:int}/pagar-todo", async (int id, PagoDeudaTotalDto? dto, ICuentaCorrienteClienteLogica logica) =>
+        {
+            var resultado = await logica.PagarDeudaTotal(id, dto ?? new PagoDeudaTotalDto(null));
+            if (resultado.Ok) return Results.Ok(new { mensaje = "deuda cancelada" });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
+        });
+
+        // Registro de pago a cuenta (icono $ del listado): baja el saldo por un monto libre
         grupo.MapPost("/{id:int}/pagos", async (int id, PagoCuentaCorrienteDto dto, ICuentaCorrienteClienteLogica logica) =>
         {
             var resultado = await logica.RegistrarPago(id, dto);

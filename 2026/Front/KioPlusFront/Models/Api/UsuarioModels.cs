@@ -34,3 +34,5 @@ public record LoginResultadoDto(
     TipoDeUsuario TipoUsuario);
 
 public record CambiarEstadoUsuarioDto(bool Estado);
+
+public record CambiarContraseniaDto(string NombreUsuario, string NuevaContrasenia);

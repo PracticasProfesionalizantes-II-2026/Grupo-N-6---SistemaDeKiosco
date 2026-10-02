@@ -7,12 +7,12 @@ public record ProveedorDto(
     string NombreRazonSocial,
     string Telefono,
     string Direccion,
-    string CorreoElectronico,
-    string Observaciones);
+    string? CorreoElectronico,
+    string? Observaciones);
 
 public record ProveedorCreateDto(
-    [property: Required] string NombreRazonSocial,
-    [property: Required] string Telefono,
-    [property: Required] string Direccion,
-    [property: Required, EmailAddress] string CorreoElectronico,
-    string Observaciones);
+    [property: Required(ErrorMessage = "Ingresá el nombre o razón social")] string NombreRazonSocial,
+    [property: Required(ErrorMessage = "Ingresá el teléfono")] string Telefono,
+    [property: Required(ErrorMessage = "Ingresá la dirección")] string Direccion,
+    [property: EmailAddress(ErrorMessage = "El correo electrónico no es válido")] string? CorreoElectronico,
+    string? Observaciones);

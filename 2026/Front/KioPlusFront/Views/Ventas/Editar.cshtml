@@ -1,0 +1,149 @@
+@model EditarVentaViewModel
+@{
+    ViewData["Title"] = $"Editar venta #{Model.IdVenta}";
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Editar venta #@Model.IdVenta</h1>
+    <a class="btn btn-kp-outline" asp-action="Listado">Volver al listado</a>
+</div>
+
+<div class="kp-filtros">
+    <div class="row">
+        <div class="col-md-3"><strong>Fecha:</strong> @Model.FechaHora.ToString("dd/MM/yyyy HH:mm")</div>
+        <div class="col-md-3">
+            <strong>Estado:</strong>
+            <span class="kp-badge @(Model.Estado == EstadoVenta.Pagado ? "kp-badge-aldia" : "kp-badge-moroso")">
+                @(Model.Estado == EstadoVenta.Pagado ? "Pagado" : "No pagado")
+            </span>
+        </div>
+        <div class="col-md-3"><strong>Total:</strong> $@Model.MontoTotal.ToString("N2")</div>
+        <div class="col-md-3">
+            @if (Model.MontoPagado > 0 && Model.Estado != EstadoVenta.Pagado)
+            {
+                <strong>Cobrado:</strong> <text>$@Model.MontoPagado.ToString("N2")</text>
+            }
+        </div>
+    </div>
+</div>
+
+@* --- Renglones de la venta --- *@
+<h2 class="kp-section-title">Productos de la venta</h2>
+
+<form asp-action="AgregarDetalle" method="post" class="kp-filtros" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.IdVenta" />
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-7">
+            <partial name="_Combo" model="Combos.Productos(Model.Productos)" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="cantidad">Cantidad</label>
+            <input class="form-control" type="number" id="cantidad" name="cantidad" min="1" value="1" required />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-kp w-100">Agregar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Detalles.Count == 0)
+{
+    <p class="kp-vacio">Esta venta no tiene productos cargados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-end">Precio Unitario</th>
+                    <th class="text-end">Subtotal</th>
+                    <th style="width:70px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detalle in Model.Detalles)
+                {
+                    <tr>
+                        <td>@detalle.Producto</td>
+                        <td class="text-center">
+                            <form asp-action="ActualizarDetalle" method="post" class="kp-cantidad" novalidate>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.IdVenta" />
+                                <input type="hidden" name="idDetalle" value="@detalle.IdDetalle" />
+                                <input class="form-control form-control-sm" type="number" name="cantidad"
+                                       min="1" max="@(detalle.Cantidad + Model.StockDisponible(detalle.IdProducto))"
+                                       value="@detalle.Cantidad" aria-label="Cantidad de @detalle.Producto" />
+                                <button type="submit" class="kp-icon-btn" title="Guardar la cantidad">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m5 13 4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td class="text-end">$@detalle.PrecioUnitario.ToString("N2")</td>
+                        <td class="text-end">$@detalle.Subtotal.ToString("N2")</td>
+                        <td>
+                            <form asp-action="EliminarDetalle" method="post"
+                                  onsubmit="return confirm('¿Quitar @detalle.Producto de la venta?');" novalidate>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.IdVenta" />
+                                <input type="hidden" name="idDetalle" value="@detalle.IdDetalle" />
+                                <button type="submit" class="kp-icon-btn" title="Quitar de la venta">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="9" />
+                                        <path d="m9 9 6 6M15 9l-6 6" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kp-total">Total: $@Model.TotalRenglones.ToString("N2")</div>
+}
+
+@* --- Cabecera de la venta --- *@
+<h2 class="kp-section-title">Forma de pago y cliente</h2>
+
+<form asp-action="Editar" method="post" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdVenta" />
+    <input type="hidden" asp-for="FechaHora" />
+    <input type="hidden" asp-for="MontoTotal" />
+    <input type="hidden" asp-for="IdUsuario" />
+    <input type="hidden" asp-for="Finalizada" />
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <label asp-for="FormaPago" class="form-label"></label>
+            <select asp-for="FormaPago" class="form-select">
+                <option value="@FormaDePago.PagadoAlMomento">Pagado al momento</option>
+                <option value="@FormaDePago.CuentaCorriente">Cuenta Corriente</option>
+            </select>
+        </div>
+
+        <div class="col-md-8">
+            <partial name="_Combo"
+                     model="Combos.Clientes(Model.Clientes, Model.IdCliente, CuentaCorrienteService.IdConsumidorFinal)" />
+        </div>
+    </div>
+
+    <div class="kp-form-acciones">
+        <a class="btn btn-kp-outline" asp-action="Listado">Cancelar</a>
+        <button type="submit" class="btn btn-kp">Guardar cambios</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

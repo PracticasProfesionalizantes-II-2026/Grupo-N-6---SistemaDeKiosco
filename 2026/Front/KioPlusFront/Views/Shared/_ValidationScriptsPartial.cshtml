@@ -1,2 +1,29 @@
-﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    // jQuery Validate trae sus propios mensajes, en inglés, y los usa cuando la
+    // regla no vino del servidor. Eso pasa con los atributos HTML5 del input:
+    // min, max y step se convierten en reglas de jQuery sin mensaje propio, así
+    // que escribir -90 en un campo con min="0.01" mostraba
+    // "Please enter a value greater than or equal to 0.01.".
+    //
+    // Acá se reemplazan esos textos. Los mensajes que sí escribimos nosotros
+    // viajan en los atributos data-val-* y siguen ganando sobre estos.
+    $.extend($.validator.messages, {
+        required: "Completá este campo",
+        email: "No es un correo válido",
+        url: "No es una dirección web válida",
+        date: "No es una fecha válida",
+        number: "Tiene que ser un número",
+        digits: "Solo se pueden poner números",
+        equalTo: "Los dos valores tienen que coincidir",
+        remote: "Revisá este campo",
+        maxlength: $.validator.format("No puede tener más de {0} caracteres"),
+        minlength: $.validator.format("Tiene que tener al menos {0} caracteres"),
+        rangelength: $.validator.format("Tiene que tener entre {0} y {1} caracteres"),
+        range: $.validator.format("Tiene que estar entre {0} y {1}"),
+        max: $.validator.format("No puede ser mayor que {0}"),
+        min: $.validator.format("No puede ser menor que {0}"),
+        step: $.validator.format("Tiene que ser un múltiplo de {0}")
+    });
+</script>

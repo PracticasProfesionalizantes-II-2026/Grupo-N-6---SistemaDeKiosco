@@ -13,7 +13,7 @@ public record CuentaCorrienteClienteDto(
     int Dni,
     string Telefono,
     string Direccion,
-    string CorreoElectronico,
+    string? CorreoElectronico,
     double MontoAdeudado,
     EstadoDeuda Estado);
 
@@ -27,3 +27,6 @@ public record CuentaCorrienteClienteCreateDto(
     double MontoAdeudado);
 
 public record PagoCuentaCorrienteDto(double Monto);
+
+// Cancelación de toda la deuda del cliente. Sin fecha se toma la de hoy.
+public record PagoDeudaTotalDto(DateTime? FechaPago);

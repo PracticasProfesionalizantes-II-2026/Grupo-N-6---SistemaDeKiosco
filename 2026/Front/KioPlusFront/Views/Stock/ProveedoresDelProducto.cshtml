@@ -8,7 +8,7 @@
     <a class="btn btn-kp-outline" asp-action="Productos">Volver</a>
 </div>
 
-<form asp-action="AsociarProveedor" method="post" class="kp-filtros">
+<form asp-action="AsociarProveedor" method="post" class="kp-filtros" novalidate>
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="IdProducto" />
 
@@ -17,15 +17,17 @@
             <label asp-for="IdProveedor" class="form-label"></label>
             <select asp-for="IdProveedor" class="form-select">
                 <option value="0">— Elegí un proveedor —</option>
-                @foreach (var p in Model.Proveedores)
+                @foreach (var p in Model.ProveedoresDisponibles)
                 {
                     <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
                 }
             </select>
+            <span asp-validation-for="IdProveedor" class="text-danger small"></span>
         </div>
         <div class="col-md-4">
             <label asp-for="PrecioCompra" class="form-label"></label>
-            <input asp-for="PrecioCompra" type="number" step="0.01" min="0.01" class="form-control" />
+            <input asp-for="PrecioCompra" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="PrecioCompra" class="text-danger small"></span>
         </div>
         <div class="col-md-2">
             <button type="submit" class="btn btn-kp w-100">Asociar</button>
@@ -54,7 +56,7 @@ else
                     <tr>
                         <td>
                             <form asp-action="DesasociarProveedor" method="post"
-                                  onsubmit="return confirm('¿Quitar este proveedor del producto?');">
+                                  onsubmit="return confirm('¿Quitar este proveedor del producto?');" novalidate>
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="idProducto" value="@Model.IdProducto" />
                                 <input type="hidden" name="idAsociacion" value="@asociacion.IdProductoProveedor" />
@@ -66,10 +68,30 @@ else
                             </form>
                         </td>
                         <td>@Model.NombreProveedor(asociacion.IdProveedor)</td>
-                        <td class="text-end">$@asociacion.PrecioCompra.ToString("N2")</td>
+                        <td class="text-end">
+                            @* El precio se corrige acá mismo *@
+                            <form asp-action="EditarPrecioProveedor" method="post" class="kp-cantidad justify-content-end" novalidate>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="idProducto" value="@Model.IdProducto" />
+                                <input type="hidden" name="idAsociacion" value="@asociacion.IdProductoProveedor" />
+                                <input class="form-control form-control-sm" type="number" name="precioCompra"
+                                       step="0.01" min="0.01"
+                                       value="@asociacion.PrecioCompra.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                       aria-label="Precio de compra" />
+                                <button type="submit" class="kp-icon-btn" title="Guardar el precio">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m5 13 4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

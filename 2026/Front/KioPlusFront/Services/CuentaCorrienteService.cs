@@ -11,6 +11,8 @@ public interface ICuentaCorrienteService
     Task<ApiResultado> CrearAsync(CuentaCorrienteClienteCreateDto dto);
     Task<ApiResultado> ActualizarAsync(int id, CuentaCorrienteClienteCreateDto dto);
     Task<ApiResultado> RegistrarPagoAsync(int id, double monto);
+    Task<IReadOnlyList<VentaAdeudadaDto>> ObtenerVentasAdeudadasAsync(int id);
+    Task<ApiResultado> PagarDeudaTotalAsync(int id, DateTime? fechaPago = null);
     Task<ApiResultado> EliminarAsync(int id);
 }
 
@@ -49,6 +51,12 @@ public class CuentaCorrienteService : ICuentaCorrienteService
 
     public Task<ApiResultado> RegistrarPagoAsync(int id, double monto) =>
         _api.PostAsync($"/cuentas-corrientes-clientes/{id}/pagos", new PagoCuentaCorrienteDto(monto));
+
+    public Task<IReadOnlyList<VentaAdeudadaDto>> ObtenerVentasAdeudadasAsync(int id) =>
+        _api.ObtenerListaAsync<VentaAdeudadaDto>($"/cuentas-corrientes-clientes/{id}/ventas-adeudadas");
+
+    public Task<ApiResultado> PagarDeudaTotalAsync(int id, DateTime? fechaPago = null) =>
+        _api.PostAsync($"/cuentas-corrientes-clientes/{id}/pagar-todo", new PagoDeudaTotalDto(fechaPago));
 
     public Task<ApiResultado> EliminarAsync(int id) =>
         _api.DeleteAsync($"/cuentas-corrientes-clientes/{id}");

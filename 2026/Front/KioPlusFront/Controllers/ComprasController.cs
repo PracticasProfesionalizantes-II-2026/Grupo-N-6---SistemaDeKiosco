@@ -30,21 +30,27 @@ public class ComprasController : Controller
     public async Task<IActionResult> Index(ListadoComprasViewModel filtros)
     {
         filtros.Compras = await _compras.ObtenerTodasAsync(
-            filtros.FechaDesde, filtros.FechaHasta, filtros.IdProveedor);
+            Periodos.DesdeEfectiva(filtros), Periodos.HastaEfectiva(filtros),
+            filtros.IdProveedor);
         filtros.Proveedores = await _proveedores.ObtenerTodosAsync();
         return View(filtros);
     }
 
+    // idProductoNuevo llega cuando el usuario dio de alta un producto sin salir de
+    // esta compra: los renglones siguen en sesión y el producto vuelve preseleccionado.
     [HttpGet]
-    public async Task<IActionResult> Nueva()
+    public async Task<IActionResult> Nueva(int? idProductoNuevo)
     {
         var modelo = await ArmarNuevaCompraAsync();
+        modelo.IdProductoNuevo = idProductoNuevo;
         return View(modelo);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AgregarItem(int idProducto, int cantidad, double precioUnitario)
+    public async Task<IActionResult> AgregarItem(
+        int idProducto, int cantidad, double precioUnitario,
+        string? nroLote, DateTime? fechaVencimiento)
     {
         if (cantidad <= 0 || precioUnitario <= 0)
         {
@@ -61,24 +67,18 @@ public class ComprasController : Controller
             return RedirectToAction(nameof(Nueva));
         }
 
+        // Cada renglón ingresa su propio lote, así que dos renglones del mismo
+        // producto con vencimientos distintos no se fusionan.
         var carrito = LeerCarrito();
-        var existente = carrito.FirstOrDefault(i => i.IdProducto == idProducto);
-
-        if (existente is not null)
+        carrito.Add(new ItemCompra
         {
-            existente.Cantidad += cantidad;
-            existente.PrecioUnitario = precioUnitario;
-        }
-        else
-        {
-            carrito.Add(new ItemCompra
-            {
-                IdProducto = producto.IdProducto,
-                Producto = $"{producto.Nombre} ({producto.Marca})",
-                Cantidad = cantidad,
-                PrecioUnitario = precioUnitario
-            });
-        }
+            IdProducto = producto.IdProducto,
+            Producto = $"{producto.Nombre} ({producto.Marca})",
+            Cantidad = cantidad,
+            PrecioUnitario = precioUnitario,
+            NroLote = string.IsNullOrWhiteSpace(nroLote) ? null : nroLote.Trim(),
+            FechaVencimiento = fechaVencimiento
+        });
 
         GuardarCarrito(carrito);
         return RedirectToAction(nameof(Nueva));
@@ -86,11 +86,14 @@ public class ComprasController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult QuitarItem(int idProducto)
+    public IActionResult QuitarItem(int indice)
     {
         var carrito = LeerCarrito();
-        carrito.RemoveAll(i => i.IdProducto == idProducto);
-        GuardarCarrito(carrito);
+        if (indice >= 0 && indice < carrito.Count)
+        {
+            carrito.RemoveAt(indice);
+            GuardarCarrito(carrito);
+        }
         return RedirectToAction(nameof(Nueva));
     }
 
@@ -120,8 +123,14 @@ public class ComprasController : Controller
             return RedirectToAction(nameof(Nueva));
         }
 
-        var creada = await _compras.CrearAsync(new CompraCreateDto(
-            fechaHora == default ? DateTime.Now : fechaHora, idProveedor));
+        // El formulario solo elige el día; la hora es la del momento del registro,
+        // así el listado no muestra todas las compras a las 00:00.
+        var ahora = DateTime.Now;
+        var momento = fechaHora == default
+            ? ahora
+            : fechaHora.Date.Add(fechaHora.Date == ahora.Date ? ahora.TimeOfDay : new TimeSpan(9, 0, 0));
+
+        var creada = await _compras.CrearAsync(new CompraCreateDto(momento, idProveedor));
 
         if (!creada.Ok || creada.Datos is null)
         {
@@ -134,7 +143,9 @@ public class ComprasController : Controller
         foreach (var item in carrito)
         {
             var detalle = await _compras.AgregarDetalleAsync(idCompra,
-                new DetalleCompraCreateDto(item.IdProducto, item.Cantidad, item.PrecioUnitario));
+                new DetalleCompraCreateDto(
+                    item.IdProducto, item.Cantidad, item.PrecioUnitario,
+                    item.NroLote, item.FechaVencimiento));
 
             if (!detalle.Ok)
             {
@@ -145,7 +156,7 @@ public class ComprasController : Controller
         }
 
         HttpContext.Session.Remove(ClaveCarrito);
-        TempData["Exito"] = $"Compra #{idCompra} registrada. El stock ya fue actualizado.";
+        TempData["Exito"] = $"Compra #{idCompra} registrada. Cada renglón ingresó como un lote nuevo.";
         return RedirectToAction(nameof(Index));
     }
 

@@ -1,0 +1,175 @@
+@model DeudaClienteViewModel
+@{
+    ViewData["Title"] = $"Deuda de {Model.Cliente}";
+    var hoy = DateTime.Today.ToString("yyyy-MM-dd");
+    // La fecha de pago no puede ser anterior a la última venta que el cliente adeuda
+    var minimoParaPagarTodo = Model.Ventas.Count == 0
+        ? null
+        : Model.Ventas.Max(v => v.FechaHora).ToString("yyyy-MM-dd");
+    var hayPagosParciales = Model.Ventas.Any(v => v.MontoPagado > 0);
+}
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Ventas adeudadas — @Model.Cliente</h1>
+    <a class="btn btn-kp-outline" asp-action="Index">Volver</a>
+</div>
+
+<div class="kp-filtros">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <strong>Monto adeudado:</strong> $@Model.MontoAdeudado.ToString("N2")
+            @if (Model.SaldoSinVentas > 0)
+            {
+                <div class="form-text">
+                    De ese total, $@Model.SaldoSinVentas.ToString("N2") es saldo cargado a mano
+                    al crear la cuenta y no corresponde a ninguna venta registrada.
+                </div>
+            }
+        </div>
+
+        @if (Model.MontoAdeudado > 0)
+        {
+            <div class="col-md-4 text-end">
+                <button type="button" class="btn btn-kp" data-bs-toggle="modal" data-bs-target="#pago-deuda">
+                    Pagar todo
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.Ventas.Count == 0)
+{
+    <p class="kp-vacio">Este cliente no tiene ventas pendientes de pago.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:70px"></th>
+                    <th>Fecha/Hora</th>
+                    <th>Vendedor</th>
+                    <th>Productos</th>
+                    <th class="text-end">Importe</th>
+                    @if (hayPagosParciales)
+                    {
+                        <th class="text-end">Pagado</th>
+                        <th class="text-end">Saldo</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venta in Model.Ventas)
+                {
+                    <tr>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-kp"
+                                    data-bs-toggle="modal" data-bs-target="#pago-venta-@venta.IdVenta">
+                                Pagar
+                            </button>
+                        </td>
+                        <td>@venta.FechaHora.ToString("dd/MM/yy - HH:mm")</td>
+                        <td>@venta.Vendedor</td>
+                        <td>
+                            <a asp-controller="Ventas" asp-action="Detalle" asp-route-id="@venta.IdVenta">
+                                Productos de la venta
+                            </a>
+                        </td>
+                        <td class="text-end">$@venta.MontoTotal.ToString("N2")</td>
+                        @if (hayPagosParciales)
+                        {
+                            <td class="text-end">$@venta.MontoPagado.ToString("N2")</td>
+                            <td class="text-end"><strong>$@venta.SaldoPendiente.ToString("N2")</strong></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kp-total">
+        Total adeudado en ventas: $@Model.Ventas.Sum(v => v.SaldoPendiente).ToString("N2")
+    </div>
+}
+
+@* Pago de una venta puntual: la fecha no puede ser futura ni anterior a la venta *@
+@foreach (var venta in Model.Ventas)
+{
+    <div class="modal fade" id="pago-venta-@venta.IdVenta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" asp-action="PagarVenta" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.IdCuentaCorrienteCliente" />
+                <input type="hidden" name="idVenta" value="@venta.IdVenta" />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Pago de venta #@venta.IdVenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-3">
+                        Venta del @venta.FechaHora.ToString("dd/MM/yyyy") por
+                        <strong>$@venta.MontoTotal.ToString("N2")</strong>.
+                        @if (venta.MontoPagado > 0)
+                        {
+                            <text>
+                                Ya tiene $@venta.MontoPagado.ToString("N2") imputados, así que
+                                se cobran <strong>$@venta.SaldoPendiente.ToString("N2")</strong>.
+                            </text>
+                        }
+                    </p>
+                    <label class="form-label" for="fecha-venta-@venta.IdVenta">Fecha de pago</label>
+                    <input class="form-control" id="fecha-venta-@venta.IdVenta" name="fechaPago" type="date"
+                           value="@hoy" min="@venta.FechaHora.ToString("yyyy-MM-dd")" max="@hoy" required />
+                    <div class="form-text">
+                        No puede ser anterior a la fecha de la venta ni posterior a hoy.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-kp-outline" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-kp">Registrar pago</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@* Pago de toda la deuda: la fecha no puede ser anterior a la última venta adeudada *@
+@if (Model.MontoAdeudado > 0)
+{
+    <div class="modal fade" id="pago-deuda" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" asp-action="PagarTodo" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.IdCuentaCorrienteCliente" />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Pago de deuda — @Model.Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-3">
+                        Se van a cancelar @Model.Ventas.Count venta(s) por un total de
+                        <strong>$@Model.MontoAdeudado.ToString("N2")</strong>.
+                    </p>
+                    <label class="form-label" for="fecha-deuda">Fecha de pago</label>
+                    <input class="form-control" id="fecha-deuda" name="fechaPago" type="date"
+                           value="@hoy" min="@minimoParaPagarTodo" max="@hoy" required />
+                    <div class="form-text">
+                        No puede ser anterior a la fecha de la última venta adeudada ni posterior a hoy.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-kp-outline" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-kp">Pagar toda la deuda</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

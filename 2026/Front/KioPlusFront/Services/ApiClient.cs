@@ -113,6 +113,10 @@ public class ApiClient
         if (respuesta.StatusCode == HttpStatusCode.Unauthorized)
             return "Usuario o contraseña incorrectos.";
 
+        // 503 es la base de datos caída, no la API: el mensaje lo tiene que decir
+        if (respuesta.StatusCode == HttpStatusCode.ServiceUnavailable)
+            return "No hay conexión con la base de datos. Volvé a intentar en unos minutos.";
+
         var texto = await respuesta.Content.ReadAsStringAsync();
         if (string.IsNullOrWhiteSpace(texto))
             return $"La API respondió {(int)respuesta.StatusCode}.";

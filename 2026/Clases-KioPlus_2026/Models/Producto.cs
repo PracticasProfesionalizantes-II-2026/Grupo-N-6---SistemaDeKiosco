@@ -15,7 +15,8 @@ namespace Clases_KioPlus.Models
         // Precio de venta actual del producto
         [Required] public double PrecioVenta { get; set; }
 
-        // Cantidad actual disponible en el stock
+        // Cantidad actual disponible en el stock. Es un valor derivado: siempre
+        // equivale a la suma de las cantidades de sus lotes. Nunca se edita a mano.
         [Required] public int StockDisponible { get; set; }
 
         // Días previos al vencimiento en que se debe generar una alerta

@@ -13,17 +13,17 @@ public record UsuarioDto(
     bool Estado);
 
 public record UsuarioCreateDto(
-    [property: Required] string NombreApellido,
-    [property: Required] string Telefono,
-    [property: Required] string NombreUsuario,
-    [property: Required] string ContraseniaUsuario,
+    [property: Required(ErrorMessage = "Ingresá el nombre y apellido")] string NombreApellido,
+    [property: Required(ErrorMessage = "Ingresá el teléfono")] string Telefono,
+    [property: Required(ErrorMessage = "Ingresá el nombre de usuario")] string NombreUsuario,
+    [property: Required(ErrorMessage = "Ingresá la contraseña")] string ContraseniaUsuario,
     Usuario.TipoDeUsuario TipoUsuario,
     bool Estado);
 
 // Credenciales enviadas por la pantalla de inicio de sesión
 public record LoginDto(
-    [property: Required] string NombreUsuario,
-    [property: Required] string ContraseniaUsuario);
+    [property: Required(ErrorMessage = "Ingresá el nombre de usuario")] string NombreUsuario,
+    [property: Required(ErrorMessage = "Ingresá la contraseña")] string ContraseniaUsuario);
 
 // Datos de la sesión iniciada. Nunca incluye la contraseña.
 public record LoginResultadoDto(
@@ -34,3 +34,9 @@ public record LoginResultadoDto(
 
 // Alta/baja lógica del usuario (candado en el listado)
 public record CambiarEstadoUsuarioDto(bool Estado);
+
+// Nueva contraseña pedida desde "¿Olvidaste tu contraseña?".
+// La confirmación se valida en la pantalla antes de llegar acá.
+public record CambiarContraseniaDto(
+    [property: Required(ErrorMessage = "Ingresá el nombre de usuario")] string NombreUsuario,
+    [property: Required(ErrorMessage = "Ingresá la contraseña nueva")] string NuevaContrasenia);

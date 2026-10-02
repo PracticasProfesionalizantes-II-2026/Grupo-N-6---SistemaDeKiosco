@@ -10,6 +10,11 @@ public class ItemCompra
     public string Producto { get; set; } = string.Empty;
     public int Cantidad { get; set; }
     public double PrecioUnitario { get; set; }
+
+    // Datos del lote que va a ingresar con este renglón
+    public string? NroLote { get; set; }
+    public DateTime? FechaVencimiento { get; set; }
+
     public double Subtotal => Cantidad * PrecioUnitario;
 }
 
@@ -31,13 +36,19 @@ public class NuevaCompraViewModel
     public int Cantidad { get; set; } = 1;
     public double PrecioUnitario { get; set; }
 
+    // Producto recién dado de alta desde esta misma compra: vuelve preseleccionado
+    public int? IdProductoNuevo { get; set; }
+
     public double Total => Items.Sum(i => i.Subtotal);
 }
 
-public class ListadoComprasViewModel
+public class ListadoComprasViewModel : IFiltroPorPeriodo
 {
     public IReadOnlyList<CompraListadoDto> Compras { get; set; } = Array.Empty<CompraListadoDto>();
     public IReadOnlyList<ProveedorDto> Proveedores { get; set; } = Array.Empty<ProveedorDto>();
+
+    [Display(Name = "Período")]
+    public string Periodo { get; set; } = Periodos.Historico;
 
     [DataType(DataType.Date)]
     [Display(Name = "Desde")]

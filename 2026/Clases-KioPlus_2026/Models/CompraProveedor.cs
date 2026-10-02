@@ -12,7 +12,7 @@ namespace Clases_KioPlus.Models
         public int Id { get; set; }
 
         // Relación con el proveedor al que se le realizo la compra
-        public int ProveedorId { get; set; }
+        [Required] public int ProveedorId { get; set; }
         public Proveedor Proveedor { get; set; }
 
         [Required] public DateTime FechaHora { get; set; }

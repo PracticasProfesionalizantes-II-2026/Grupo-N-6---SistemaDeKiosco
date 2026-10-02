@@ -11,8 +11,8 @@ public record DetalleVentaDto(
     double Subtotal);
 
 public record DetalleVentaCreateDto(
-    [property: Range(1, int.MaxValue, ErrorMessage = "idProducto inválido")] int IdProducto,
-    [property: Range(1, int.MaxValue, ErrorMessage = "cantidad debe ser mayor a 0")] int Cantidad);
+    [property: Range(1, int.MaxValue, ErrorMessage = "Elegí un producto")] int IdProducto,
+    [property: Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")] int Cantidad);
 
 public record DetalleVentaUpdateDto(
-    [property: Range(1, int.MaxValue, ErrorMessage = "cantidad debe ser mayor a 0")] int Cantidad);
+    [property: Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")] int Cantidad);

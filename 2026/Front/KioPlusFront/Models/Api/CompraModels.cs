@@ -17,6 +17,14 @@ public record DetalleCompraListadoDto(
     string Producto,
     int Cantidad,
     double PrecioUnitario,
-    double Subtotal);
+    double Subtotal,
+    string? NroLote,
+    DateTime? FechaVencimiento);
 
-public record DetalleCompraCreateDto(int IdProducto, int Cantidad, double PrecioUnitario);
+// Cada renglón de compra ingresa mercadería, así que genera un lote
+public record DetalleCompraCreateDto(
+    int IdProducto,
+    int Cantidad,
+    double PrecioUnitario,
+    string? NroLote,
+    DateTime? FechaVencimiento);

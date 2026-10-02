@@ -39,13 +39,13 @@ public class StockController : Controller
         return View(filtros);
     }
 
+    // volverA llega desde el botón "Nuevo Producto" de una venta o una compra en
+    // curso: es la pantalla a la que hay que devolver al usuario al terminar el alta.
     [HttpGet]
-    public async Task<IActionResult> CrearProducto()
+    public async Task<IActionResult> CrearProducto(string? volverA)
     {
-        var modelo = new ProductoFormViewModel
-        {
-            Categorias = await _categorias.ObtenerTodasAsync()
-        };
+        var modelo = new ProductoFormViewModel { VolverA = volverA };
+        await CompletarListasAsync(modelo);
         return View(modelo);
     }
 
@@ -55,7 +55,7 @@ public class StockController : Controller
     {
         if (!ModelState.IsValid)
         {
-            modelo.Categorias = await _categorias.ObtenerTodasAsync();
+            await CompletarListasAsync(modelo);
             return View(modelo);
         }
 
@@ -63,15 +63,96 @@ public class StockController : Controller
             modelo.Nombre, modelo.Marca, modelo.IdCategoria,
             modelo.PrecioVenta, modelo.DiasAvisoVencimiento));
 
-        if (!resultado.Ok)
+        if (!resultado.Ok || resultado.Datos is null)
         {
-            ModelState.AddModelError(string.Empty, resultado.Error!);
-            modelo.Categorias = await _categorias.ObtenerTodasAsync();
+            ModelState.AddModelError(string.Empty, resultado.Error ?? "No se pudo crear el producto.");
+            await CompletarListasAsync(modelo);
             return View(modelo);
         }
 
-        TempData["Exito"] = "Producto agregado. Cargá una compra o un lote para darle stock.";
-        return RedirectToAction(nameof(Productos));
+        var idProducto = resultado.Datos.IdProducto;
+        var avisos = new List<string>();
+
+        // El stock nace del primer lote. Sin lote el producto queda en cero.
+        if (modelo.CantidadInicial > 0)
+        {
+            var lote = await _lotes.CrearAsync(idProducto, new LoteCreateDto(
+                string.IsNullOrWhiteSpace(modelo.NroLote) ? "L1" : modelo.NroLote,
+                modelo.FechaVencimiento, modelo.CantidadInicial));
+
+            if (!lote.Ok) avisos.Add($"El producto se creó pero no se pudo cargar el lote: {lote.Error}");
+        }
+
+        if (modelo.IdProveedor > 0)
+        {
+            var asociacion = await _proveedores.AsociarProductoAsync(idProducto,
+                new ProductoProveedorCreateDto(modelo.IdProveedor, modelo.PrecioCompra));
+
+            if (!asociacion.Ok) avisos.Add($"No se pudo asociar el proveedor: {asociacion.Error}");
+        }
+
+        if (avisos.Count > 0) TempData["Error"] = string.Join(" ", avisos);
+
+        TempData["Exito"] = modelo.CantidadInicial > 0
+            ? "Producto agregado con su primer lote."
+            : "Producto agregado. Cargá una compra o un lote para darle stock.";
+
+        return VolverAlOrigen(modelo.VolverA, idProducto);
+    }
+
+    // Alta rápida de categoría sin salir del alta de producto: no hay redirect,
+    // así que el formulario vuelve con todo lo que el usuario ya había escrito y
+    // con la categoría nueva ya seleccionada.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CrearCategoriaRapida(ProductoFormViewModel modelo)
+    {
+        ModelState.Clear();
+
+        if (string.IsNullOrWhiteSpace(modelo.NuevaCategoria))
+        {
+            TempData["Error"] = "Escribí el nombre de la categoría que querés crear.";
+            await CompletarListasAsync(modelo);
+            return View(nameof(CrearProducto), modelo);
+        }
+
+        var resultado = await _categorias.CrearAsync(
+            new CategoriaCreateDto(modelo.NuevaCategoria.Trim(), modelo.NuevaCategoria.Trim()));
+
+        if (!resultado.Ok)
+        {
+            TempData["Error"] = resultado.Error;
+            await CompletarListasAsync(modelo);
+            return View(nameof(CrearProducto), modelo);
+        }
+
+        await CompletarListasAsync(modelo);
+
+        // Queda seleccionada la categoría recién creada
+        var creada = modelo.Categorias.FirstOrDefault(c =>
+            string.Equals(c.Nombre, modelo.NuevaCategoria.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (creada is not null) modelo.IdCategoria = creada.IdCategoria;
+
+        modelo.NuevaCategoria = null;
+        TempData["Exito"] = "Categoría creada y seleccionada.";
+        return View(nameof(CrearProducto), modelo);
+    }
+
+    // Vuelve a la pantalla que abrió el alta llevándose el id del producto nuevo,
+    // para que la venta o la compra en curso lo encuentren ya seleccionado.
+    private IActionResult VolverAlOrigen(string? volverA, int idProducto)
+    {
+        if (string.IsNullOrWhiteSpace(volverA) || !Url.IsLocalUrl(volverA))
+            return RedirectToAction(nameof(Productos));
+
+        var separador = volverA.Contains('?') ? "&" : "?";
+        return Redirect($"{volverA}{separador}idProductoNuevo={idProducto}");
+    }
+
+    private async Task CompletarListasAsync(ProductoFormViewModel modelo)
+    {
+        modelo.Categorias = await _categorias.ObtenerTodasAsync();
+        modelo.Proveedores = await _proveedores.ObtenerTodosAsync();
     }
 
     [HttpGet]
@@ -96,6 +177,7 @@ public class StockController : Controller
             StockDisponible = p.StockDisponible,
             Categorias = await _categorias.ObtenerTodasAsync()
         });
+
     }
 
     [HttpPost]
@@ -104,7 +186,7 @@ public class StockController : Controller
     {
         if (!ModelState.IsValid)
         {
-            modelo.Categorias = await _categorias.ObtenerTodasAsync();
+            await CompletarListasAsync(modelo);
             return View(modelo);
         }
 
@@ -115,7 +197,7 @@ public class StockController : Controller
         if (!resultado.Ok)
         {
             ModelState.AddModelError(string.Empty, resultado.Error!);
-            modelo.Categorias = await _categorias.ObtenerTodasAsync();
+            await CompletarListasAsync(modelo);
             return View(modelo);
         }
 
@@ -137,13 +219,10 @@ public class StockController : Controller
 
     // ---------- Listados de control ----------
 
+    // Muestra únicamente los productos por debajo del stock mínimo
     [HttpGet]
-    public async Task<IActionResult> Listado()
-    {
-        var productos = await _productos.ObtenerTodosAsync();
-        ViewBag.Criticos = await _productos.ObtenerStockCriticoAsync();
-        return View(productos);
-    }
+    public async Task<IActionResult> Listado() =>
+        View(await _productos.ObtenerStockCriticoAsync());
 
     [HttpGet]
     public async Task<IActionResult> ProximosAVencer()
@@ -276,6 +355,23 @@ public class StockController : Controller
         else TempData["Error"] = resultado.Error;
 
         return RedirectToAction(nameof(ProveedoresDelProducto), new { id = modelo.IdProducto });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditarPrecioProveedor(int idProducto, int idAsociacion, double precioCompra)
+    {
+        if (precioCompra <= 0)
+        {
+            TempData["Error"] = "El precio de compra debe ser mayor a 0.";
+            return RedirectToAction(nameof(ProveedoresDelProducto), new { id = idProducto });
+        }
+
+        var resultado = await _proveedores.ActualizarPrecioAsync(idProducto, idAsociacion, precioCompra);
+        if (resultado.Ok) TempData["Exito"] = "Precio actualizado.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(ProveedoresDelProducto), new { id = idProducto });
     }
 
     [HttpPost]

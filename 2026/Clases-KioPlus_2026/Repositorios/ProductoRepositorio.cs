@@ -18,7 +18,8 @@ public class ProductoRepositorio : IProductoRepositorio
             query = query.Where(p => p.CategoriaId == idCategoria.Value);
         if (!string.IsNullOrWhiteSpace(marca))
             query = query.Where(p => p.Marca.Contains(marca));
-        return await query.ToListAsync();
+        // Por defecto el listado sale en orden alfabético
+        return await query.OrderBy(p => p.Nombre).ToListAsync();
     }
 
     public async Task<Producto?> ObtenerPorId(int id) =>
@@ -47,18 +48,24 @@ public class ProductoRepositorio : IProductoRepositorio
     }
 
     public async Task<IEnumerable<Producto>> ObtenerConStockCritico(int umbral) =>
-        await _db.Productos.Where(p => p.StockDisponible <= umbral).ToListAsync();
+        await _db.Productos
+            .Where(p => p.StockDisponible < umbral)
+            .OrderBy(p => p.StockDisponible)
+            .ThenBy(p => p.Nombre)
+            .ToListAsync();
 
     public async Task<IEnumerable<Lote>> ObtenerLotesConProducto() =>
         await _db.Lotes.Include(l => l.Producto).ToListAsync();
 
-    public async Task<IEnumerable<(string Nombre, int Cantidad, double Monto)>> MasVendidos(DateTime desde, DateTime hasta)
+    // Sin fechas el ranking se arma sobre todo el historial de ventas
+    public async Task<IEnumerable<(string Nombre, int Cantidad, double Monto)>> MasVendidos(DateTime? desde, DateTime? hasta)
     {
         var resultado = await (
             from d in _db.DetallesVentas
             join v in _db.Ventas on d.VentaId equals v.Id
             join p in _db.Productos on d.ProductoId equals p.Id
-            where v.FechaHora >= desde && v.FechaHora <= hasta
+            where (desde == null || v.FechaHora >= desde)
+                  && (hasta == null || v.FechaHora <= hasta)
             group d by new { p.Id, p.Nombre } into g
             select new
             {

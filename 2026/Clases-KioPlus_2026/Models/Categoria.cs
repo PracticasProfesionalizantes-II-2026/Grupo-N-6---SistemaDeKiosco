@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,8 +14,9 @@ namespace Clases_KioPlus.Models
         // Nombre de la categoría del producto (por ejemplo: bebidas, limpieza, etc.)
         [Required] public string Nombre { get; set; }
 
-        // Descripción o detalle adicional de la categoría
-        [Required] public string Descripcion { get; set; }
+        // Descripción o detalle adicional de la categoría. Es opcional:
+        // el nombre ya alcanza para clasificar el producto.
+        public string? Descripcion { get; set; }
 
         // Relación uno a muchos con productos
         public List<Producto> Productos { get; set; }

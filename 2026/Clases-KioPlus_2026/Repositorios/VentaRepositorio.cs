@@ -55,6 +55,23 @@ public class VentaRepositorio : IVentaRepositorio
         return filas.Select(f => (f.Venta, f.Vendedor, f.Cliente.Trim()));
     }
 
+    public async Task<IEnumerable<(Venta Venta, string Vendedor)>> ObtenerAdeudadasPorCliente(int idCliente)
+    {
+        var filas = await (
+            from v in _db.Ventas
+            join u in _db.Usuarios on v.UsuarioId equals u.Id into gu
+            from u in gu.DefaultIfEmpty()
+            where v.CuentaCorrienteClienteId == idCliente
+                  && v.FormaPago == Venta.FormaDePago.CuentaCorriente
+                  && v.Estado == Venta.EstadoVenta.NoPagado
+                  && v.Finalizada
+            orderby v.FechaHora
+            select new { Venta = v, Vendedor = u != null ? u.NombreApellido : "(usuario eliminado)" }
+        ).ToListAsync();
+
+        return filas.Select(f => (f.Venta, f.Vendedor));
+    }
+
     public async Task<Venta?> ObtenerPorId(int id) =>
         await _db.Ventas.FindAsync(id);
 

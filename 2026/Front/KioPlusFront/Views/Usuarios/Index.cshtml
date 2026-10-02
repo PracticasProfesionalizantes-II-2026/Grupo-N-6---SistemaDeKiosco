@@ -86,13 +86,10 @@ else
                         <td>@u.NombreUsuario</td>
                         <td>
                             <span class="d-inline-flex align-items-center gap-2">
-                                <span data-contrasenia="@u.ContraseniaUsuario">@puntos</span>
-                                <button type="button" class="kp-icon-btn" title="Mostrar/ocultar contraseña"
-                                        data-toggle-contrasenia>
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z" />
-                                        <circle cx="12" cy="12" r="2.6" />
-                                    </svg>
+                                <span data-kp-texto-oculto="@u.ContraseniaUsuario">@puntos</span>
+                                <button type="button" class="kp-icon-btn" data-kp-ver-texto
+                                        aria-label="Mostrar contraseña" title="Mostrar u ocultar la contraseña">
+                                    <partial name="_IconoOjo" />
                                 </button>
                             </span>
                         </td>
@@ -107,19 +104,4 @@ else
             </tbody>
         </table>
     </div>
-}
-
-@section Scripts {
-    <script>
-        // Reproduce el ojito del mockup: alterna entre los puntos y la contraseña real.
-        document.querySelectorAll('[data-toggle-contrasenia]').forEach(function (boton) {
-            boton.addEventListener('click', function () {
-                const celda = boton.parentElement.querySelector('[data-contrasenia]');
-                const oculta = '●'.repeat(8);
-                celda.textContent = celda.textContent === oculta
-                    ? celda.dataset.contrasenia
-                    : oculta;
-            });
-        });
-    </script>
 }

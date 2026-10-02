@@ -20,16 +20,35 @@ public class ProductoProveedorLogica : IProductoProveedorLogica
         return lista.Select(AMapa);
     }
 
+    // Devuelve null si el proveedor no existe, para poder responder 404
+    public async Task<IEnumerable<ProductoDelProveedorDto>?> ObtenerPorProveedor(int idProveedor)
+    {
+        if (!await _repo.ProveedorExiste(idProveedor)) return null;
+
+        var filas = await _repo.ObtenerPorProveedor(idProveedor);
+        return filas.Select(f => new ProductoDelProveedorDto(
+            f.Asociacion.Id, f.Asociacion.ProductoId, f.Producto, f.Marca, f.Asociacion.PrecioCompra));
+    }
+
     public async Task<ProductoProveedorDto?> ObtenerPorId(int id)
     {
         var pp = await _repo.ObtenerPorId(id);
         return pp is null ? null : AMapa(pp);
     }
 
-    // Devuelve null si el producto no existe
-    public async Task<int?> Crear(int idProducto, ProductoProveedorCreateDto dto)
+    // Un producto se asocia una sola vez a cada proveedor: si ya están
+    // asociados, lo que corresponde es editar el precio de esa asociación.
+    public async Task<ResultadoOperacion> Crear(int idProducto, ProductoProveedorCreateDto dto)
     {
-        if (!await _repo.ProductoExiste(idProducto)) return null;
+        if (!await _repo.ProductoExiste(idProducto))
+            return ResultadoOperacion.NoEncontrado("producto no encontrado");
+
+        if (!await _repo.ProveedorExiste(dto.IdProveedor))
+            return ResultadoOperacion.NoEncontrado("proveedor no encontrado");
+
+        if (await _repo.ObtenerPorProductoYProveedor(idProducto, dto.IdProveedor) is not null)
+            return ResultadoOperacion.Invalido(
+                "ese proveedor ya está asociado a este producto: editá su precio");
 
         var pp = new ProductoProveedor
         {
@@ -38,7 +57,7 @@ public class ProductoProveedorLogica : IProductoProveedorLogica
             PrecioCompra = dto.PrecioCompra
         };
         await _repo.Agregar(pp);
-        return pp.Id;
+        return ResultadoOperacion.Exito(pp.Id);
     }
 
     public async Task<bool> Actualizar(int id, ProductoProveedorUpdateDto dto)

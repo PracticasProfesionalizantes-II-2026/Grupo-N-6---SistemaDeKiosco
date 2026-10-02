@@ -47,7 +47,6 @@ namespace Clases_KioPlus.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
@@ -96,7 +95,6 @@ namespace Clases_KioPlus.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CorreoElectronico")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Direccion")
@@ -115,6 +113,9 @@ namespace Clases_KioPlus.Migrations
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("SaldoInicial")
+                        .HasColumnType("float");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -200,7 +201,13 @@ namespace Clases_KioPlus.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FechaVencimiento")
+                    b.Property<int>("CantidadInicial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DetalleCompraId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaVencimiento")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NroLote")
@@ -294,9 +301,10 @@ namespace Clases_KioPlus.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductoId");
-
                     b.HasIndex("ProveedorId");
+
+                    b.HasIndex("ProductoId", "ProveedorId")
+                        .IsUnique();
 
                     b.ToTable("ProductoProveedores");
                 });
@@ -310,7 +318,6 @@ namespace Clases_KioPlus.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CorreoElectronico")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Direccion")
@@ -322,7 +329,6 @@ namespace Clases_KioPlus.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observaciones")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefono")
@@ -386,11 +392,17 @@ namespace Clases_KioPlus.Migrations
                     b.Property<DateTime>("FechaHora")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaPago")
+                    b.Property<DateTime?>("FechaPago")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Finalizada")
+                        .HasColumnType("bit");
 
                     b.Property<int>("FormaPago")
                         .HasColumnType("int");
+
+                    b.Property<double>("MontoPagado")
+                        .HasColumnType("float");
 
                     b.Property<double>("MontoTotal")
                         .HasColumnType("float");

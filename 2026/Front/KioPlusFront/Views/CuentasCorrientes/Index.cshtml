@@ -9,21 +9,28 @@
 </div>
 
 <div class="collapse @(Model.Nombre is not null || Model.Dni.HasValue || Model.Estado.HasValue ? "show" : "")" id="filtros">
-    <form asp-action="Index" method="get" class="kp-filtros">
+@* Los mensajes de los filtros necesitan dónde mostrarse *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="All" class="alert alert-danger py-2" role="alert"></div>
+    }
+
+    <form asp-action="Index" method="get" class="kp-filtros" novalidate>
         <div class="row g-3 align-items-end">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label asp-for="Nombre" class="form-label"></label>
                 <input asp-for="Nombre" class="form-control" />
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label asp-for="Apellido" class="form-label"></label>
                 <input asp-for="Apellido" class="form-control" />
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <label asp-for="Dni" class="form-label"></label>
                 <input asp-for="Dni" type="number" class="form-control" />
+            <span asp-validation-for="Dni" class="text-danger small"></span>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label asp-for="Estado" class="form-label"></label>
                 <select asp-for="Estado" class="form-select">
                     <option value="">Todos</option>
@@ -31,15 +38,17 @@
                     <option value="@EstadoDeuda.AlDia">Al día</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label asp-for="MontoMin" class="form-label"></label>
                 <input asp-for="MontoMin" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="MontoMin" class="text-danger small"></span>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label asp-for="MontoMax" class="form-label"></label>
                 <input asp-for="MontoMax" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="MontoMax" class="text-danger small"></span>
             </div>
-            <div class="col-md-4 d-flex gap-2">
+            <div class="col-md-3 d-flex gap-2 align-items-end">
                 <button type="submit" class="btn btn-kp">Aplicar</button>
                 <a class="btn btn-kp-outline" asp-action="Index">Limpiar</a>
             </div>
@@ -83,8 +92,17 @@ else
 
                                 @if (!esConsumidorFinal)
                                 {
+                                    <a class="kp-icon-btn" asp-action="Deuda" asp-route-id="@c.IdCuentaCorrienteCliente"
+                                       title="Ver las ventas que adeuda">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 3h9l5 5v13H5z" />
+                                            <path d="M14 3v5h5" />
+                                            <path d="M9 13h6M9 17h6" />
+                                        </svg>
+                                    </a>
+
                                     <form asp-action="Eliminar" method="post"
-                                          onsubmit="return confirm('¿Eliminar la cuenta de @c.Nombre @c.Apellido?');">
+                                          onsubmit="return confirm('¿Eliminar la cuenta de @c.Nombre @c.Apellido?');" novalidate>
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="id" value="@c.IdCuentaCorrienteCliente" />
                                         <button type="submit" class="kp-icon-btn" title="Eliminar">
@@ -131,7 +149,7 @@ else
 {
     <div class="modal fade" id="pago-@c.IdCuentaCorrienteCliente" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form class="modal-content" asp-action="RegistrarPago" method="post">
+            <form class="modal-content" asp-action="RegistrarPago" method="post" novalidate>
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@c.IdCuentaCorrienteCliente" />
 
@@ -156,4 +174,8 @@ else
             </form>
         </div>
     </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

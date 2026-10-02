@@ -5,23 +5,18 @@
 
 <div class="kp-page-header">
     <h1 class="kp-page-title">Nueva compra</h1>
-    <a class="btn btn-kp-outline" asp-controller="Stock" asp-action="CrearProducto">Nuevo Producto</a>
+    <a class="btn btn-kp-outline" asp-controller="Stock" asp-action="CrearProducto"
+       asp-route-volverA="@Url.Action("Nueva", "Compras")">Nuevo Producto</a>
 </div>
 
-@* --- Alta de renglones --- *@
-<form asp-action="AgregarItem" method="post" class="kp-filtros">
+@* --- Alta de renglones: cada uno ingresa su propio lote --- *@
+<form asp-action="AgregarItem" method="post" class="kp-filtros" novalidate>
     @Html.AntiForgeryToken()
 
-    <div class="row g-3 align-items-end">
-        <div class="col-md-5">
-            <label class="form-label" for="idProducto">Producto</label>
-            <select class="form-select" id="idProducto" name="idProducto" required>
-                <option value="">— Elegí el producto —</option>
-                @foreach (var p in Model.Productos)
-                {
-                    <option value="@p.IdProducto">@p.Nombre - @p.Marca (stock @p.StockDisponible)</option>
-                }
-            </select>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <partial name="_Combo"
+                     model="Combos.Productos(Model.Productos, Model.IdProductoNuevo, mostrarPrecio: false)" />
         </div>
 
         <div class="col-md-2">
@@ -29,14 +24,24 @@
             <input class="form-control" type="number" id="cantidad" name="cantidad" min="1" value="1" required />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label class="form-label" for="precioUnitario">Precio de compra</label>
             <input class="form-control" type="number" id="precioUnitario" name="precioUnitario"
                    step="0.01" min="0.01" required />
         </div>
 
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-kp w-100">Agregar</button>
+        <div class="col-md-4">
+            <label class="form-label" for="nroLote">N° de lote</label>
+            <input class="form-control" id="nroLote" name="nroLote" placeholder="Opcional" />
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label" for="fechaVencimiento">Vencimiento</label>
+            <input class="form-control" type="date" id="fechaVencimiento" name="fechaVencimiento" />
+        </div>
+
+        <div class="col-md-4 d-flex align-items-start">
+            <button type="submit" class="btn btn-kp w-100 mt-4">Agregar</button>
         </div>
     </div>
 </form>
@@ -53,6 +58,8 @@ else
             <thead>
                 <tr>
                     <th>Producto</th>
+                    <th>N° de lote</th>
+                    <th>Vencimiento</th>
                     <th class="text-center">Cantidad</th>
                     <th class="text-end">Precio de compra</th>
                     <th class="text-end">Subtotal</th>
@@ -60,17 +67,20 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Items)
+                @for (var i = 0; i < Model.Items.Count; i++)
                 {
+                    var item = Model.Items[i];
                     <tr>
                         <td>@item.Producto</td>
+                        <td>@(string.IsNullOrWhiteSpace(item.NroLote) ? "(se numera solo)" : item.NroLote)</td>
+                        <td>@(item.FechaVencimiento?.ToString("dd/MM/yyyy") ?? "No vence")</td>
                         <td class="text-center">@item.Cantidad</td>
                         <td class="text-end">$@item.PrecioUnitario.ToString("N2")</td>
                         <td class="text-end">$@item.Subtotal.ToString("N2")</td>
                         <td>
-                            <form asp-action="QuitarItem" method="post">
+                            <form asp-action="QuitarItem" method="post" novalidate>
                                 @Html.AntiForgeryToken()
-                                <input type="hidden" name="idProducto" value="@item.IdProducto" />
+                                <input type="hidden" name="indice" value="@i" />
                                 <button type="submit" class="kp-icon-btn" title="Quitar de la compra">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
                                         <circle cx="12" cy="12" r="9" />
@@ -89,11 +99,11 @@ else
 }
 
 @* --- Cierre de la compra --- *@
-<form asp-action="Finalizar" method="post" class="mt-4">
+<form asp-action="Finalizar" method="post" class="mt-4" novalidate>
     @Html.AntiForgeryToken()
 
     <div class="row g-4">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <label asp-for="IdProveedor" class="form-label"></label>
             <select asp-for="IdProveedor" class="form-select">
                 <option value="0">— Elegí el proveedor —</option>
@@ -102,15 +112,15 @@ else
                     <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
                 }
             </select>
+            <span asp-validation-for="IdProveedor" class="text-danger small"></span>
         </div>
 
         <div class="col-md-4">
             <label asp-for="FechaHora" class="form-label"></label>
             <input asp-for="FechaHora" type="date" class="form-control" />
+            <span asp-validation-for="FechaHora" class="text-danger small"></span>
         </div>
     </div>
-
-    <p class="form-text mt-3">Al registrar la compra, la cantidad comprada se suma al stock de cada producto.</p>
 
     <div class="kp-form-acciones">
         <button type="submit" class="btn btn-kp-outline" formaction="@Url.Action("Cancelar")">
@@ -119,3 +129,7 @@ else
         <button type="submit" class="btn btn-kp">Registrar compra</button>
     </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

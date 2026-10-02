@@ -7,12 +7,27 @@
     <h1 class="kp-page-title">Nuevo producto</h1>
 </div>
 
+@if (!string.IsNullOrWhiteSpace(Model.VolverA))
+{
+    <p class="form-text">
+        Estás dando de alta un producto sin salir de lo que venías cargando.
+        Al terminar volvés ahí y no se pierde nada.
+    </p>
+}
+
 <form asp-action="CrearProducto" method="post" class="kp-form">
     <partial name="_ProductoForm" model="Model" />
 
     <div class="kp-form-acciones">
-        <a class="btn btn-kp-outline" asp-action="Productos">Cancelar</a>
-        <button type="submit" class="btn btn-kp">Agregar producto</button>
+        @if (string.IsNullOrWhiteSpace(Model.VolverA))
+        {
+            <a class="btn btn-kp-outline" asp-action="Productos">Cancelar</a>
+        }
+        else
+        {
+            <a class="btn btn-kp-outline" href="@Model.VolverA">Volver sin crear</a>
+        }
+        <button type="submit" class="btn btn-kp">Nuevo Producto</button>
     </div>
 </form>
 

@@ -6,6 +6,7 @@
 
 @Html.AntiForgeryToken()
 <input type="hidden" asp-for="IdProducto" />
+<input type="hidden" asp-for="VolverA" />
 
 <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
 
@@ -31,14 +32,34 @@
         }
     </select>
     <span asp-validation-for="IdCategoria" class="text-danger small"></span>
-    <div class="form-text">
-        <a asp-action="Categorias">Agregar nueva categoría</a>
-    </div>
+
+    @if (Model.IdProducto == 0)
+    {
+        @* Se crea acá mismo para no perder lo que ya se cargó del producto *@
+        <div class="row g-2 mt-1">
+            <div class="col-md-8">
+                <input asp-for="NuevaCategoria" class="form-control form-control-sm"
+                       placeholder="¿Falta una categoría? Escribí su nombre" />
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-kp-outline btn-sm w-100"
+                        formaction="@Url.Action("CrearCategoriaRapida", "Stock")" formnovalidate>
+                    Crear categoría
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-text">
+            <a asp-action="Categorias">Administrar categorías</a>
+        </div>
+    }
 </div>
 
 <div class="mb-3">
     <label asp-for="PrecioVenta" class="form-label"></label>
-    <input asp-for="PrecioVenta" type="number" step="0.01" min="0.01" class="form-control" />
+    <input asp-for="PrecioVenta" type="number" step="0.01" class="form-control" />
     <span asp-validation-for="PrecioVenta" class="text-danger small"></span>
 </div>
 
@@ -47,12 +68,57 @@
     <div class="mb-3">
         <label class="form-label">Stock disponible</label>
         <input class="form-control" value="@Model.StockDisponible" disabled />
-        <div class="form-text">El stock se actualiza con las compras a proveedor y las ventas.</div>
+        <div class="form-text">
+            <a asp-action="Lotes" asp-route-id="@Model.IdProducto">Ver los lotes</a>
+        </div>
     </div>
 }
 
 <div class="mb-3">
     <label asp-for="DiasAvisoVencimiento" class="form-label"></label>
-    <input asp-for="DiasAvisoVencimiento" type="number" min="0" class="form-control" />
+    <input asp-for="DiasAvisoVencimiento" type="number" class="form-control" />
     <span asp-validation-for="DiasAvisoVencimiento" class="text-danger small"></span>
 </div>
+
+@* Al dar de alta se puede cargar el primer lote y el primer proveedor.
+   Los dos son opcionales: después se agregan todos los que hagan falta. *@
+@if (Model.IdProducto == 0)
+{
+    <h2 class="kp-section-title">Primer lote (opcional)</h2>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="NroLote" class="form-label"></label>
+            <input asp-for="NroLote" class="form-control" placeholder="L1" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="FechaVencimiento" class="form-label"></label>
+            <input asp-for="FechaVencimiento" type="date" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="CantidadInicial" class="form-label"></label>
+            <input asp-for="CantidadInicial" type="number" class="form-control" />
+            <span asp-validation-for="CantidadInicial" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <h2 class="kp-section-title">Primer proveedor (opcional)</h2>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="IdProveedor" class="form-label"></label>
+            <select asp-for="IdProveedor" class="form-select">
+                <option value="0">— Sin proveedor por ahora —</option>
+                @foreach (var p in Model.Proveedores)
+                {
+                    <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="PrecioCompra" class="form-label"></label>
+            <input asp-for="PrecioCompra" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="PrecioCompra" class="text-danger small"></span>
+        </div>
+    </div>
+}

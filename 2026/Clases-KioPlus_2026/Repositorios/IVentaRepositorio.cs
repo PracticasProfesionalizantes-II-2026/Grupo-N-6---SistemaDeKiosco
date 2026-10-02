@@ -13,6 +13,8 @@ public interface IVentaRepositorio
     Task<IEnumerable<(Venta Venta, string Vendedor, string Cliente)>> ObtenerTodasConNombres(
         DateTime? fechaDesde, DateTime? fechaHasta, int? idUsuario, int? idCliente,
         double? importeMayorA, double? importeMenorA);
+    // Ventas en cuenta corriente que el cliente todavía no pagó
+    Task<IEnumerable<(Venta Venta, string Vendedor)>> ObtenerAdeudadasPorCliente(int idCliente);
     Task<Venta?> ObtenerPorId(int id);
     Task<Venta> Agregar(Venta venta);
     Task Actualizar(Venta venta);

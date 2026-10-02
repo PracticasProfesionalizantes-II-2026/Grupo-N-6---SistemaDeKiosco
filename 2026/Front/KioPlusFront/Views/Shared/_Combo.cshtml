@@ -1,0 +1,30 @@
+@model ComboViewModel
+@*
+    Buscador con lista desplegable. Un solo control: se escribe adentro y la
+    lista se filtra; con el campo vacío muestra todas las opciones. El id
+    elegido viaja en el input oculto, así el formulario no cambia.
+*@
+@{
+    var seleccionada = Model.Opciones.FirstOrDefault(o => o.Valor == Model.ValorSeleccionado);
+}
+
+<label class="form-label" for="@Model.Id">@Model.Etiqueta</label>
+
+<div class="kp-combo" data-kp-combo>
+    <input class="form-control" id="@Model.Id" type="text" autocomplete="off"
+           placeholder="@Model.Placeholder" value="@(seleccionada?.Etiqueta)"
+           aria-label="@Model.Etiqueta" data-kp-combo-entrada />
+
+    <input type="hidden" name="@Model.Nombre" value="@(seleccionada?.Valor)" data-kp-combo-valor />
+
+    <ul class="kp-combo-lista" hidden data-kp-combo-lista>
+        @foreach (var opcion in Model.Opciones)
+        {
+            <li data-valor="@opcion.Valor" data-etiqueta="@opcion.Etiqueta"
+                class="@(opcion.Atenuada ? "kp-combo-sin-stock" : null)">
+                @opcion.Detalle
+            </li>
+        }
+        <li class="kp-combo-vacio" hidden data-kp-combo-vacio>@Model.TextoVacio</li>
+    </ul>
+</div>

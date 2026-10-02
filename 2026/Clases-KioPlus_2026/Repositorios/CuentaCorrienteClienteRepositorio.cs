@@ -56,16 +56,33 @@ public class CuentaCorrienteClienteRepositorio : ICuentaCorrienteClienteReposito
         await _db.SaveChangesAsync();
     }
 
-    // Mueve el saldo adeudado y deja el estado consistente con el nuevo monto.
-    public async Task AjustarDeuda(int id, double delta)
+    // El monto adeudado nunca se mueve a mano: se reconstruye desde las ventas.
+    // Así no puede quedar desincronizado con lo que el cliente ve que debe.
+    public async Task RecalcularDeuda(int id)
     {
         var cuenta = await _db.CuentasCorrientesClientes.FindAsync(id);
         if (cuenta is null) return;
 
-        cuenta.MontoAdeudado = Math.Max(0, cuenta.MontoAdeudado + delta);
+        var pendienteDeVentas = await _db.Ventas
+            .Where(v => v.CuentaCorrienteClienteId == id
+                        && v.Finalizada
+                        && v.FormaPago == Venta.FormaDePago.CuentaCorriente
+                        && v.Estado == Venta.EstadoVenta.NoPagado)
+            .SumAsync(v => (double?)(v.MontoTotal - v.MontoPagado)) ?? 0;
+
+        cuenta.MontoAdeudado = Math.Max(0, cuenta.SaldoInicial) + Math.Max(0, pendienteDeVentas);
         cuenta.Estado = cuenta.MontoAdeudado > 0
             ? CuentaCorrienteCliente.EstadoDeuda.Moroso
             : CuentaCorrienteCliente.EstadoDeuda.AlDia;
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DescontarSaldoInicial(int id, double monto)
+    {
+        var cuenta = await _db.CuentasCorrientesClientes.FindAsync(id);
+        if (cuenta is null || monto <= 0) return;
+
+        cuenta.SaldoInicial = Math.Max(0, cuenta.SaldoInicial - monto);
         await _db.SaveChangesAsync();
     }
 }

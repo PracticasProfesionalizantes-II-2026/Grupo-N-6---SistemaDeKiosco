@@ -1,4 +1,4 @@
-using Clases_KioPlus.Logica.DTOs;
+﻿using Clases_KioPlus.Logica.DTOs;
 using Clases_KioPlus.Models;
 using Clases_KioPlus.Repositorios;
 
@@ -11,5 +11,6 @@ public interface IUsuarioLogica
     Task<ResultadoOperacion> Actualizar(int id, UsuarioCreateDto dto);
     Task<bool> Eliminar(int id);
     Task<bool> CambiarEstado(int id, bool estado);
+    Task<ResultadoOperacion> CambiarContrasenia(CambiarContraseniaDto dto);
     Task<LoginResultadoDto?> Login(LoginDto dto);
 }

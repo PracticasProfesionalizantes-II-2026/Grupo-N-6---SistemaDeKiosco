@@ -8,17 +8,9 @@ public static class CajaEndpoints
     {
         var grupo = app.MapGroup("/caja").WithTags("Caja");
 
-        // Saldo actual, o saldo a una fecha con ?fecha=2026-05-01
-        grupo.MapGet("/", async (DateTime? fecha, ICajaLogica logica) =>
-        {
-            if (fecha.HasValue)
-            {
-                var saldo = await logica.SaldoAFecha(fecha.Value);
-                return Results.Ok(new { fecha = fecha.Value.Date, saldo });
-            }
-
-            var saldoActual = await logica.SaldoActual();
-            return Results.Ok(new { saldoActual });
-        });
+        // Saldo actual de la caja. Es lo único que el sistema expone de ella:
+        // no hay gestión de caja, solo el saldo que mueven ventas y compras.
+        grupo.MapGet("/", async (ICajaLogica logica) =>
+            Results.Ok(new { saldoActual = await logica.SaldoActual() }));
     }
 }

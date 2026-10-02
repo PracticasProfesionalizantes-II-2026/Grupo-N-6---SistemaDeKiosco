@@ -6,7 +6,7 @@ public record CompraDto(int IdCompraProveedor, DateTime FechaHora, int IdProveed
 
 public record CompraCreateDto(
     DateTime FechaHora,
-    [property: Range(1, int.MaxValue, ErrorMessage = "idProveedor inválido")] int IdProveedor);
+    [property: Range(1, int.MaxValue, ErrorMessage = "Elegí un proveedor")] int IdProveedor);
 
 // Forma enriquecida usada por el listado de compras: incluye el nombre del proveedor.
 public record CompraListadoDto(

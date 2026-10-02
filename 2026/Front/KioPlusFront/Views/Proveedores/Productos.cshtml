@@ -1,0 +1,102 @@
+@model ProductosDelProveedorViewModel
+@{
+    ViewData["Title"] = $"Productos de {Model.NombreProveedor}";
+}
+@* Es la misma asociación que se administra desde Stock → Proveedores del producto,
+   recorrida desde el proveedor. Lo que se haga acá se ve allá, y al revés. *@
+
+<div class="kp-page-header">
+    <h1 class="kp-page-title">Productos asociados — @Model.NombreProveedor</h1>
+    <a class="btn btn-kp-outline" asp-action="Index">Volver</a>
+</div>
+
+<form asp-action="AsociarProducto" method="post" class="kp-filtros" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.IdProveedor" />
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-6">
+            <label class="form-label" for="idProducto">Producto</label>
+            <select class="form-select" id="idProducto" name="idProducto">
+                <option value="0">— Elegí un producto —</option>
+                @foreach (var p in Model.ProductosDisponibles)
+                {
+                    <option value="@p.IdProducto">@p.Nombre - @p.Marca</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="precioCompra">Precio de compra</label>
+            <input class="form-control" id="precioCompra" name="precioCompra"
+                   type="number" step="0.01" min="0.01" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-kp w-100">Asociar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Productos.Count == 0)
+{
+    <p class="kp-vacio">Este proveedor todavía no tiene productos asociados.</p>
+}
+else
+{
+    <div class="kp-table-wrapper">
+        <table class="kp-table">
+            <thead>
+                <tr>
+                    <th style="width:60px"></th>
+                    <th>Producto</th>
+                    <th>Marca</th>
+                    <th class="text-end">Precio de compra</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var producto in Model.Productos)
+                {
+                    <tr>
+                        <td>
+                            <form asp-action="DesasociarProducto" method="post"
+                                  onsubmit="return confirm('¿Quitar @producto.Producto de este proveedor?');" novalidate>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.IdProveedor" />
+                                <input type="hidden" name="idProducto" value="@producto.IdProducto" />
+                                <input type="hidden" name="idAsociacion" value="@producto.IdProductoProveedor" />
+                                <button type="submit" class="kp-icon-btn" title="Quitar producto">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                        <td>@producto.Producto</td>
+                        <td>@producto.Marca</td>
+                        <td class="text-end">
+                            @* El precio se corrige acá mismo *@
+                            <form asp-action="EditarPrecio" method="post" class="kp-cantidad justify-content-end" novalidate>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@Model.IdProveedor" />
+                                <input type="hidden" name="idProducto" value="@producto.IdProducto" />
+                                <input type="hidden" name="idAsociacion" value="@producto.IdProductoProveedor" />
+                                <input class="form-control form-control-sm" type="number" name="precioCompra"
+                                       step="0.01" min="0.01"
+                                       value="@producto.PrecioCompra.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                       aria-label="Precio de compra de @producto.Producto" />
+                                <button type="submit" class="kp-icon-btn" title="Guardar el precio">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m5 13 4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

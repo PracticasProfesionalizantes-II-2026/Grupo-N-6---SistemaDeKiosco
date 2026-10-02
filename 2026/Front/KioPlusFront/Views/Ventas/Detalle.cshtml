@@ -3,10 +3,19 @@
     ViewData["Title"] = "Productos de la venta";
     var venta = ViewBag.Venta as VentaDto;
 }
+@* Pantalla de consulta. Para corregir la venta se entra a "Editar venta", donde
+   cada cambio mueve el stock por los lotes. *@
 
 <div class="kp-page-header">
     <h1 class="kp-page-title">Venta #@(venta?.IdVenta)</h1>
-    <a class="btn btn-kp-outline" asp-action="Listado">Volver</a>
+
+    <div class="d-flex gap-2">
+        @if (venta is not null)
+        {
+            <a class="btn btn-kp" asp-action="Editar" asp-route-id="@venta.IdVenta">Editar venta</a>
+        }
+        <a class="btn btn-kp-outline" asp-action="Listado">Volver</a>
+    </div>
 </div>
 
 @if (venta is not null)

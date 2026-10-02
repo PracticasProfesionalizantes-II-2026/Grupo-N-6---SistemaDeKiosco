@@ -12,5 +12,5 @@ public interface IProductoLogica
     Task<bool> Eliminar(int id);
     Task<IEnumerable<StockCriticoDto>> ObtenerStockCritico();
     Task<IEnumerable<ProximoVencimientoDto>> ObtenerProximosAVencer();
-    Task<IEnumerable<object>> MasVendidos(DateTime desde, DateTime hasta, string criterio, int limite);
+    Task<IEnumerable<object>> MasVendidos(DateTime? desde, DateTime? hasta, string criterio, int limite);
 }

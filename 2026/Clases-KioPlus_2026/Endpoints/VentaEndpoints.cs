@@ -47,6 +47,18 @@ public static class VentaEndpoints
                 : Results.BadRequest(new { mensaje = resultado.Error });
         });
 
+        // Cobro de una venta adeudada desde la cuenta corriente del cliente.
+        // El cuerpo es opcional: sin fechaPago se toma la fecha de hoy.
+        grupo.MapPost("/{id:int}/pagar", async (int id, PagoVentaDto? dto, IVentaLogica logica) =>
+        {
+            var resultado = await logica.RegistrarPago(id, dto ?? new PagoVentaDto(null));
+            if (resultado.Ok) return Results.Ok(new { mensaje = "venta pagada" });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
+        });
+
         grupo.MapPut("/{id:int}", async (int id, VentaCreateDto dto, IVentaLogica logica) =>
         {
             var ok = await logica.Actualizar(id, dto);

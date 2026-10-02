@@ -26,12 +26,49 @@ public class NuevaVentaViewModel
     public FormaDePago FormaPago { get; set; } = FormaDePago.PagadoAlMomento;
     public int IdCliente { get; set; } = 1;
 
+    // Producto recién dado de alta desde esta misma venta: vuelve preseleccionado
+    public int? IdProductoNuevo { get; set; }
+
     public double Total => Items.Sum(i => i.Subtotal);
+
+    public int StockDisponible(int idProducto) =>
+        Productos.FirstOrDefault(p => p.IdProducto == idProducto)?.StockDisponible ?? 0;
 }
 
-public class ListadoVentasViewModel
+// Una venta ya registrada, para corregirla entera desde el listado: su cabecera
+// y también sus renglones, en la misma pantalla.
+public class EditarVentaViewModel
+{
+    public int IdVenta { get; set; }
+    public DateTime FechaHora { get; set; }
+    public double MontoTotal { get; set; }
+    public int IdUsuario { get; set; }
+    public bool Finalizada { get; set; }
+    public EstadoVenta Estado { get; set; }
+    public double MontoPagado { get; set; }
+
+    [Display(Name = "Forma de pago")]
+    public FormaDePago FormaPago { get; set; }
+
+    [Display(Name = "Cliente")]
+    public int IdCliente { get; set; }
+
+    public IReadOnlyList<CuentaCorrienteClienteDto> Clientes { get; set; } = Array.Empty<CuentaCorrienteClienteDto>();
+    public IReadOnlyList<DetalleVentaListadoDto> Detalles { get; set; } = Array.Empty<DetalleVentaListadoDto>();
+    public IReadOnlyList<ProductoDto> Productos { get; set; } = Array.Empty<ProductoDto>();
+
+    public double TotalRenglones => Detalles.Sum(d => d.Subtotal);
+
+    public int StockDisponible(int idProducto) =>
+        Productos.FirstOrDefault(p => p.IdProducto == idProducto)?.StockDisponible ?? 0;
+}
+
+public class ListadoVentasViewModel : IFiltroPorPeriodo
 {
     public IReadOnlyList<VentaListadoDto> Ventas { get; set; } = Array.Empty<VentaListadoDto>();
+
+    [Display(Name = "Período")]
+    public string Periodo { get; set; } = Periodos.Historico;
 
     [DataType(DataType.Date)]
     [Display(Name = "Desde")]
@@ -47,9 +84,11 @@ public class ListadoVentasViewModel
     [Display(Name = "Cliente")]
     public int? IdCliente { get; set; }
 
+    [Range(0, double.MaxValue, ErrorMessage = "El importe no puede ser negativo")]
     [Display(Name = "Importe mayor a")]
     public double? ImporteMayorA { get; set; }
 
+    [Range(0, double.MaxValue, ErrorMessage = "El importe no puede ser negativo")]
     [Display(Name = "Importe menor a")]
     public double? ImporteMenorA { get; set; }
 
@@ -59,15 +98,18 @@ public class ListadoVentasViewModel
     public double TotalListado => Ventas.Sum(v => v.MontoTotal);
 }
 
-public class MasVendidosViewModel
+public class MasVendidosViewModel : IFiltroPorPeriodo
 {
+    [Display(Name = "Período")]
+    public string Periodo { get; set; } = Periodos.Historico;
+
     [DataType(DataType.Date)]
     [Display(Name = "Desde")]
-    public DateTime FechaDesde { get; set; } = DateTime.Today.AddMonths(-1);
+    public DateTime? FechaDesde { get; set; }
 
     [DataType(DataType.Date)]
     [Display(Name = "Hasta")]
-    public DateTime FechaHasta { get; set; } = DateTime.Today;
+    public DateTime? FechaHasta { get; set; }
 
     [Display(Name = "Criterio")]
     public string Criterio { get; set; } = "cantidad";

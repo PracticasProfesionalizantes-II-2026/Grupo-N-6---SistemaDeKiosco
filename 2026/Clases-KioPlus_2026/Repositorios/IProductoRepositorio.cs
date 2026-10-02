@@ -14,5 +14,5 @@ public interface IProductoRepositorio
     Task Eliminar(Producto producto);
     Task<IEnumerable<Producto>> ObtenerConStockCritico(int umbral);
     Task<IEnumerable<Lote>> ObtenerLotesConProducto();
-    Task<IEnumerable<(string Nombre, int Cantidad, double Monto)>> MasVendidos(DateTime desde, DateTime hasta);
+    Task<IEnumerable<(string Nombre, int Cantidad, double Monto)>> MasVendidos(DateTime? desde, DateTime? hasta);
 }

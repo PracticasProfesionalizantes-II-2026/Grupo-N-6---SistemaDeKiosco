@@ -1,3 +1,4 @@
+@model RecuperarContraseniaViewModel
 @{
     ViewData["Title"] = "Recuperar contraseña";
     Layout = "_LayoutLogin";
@@ -8,10 +9,41 @@
 <div class="kp-login-box">
     <h1 class="kp-login-title">Recuperar contraseña</h1>
 
-    <p class="text-center text-muted">
-        El sistema todavía no envía correos de recuperación.
-        Pedile a un administrador que restablezca tu contraseña desde la pantalla de Usuarios.
-    </p>
+    <form asp-action="RecuperarContrasenia" method="post">
+        @Html.AntiForgeryToken()
 
-    <a class="btn btn-kp mt-3" asp-action="Login">Volver al inicio de sesión</a>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+        <div class="mb-3">
+            <label asp-for="NombreUsuario" class="form-label"></label>
+            <input asp-for="NombreUsuario" class="form-control" autocomplete="username" />
+            <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="NuevaContrasenia" class="form-label"></label>
+            <div class="kp-clave">
+            <input asp-for="NuevaContrasenia" type="password" class="form-control" autocomplete="new-password" />
+            <partial name="_OjoClave" model='"NuevaContrasenia"' />
+        </div>
+            <span asp-validation-for="NuevaContrasenia" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ConfirmacionContrasenia" class="form-label"></label>
+            <div class="kp-clave">
+            <input asp-for="ConfirmacionContrasenia" type="password" class="form-control" autocomplete="new-password" />
+            <partial name="_OjoClave" model='"ConfirmacionContrasenia"' />
+        </div>
+            <span asp-validation-for="ConfirmacionContrasenia" class="text-danger small"></span>
+        </div>
+
+        <button type="submit" class="btn btn-kp w-100">Cambiar contraseña</button>
+    </form>
+
+    <a class="btn btn-kp-outline mt-3 w-100" asp-action="Login">Volver al inicio de sesión</a>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

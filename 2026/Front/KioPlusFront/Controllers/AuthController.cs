@@ -52,5 +52,26 @@ public class AuthController : Controller
     }
 
     [HttpGet]
-    public IActionResult RecuperarContrasenia() => View();
+    public IActionResult RecuperarContrasenia() => View(new RecuperarContraseniaViewModel());
+
+    // El sistema no manda código de verificación: se pide la nueva contraseña
+    // dos veces y, si coinciden, se actualiza en el momento.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RecuperarContrasenia(RecuperarContraseniaViewModel modelo)
+    {
+        if (!ModelState.IsValid) return View(modelo);
+
+        var resultado = await _usuarios.RecuperarContraseniaAsync(
+            new CambiarContraseniaDto(modelo.NombreUsuario, modelo.NuevaContrasenia));
+
+        if (!resultado.Ok)
+        {
+            ModelState.AddModelError(string.Empty, resultado.Error!);
+            return View(modelo);
+        }
+
+        TempData["Exito"] = "Contraseña actualizada. Ya podés iniciar sesión.";
+        return RedirectToAction(nameof(Login));
+    }
 }

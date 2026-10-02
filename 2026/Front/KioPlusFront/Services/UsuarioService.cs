@@ -10,6 +10,7 @@ public interface IUsuarioService
     Task<ApiResultado> CrearAsync(UsuarioCreateDto dto);
     Task<ApiResultado> ActualizarAsync(int id, UsuarioCreateDto dto);
     Task<ApiResultado> CambiarEstadoAsync(int id, bool estado);
+    Task<ApiResultado> RecuperarContraseniaAsync(CambiarContraseniaDto dto);
     Task<ApiResultado> EliminarAsync(int id);
 }
 
@@ -35,6 +36,9 @@ public class UsuarioService : IUsuarioService
 
     public Task<ApiResultado> CambiarEstadoAsync(int id, bool estado) =>
         _api.PatchAsync($"/usuarios/{id}/estado", new CambiarEstadoUsuarioDto(estado));
+
+    public Task<ApiResultado> RecuperarContraseniaAsync(CambiarContraseniaDto dto) =>
+        _api.PostAsync("/usuarios/recuperar-contrasenia", dto);
 
     public Task<ApiResultado> EliminarAsync(int id) =>
         _api.DeleteAsync($"/usuarios/{id}");

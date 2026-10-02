@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,34 +11,18 @@ namespace Clases_KioPlus.Models
     {
         public int Id { get; set; }
         //Monto actual de dinero en la caja del sistema
-        public double Monto { get; set; }
+        [Required] public double Monto { get; set; }
 
+        // Entra plata: venta cobrada al momento o pago de una cuenta corriente
         public void RegistrarIngreso(double monto)
         {
             Monto += monto;
         }
 
-        //manera 1 
-        /*
-        public void RegistrarEgreso(decimal monto)
+        // Sale plata: compra a proveedor
+        public void RegistrarEgreso(double monto)
         {
-            MontoActual -= monto;
+            Monto -= monto;
         }
-
-        public decimal ObtenerMonto()
-        {
-            return MontoActual;
-        }
-        */
-        //manera 2
-        /*
-        public decimal ObtenerMontoCaja()
-        {
-            decimal totalVentas = ventas.Sum(v => v.MontoTotal);
-            decimal totalCompras = compras.Sum(c => c.MontoTotal);
-
-            return totalVentas - totalCompras;
-        }
-        */
     }
 }

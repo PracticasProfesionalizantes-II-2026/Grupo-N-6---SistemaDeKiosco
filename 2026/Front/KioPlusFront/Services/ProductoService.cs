@@ -2,15 +2,18 @@ using KioPlusFront.Models.Api;
 
 namespace KioPlusFront.Services;
 
+// Respuesta de creación de la API (solo trae el id generado)
+public record ProductoCreadoDto(int IdProducto);
+
 public interface IProductoService
 {
     Task<IReadOnlyList<ProductoDto>> ObtenerTodosAsync(string? nombre = null, int? idCategoria = null, string? marca = null);
     Task<ApiResultado<ProductoDetalleDto>> ObtenerPorIdAsync(int id);
     Task<IReadOnlyList<StockCriticoDto>> ObtenerStockCriticoAsync();
     Task<IReadOnlyList<ProximoVencimientoDto>> ObtenerProximosAVencerAsync();
-    Task<IReadOnlyList<MasVendidoCantidadDto>> MasVendidosPorCantidadAsync(DateTime desde, DateTime hasta, int limite);
-    Task<IReadOnlyList<MasVendidoMontoDto>> MasVendidosPorMontoAsync(DateTime desde, DateTime hasta, int limite);
-    Task<ApiResultado> CrearAsync(ProductoCreateDto dto);
+    Task<IReadOnlyList<MasVendidoCantidadDto>> MasVendidosPorCantidadAsync(DateTime? desde, DateTime? hasta, int limite);
+    Task<IReadOnlyList<MasVendidoMontoDto>> MasVendidosPorMontoAsync(DateTime? desde, DateTime? hasta, int limite);
+    Task<ApiResultado<ProductoCreadoDto>> CrearAsync(ProductoCreateDto dto);
     Task<ApiResultado> ActualizarAsync(int id, ProductoCreateDto dto);
     Task<ApiResultado> EliminarAsync(int id);
 }
@@ -40,17 +43,23 @@ public class ProductoService : IProductoService
     public Task<IReadOnlyList<ProximoVencimientoDto>> ObtenerProximosAVencerAsync() =>
         _api.ObtenerListaAsync<ProximoVencimientoDto>("/productos?proximoVencimiento=true");
 
-    public Task<IReadOnlyList<MasVendidoCantidadDto>> MasVendidosPorCantidadAsync(DateTime desde, DateTime hasta, int limite) =>
+    public Task<IReadOnlyList<MasVendidoCantidadDto>> MasVendidosPorCantidadAsync(DateTime? desde, DateTime? hasta, int limite) =>
         _api.ObtenerListaAsync<MasVendidoCantidadDto>(RutaMasVendidos(desde, hasta, "cantidad", limite));
 
-    public Task<IReadOnlyList<MasVendidoMontoDto>> MasVendidosPorMontoAsync(DateTime desde, DateTime hasta, int limite) =>
+    public Task<IReadOnlyList<MasVendidoMontoDto>> MasVendidosPorMontoAsync(DateTime? desde, DateTime? hasta, int limite) =>
         _api.ObtenerListaAsync<MasVendidoMontoDto>(RutaMasVendidos(desde, hasta, "monto", limite));
 
-    private static string RutaMasVendidos(DateTime desde, DateTime hasta, string criterio, int limite) =>
-        $"/productos/mas-vendidos?fechaDesde={desde:yyyy-MM-dd}&fechaHasta={hasta:yyyy-MM-dd}&criterio={criterio}&limite={limite}";
+    // Las fechas que no vienen se omiten de la ruta: el ranking sale histórico
+    private static string RutaMasVendidos(DateTime? desde, DateTime? hasta, string criterio, int limite)
+    {
+        var ruta = $"/productos/mas-vendidos?criterio={criterio}&limite={limite}";
+        if (desde is not null) ruta += $"&fechaDesde={desde:yyyy-MM-dd}";
+        if (hasta is not null) ruta += $"&fechaHasta={hasta:yyyy-MM-dd}";
+        return ruta;
+    }
 
-    public Task<ApiResultado> CrearAsync(ProductoCreateDto dto) =>
-        _api.PostAsync("/productos", dto);
+    public Task<ApiResultado<ProductoCreadoDto>> CrearAsync(ProductoCreateDto dto) =>
+        _api.PostAsync<ProductoCreateDto, ProductoCreadoDto>("/productos", dto);
 
     public Task<ApiResultado> ActualizarAsync(int id, ProductoCreateDto dto) =>
         _api.PutAsync($"/productos/{id}", dto);

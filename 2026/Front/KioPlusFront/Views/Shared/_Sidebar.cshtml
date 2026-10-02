@@ -69,15 +69,19 @@
                 <span>Cuenta corriente<br />de cliente</span>
             </a>
         </li>
-        <li class="kp-nav-item">
-            <a class="@Activo("Usuarios")" asp-controller="Usuarios" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="8.5" r="3.5" />
-                    <path d="M5 20a7 7 0 0 1 14 0" />
-                </svg>
-                <span>Usuarios</span>
-            </a>
-        </li>
+        @* La gestión de usuarios es solo para administradores *@
+        @if (usuario?.EsAdministrador == true)
+        {
+            <li class="kp-nav-item">
+                <a class="@Activo("Usuarios")" asp-controller="Usuarios" asp-action="Index">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="8.5" r="3.5" />
+                        <path d="M5 20a7 7 0 0 1 14 0" />
+                    </svg>
+                    <span>Usuarios</span>
+                </a>
+            </li>
+        }
         <li class="kp-nav-item">
             <a class="@Activo("Notificaciones")" asp-controller="Notificaciones" asp-action="Index">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

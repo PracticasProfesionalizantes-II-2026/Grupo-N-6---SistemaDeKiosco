@@ -30,6 +30,8 @@ else
             <thead>
                 <tr>
                     <th>Producto</th>
+                    <th>N° de lote</th>
+                    <th>Vencimiento</th>
                     <th class="text-center">Cantidad</th>
                     <th class="text-end">Precio de compra</th>
                     <th class="text-end">Subtotal</th>
@@ -40,6 +42,8 @@ else
                 {
                     <tr>
                         <td>@detalle.Producto</td>
+                        <td>@(detalle.NroLote ?? "-")</td>
+                        <td>@(detalle.FechaVencimiento?.ToString("dd/MM/yyyy") ?? "No vence")</td>
                         <td class="text-center">@detalle.Cantidad</td>
                         <td class="text-end">$@detalle.PrecioUnitario.ToString("N2")</td>
                         <td class="text-end">$@detalle.Subtotal.ToString("N2")</td>

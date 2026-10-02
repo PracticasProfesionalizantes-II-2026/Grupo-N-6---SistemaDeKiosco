@@ -26,13 +26,13 @@ public class ExceptionHandlingMiddleware
         {
             _logger.LogError(ex, "Falla de conexión a la base de datos");
             context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
-            await context.Response.WriteAsJsonAsync(new { mensaje = "servicio no disponible" });
+            await context.Response.WriteAsJsonAsync(new { mensaje = "No hay conexión con la base de datos. Volvé a intentar en unos minutos." });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error no controlado");
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(new { mensaje = "error interno del servidor" });
+            await context.Response.WriteAsJsonAsync(new { mensaje = "Ocurrió un error interno en el servidor." });
         }
     }
 

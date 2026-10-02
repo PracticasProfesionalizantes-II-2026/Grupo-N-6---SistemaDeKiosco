@@ -8,7 +8,7 @@ namespace Clases_KioPlus.Logica;
 public class ProductoLogica : IProductoLogica
 {
     // Umbral compartido con la generación de notificaciones de stock bajo
-    public const int UmbralStockCritico = 5;
+    public const int UmbralStockCritico = 10;
     private readonly IProductoRepositorio _repo;
     public ProductoLogica(IProductoRepositorio repo) => _repo = repo;
 
@@ -27,7 +27,9 @@ public class ProductoLogica : IProductoLogica
         if (p is null) return null;
 
         var lotes = (p.Lotes ?? new List<Lote>())
-            .Select(l => new LoteResumenDto(l.Id, l.FechaVencimiento, l.Cantidad));
+            .OrderBy(l => l.FechaVencimiento.HasValue ? 0 : 1)
+            .ThenBy(l => l.FechaVencimiento)
+            .Select(l => new LoteResumenDto(l.Id, l.NroLote, l.FechaVencimiento, l.CantidadInicial, l.Cantidad));
 
         return new ProductoDetalleDto(
             p.Id, p.Nombre, p.Marca, p.CategoriaId, p.PrecioVenta,
@@ -75,28 +77,31 @@ public class ProductoLogica : IProductoLogica
     public async Task<IEnumerable<StockCriticoDto>> ObtenerStockCritico()
     {
         var productos = await _repo.ObtenerConStockCritico(UmbralStockCritico);
-        return productos.Select(p => new StockCriticoDto(p.Nombre, p.StockDisponible));
+        return productos.Select(p => new StockCriticoDto(p.Nombre, p.Marca, p.StockDisponible));
     }
 
+    // Solo avisa por lotes con unidades sin vender: lo ya vendido no puede vencer
+    // en el kiosco. Los lotes sin fecha de vencimiento nunca entran al listado.
     public async Task<IEnumerable<ProximoVencimientoDto>> ObtenerProximosAVencer()
     {
         var hoy = DateTime.Now.Date;
         var lotes = await _repo.ObtenerLotesConProducto();
 
         return lotes
-            .Where(l => l.Producto is not null)
+            .Where(l => l.Producto is not null && l.Cantidad > 0 && l.FechaVencimiento.HasValue)
             .Select(l => new
             {
                 Lote = l,
-                Dias = (l.FechaVencimiento.Date - hoy).Days
+                Dias = (l.FechaVencimiento!.Value.Date - hoy).Days
             })
             .Where(x => x.Dias >= 0 && x.Dias <= x.Lote.Producto.DiasAvisoVencimiento)
+            .OrderBy(x => x.Dias)
             .Select(x => new ProximoVencimientoDto(
                 x.Lote.Producto.Nombre, x.Lote.NroLote, x.Lote.Cantidad, x.Dias))
             .ToList();
     }
 
-    public async Task<IEnumerable<object>> MasVendidos(DateTime desde, DateTime hasta, string criterio, int limite)
+    public async Task<IEnumerable<object>> MasVendidos(DateTime? desde, DateTime? hasta, string criterio, int limite)
     {
         var datos = await _repo.MasVendidos(desde, hasta);
 

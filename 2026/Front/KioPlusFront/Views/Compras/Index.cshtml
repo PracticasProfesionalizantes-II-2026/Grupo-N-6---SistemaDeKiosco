@@ -1,6 +1,7 @@
 @model ListadoComprasViewModel
 @{
     ViewData["Title"] = "Compras a proveedor";
+    var esAdministrador = Context.Session.ObtenerUsuario()?.EsAdministrador == true;
 }
 
 <div class="kp-page-header">
@@ -8,16 +9,15 @@
     <a class="btn btn-kp" asp-action="Nueva">Nueva compra</a>
 </div>
 
+@* Los mensajes de los filtros necesitan dónde mostrarse *@
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger py-2" role="alert"></div>
+}
+
 <form asp-action="Index" method="get" class="kp-filtros">
     <div class="row g-3 align-items-end">
-        <div class="col-md-3">
-            <label asp-for="FechaDesde" class="form-label"></label>
-            <input asp-for="FechaDesde" type="date" class="form-control" />
-        </div>
-        <div class="col-md-3">
-            <label asp-for="FechaHasta" class="form-label"></label>
-            <input asp-for="FechaHasta" type="date" class="form-control" />
-        </div>
+        <partial name="_FiltroPeriodo" model="Model" />
         <div class="col-md-4">
             <label asp-for="IdProveedor" class="form-label"></label>
             <select asp-for="IdProveedor" class="form-select">
@@ -56,16 +56,20 @@ else
                 {
                     <tr>
                         <td>
-                            <form asp-action="Eliminar" method="post"
-                                  onsubmit="return confirm('¿Eliminar la compra #@compra.IdCompraProveedor? El stock ingresado no se revierte automáticamente.');">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@compra.IdCompraProveedor" />
-                                <button type="submit" class="kp-icon-btn" title="Eliminar compra">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
-                                    </svg>
-                                </button>
-                            </form>
+                            @* Anular una compra es solo para administradores *@
+                            @if (esAdministrador)
+                            {
+                                <form asp-action="Eliminar" method="post"
+                                      onsubmit="return confirm('¿Eliminar la compra #@compra.IdCompraProveedor? Se dan de baja los lotes que ingresó y el monto vuelve a la caja.');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@compra.IdCompraProveedor" />
+                                    <button type="submit" class="kp-icon-btn" title="Eliminar compra">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            }
                         </td>
                         <td>@compra.FechaHora.ToString("dd/MM/yy - HH:mm")</td>
                         <td>@compra.Proveedor</td>
@@ -80,4 +84,8 @@ else
     </div>
 
     <div class="kp-total">Total listado: $@Model.TotalListado.ToString("N2")</div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

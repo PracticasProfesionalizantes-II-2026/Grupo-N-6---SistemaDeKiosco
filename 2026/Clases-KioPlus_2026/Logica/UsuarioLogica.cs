@@ -81,6 +81,21 @@ public class UsuarioLogica : IUsuarioLogica
         return true;
     }
 
+    // Restablece la contraseña desde "¿Olvidaste tu contraseña?".
+    // Un usuario bloqueado no puede recuperarla por su cuenta.
+    public async Task<ResultadoOperacion> CambiarContrasenia(CambiarContraseniaDto dto)
+    {
+        var usuario = await _repo.ObtenerPorNombreUsuario(dto.NombreUsuario);
+        if (usuario is null) return ResultadoOperacion.NoEncontrado("usuario no encontrado");
+
+        if (!usuario.Estado)
+            return ResultadoOperacion.Invalido("este usuario se encuentra bloqueado");
+
+        usuario.ContraseniaUsuario = dto.NuevaContrasenia;
+        await _repo.Actualizar(usuario);
+        return ResultadoOperacion.Exito(usuario.Id);
+    }
+
     // Devuelve null si las credenciales no coinciden o el usuario está bloqueado
     public async Task<LoginResultadoDto?> Login(LoginDto dto)
     {

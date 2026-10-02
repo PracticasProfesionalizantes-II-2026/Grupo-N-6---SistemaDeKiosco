@@ -8,7 +8,28 @@ namespace Clases_KioPlus.Logica;
 public class DetalleVentaLogica : IDetalleVentaLogica
 {
     private readonly IDetalleVentaRepositorio _repo;
-    public DetalleVentaLogica(IDetalleVentaRepositorio repo) => _repo = repo;
+    private readonly ILoteRepositorio _repoLotes;
+    private readonly ICuentaCorrienteClienteRepositorio _repoCuentas;
+
+    public DetalleVentaLogica(
+        IDetalleVentaRepositorio repo,
+        ILoteRepositorio repoLotes,
+        ICuentaCorrienteClienteRepositorio repoCuentas)
+    {
+        _repo = repo;
+        _repoLotes = repoLotes;
+        _repoCuentas = repoCuentas;
+    }
+
+    // Cambiar los renglones de una venta ya cerrada cambia su monto, así que la
+    // deuda del cliente tiene que volver a cuadrar.
+    private async Task ActualizarDeudaDelCliente(int idVenta)
+    {
+        var venta = await _repo.ObtenerVenta(idVenta);
+        if (venta is null || !venta.Finalizada) return;
+
+        await _repoCuentas.RecalcularDeuda(venta.CuentaCorrienteClienteId);
+    }
 
     private static DetalleVentaDto AMapa(DetalleVenta d) =>
         new(d.Id, d.VentaId, d.ProductoId, d.Cantidad, d.PrecioUnitario, d.Subtotal);
@@ -27,7 +48,8 @@ public class DetalleVentaLogica : IDetalleVentaLogica
         return d is null ? null : AMapa(d);
     }
 
-    // Registra el renglón y descuenta el stock del producto vendido.
+    // Registra el renglón y descuenta las unidades de los lotes del producto
+    // siguiendo FEFO. El stock del producto queda recalculado a partir de los lotes.
     public async Task<ResultadoOperacion> Crear(int idVenta, DetalleVentaCreateDto dto)
     {
         if (!await _repo.VentaExiste(idVenta))
@@ -37,7 +59,7 @@ public class DetalleVentaLogica : IDetalleVentaLogica
         if (producto is null)
             return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
-        if (producto.StockDisponible < dto.Cantidad)
+        if (!await _repoLotes.ConsumirFefo(dto.IdProducto, dto.Cantidad))
             return ResultadoOperacion.Invalido(
                 $"stock insuficiente para {producto.Nombre}: disponible {producto.StockDisponible}");
 
@@ -50,12 +72,12 @@ public class DetalleVentaLogica : IDetalleVentaLogica
             Subtotal = dto.Cantidad * producto.PrecioVenta
         };
         await _repo.Agregar(detalle);
-        await _repo.AjustarStock(dto.IdProducto, -dto.Cantidad);
         await _repo.RecalcularMontoVenta(idVenta);
+        await ActualizarDeudaDelCliente(idVenta);
         return ResultadoOperacion.Exito(detalle.Id);
     }
 
-    // Al cambiar la cantidad solo se mueve la diferencia contra el stock.
+    // Al cambiar la cantidad solo se mueve la diferencia contra los lotes.
     public async Task<ResultadoOperacion> Actualizar(int idVenta, int id, DetalleVentaUpdateDto dto)
     {
         var detalle = await _repo.ObtenerPorId(id);
@@ -69,23 +91,25 @@ public class DetalleVentaLogica : IDetalleVentaLogica
             var producto = await _repo.ObtenerProducto(detalle.ProductoId);
             if (producto is null)
                 return ResultadoOperacion.NoEncontrado("producto no encontrado");
-            if (producto.StockDisponible < diferencia)
+
+            if (!await _repoLotes.ConsumirFefo(detalle.ProductoId, diferencia))
                 return ResultadoOperacion.Invalido(
                     $"stock insuficiente para {producto.Nombre}: disponible {producto.StockDisponible}");
+        }
+        else if (diferencia < 0)
+        {
+            await _repoLotes.DevolverFefo(detalle.ProductoId, -diferencia);
         }
 
         detalle.Cantidad = dto.Cantidad;
         detalle.Subtotal = dto.Cantidad * detalle.PrecioUnitario;
         await _repo.Actualizar(detalle);
-
-        if (diferencia != 0)
-            await _repo.AjustarStock(detalle.ProductoId, -diferencia);
-
         await _repo.RecalcularMontoVenta(idVenta);
+        await ActualizarDeudaDelCliente(idVenta);
         return ResultadoOperacion.Exito(detalle.Id);
     }
 
-    // Quitar un renglón devuelve las unidades al stock.
+    // Quitar un renglón devuelve las unidades a los lotes de los que salieron.
     public async Task<bool> Eliminar(int idVenta, int id)
     {
         var detalle = await _repo.ObtenerPorId(id);
@@ -95,8 +119,9 @@ public class DetalleVentaLogica : IDetalleVentaLogica
         var cantidad = detalle.Cantidad;
 
         await _repo.Eliminar(detalle);
-        await _repo.AjustarStock(idProducto, cantidad);
+        await _repoLotes.DevolverFefo(idProducto, cantidad);
         await _repo.RecalcularMontoVenta(idVenta);
+        await ActualizarDeudaDelCliente(idVenta);
         return true;
     }
 }

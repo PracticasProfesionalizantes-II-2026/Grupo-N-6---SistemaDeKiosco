@@ -10,5 +10,4 @@ public class CajaLogica : ICajaLogica
 
     public Task<double> SaldoActual() => _repo.SaldoActual();
 
-    public Task<double> SaldoAFecha(DateTime fecha) => _repo.SaldoAFecha(fecha);
 }

@@ -1,0 +1,8 @@
+@model string
+@* Ojo para mostrar u ocultar el contenido de un campo de contraseña.
+   El modelo es el id del input al que acompaña. *@
+
+<button type="button" class="kp-ver-clave" data-kp-ver-clave="@Model"
+        aria-label="Mostrar contraseña" title="Mostrar u ocultar la contraseña">
+    <partial name="_IconoOjo" />
+</button>

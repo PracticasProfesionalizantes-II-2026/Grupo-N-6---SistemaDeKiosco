@@ -8,6 +8,15 @@ public static class ProductoProveedorEndpoints
 {
     public static void MapProductoProveedorEndpoints(this IEndpointRouteBuilder app)
     {
+        // La misma asociación leída desde el proveedor: sus productos con el precio
+        app.MapGet("/proveedores/{idProveedor:int}/productos", async (int idProveedor, IProductoProveedorLogica logica) =>
+        {
+            var productos = await logica.ObtenerPorProveedor(idProveedor);
+            return productos is null
+                ? Results.NotFound(new { mensaje = "proveedor no encontrado" })
+                : Results.Ok(productos);
+        }).WithTags("ProductoProveedor");
+
         var grupo = app.MapGroup("/productos/{idProducto:int}/proveedores").WithTags("ProductoProveedor");
 
         grupo.MapGet("/", async (int idProducto, IProductoProveedorLogica logica) =>
@@ -21,10 +30,14 @@ public static class ProductoProveedorEndpoints
 
         grupo.MapPost("/", async (int idProducto, ProductoProveedorCreateDto dto, IProductoProveedorLogica logica) =>
         {
-            var id = await logica.Crear(idProducto, dto);
-            return id is null
-                ? Results.NotFound(new { mensaje = "producto no encontrado" })
-                : Results.Created($"/productos/{idProducto}/proveedores/{id}", new { idProductoProveedor = id });
+            var resultado = await logica.Crear(idProducto, dto);
+            if (resultado.Ok)
+                return Results.Created($"/productos/{idProducto}/proveedores/{resultado.Id}",
+                    new { idProductoProveedor = resultado.Id });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
         }).AddEndpointFilter<ValidationFilter<ProductoProveedorCreateDto>>();
 
         grupo.MapPut("/{id:int}", async (int idProducto, int id, ProductoProveedorUpdateDto dto, IProductoProveedorLogica logica) =>

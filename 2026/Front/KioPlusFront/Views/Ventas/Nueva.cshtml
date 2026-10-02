@@ -5,36 +5,20 @@
 
 <div class="kp-page-header">
     <h1 class="kp-page-title">Nueva venta</h1>
-    <a class="btn btn-kp" asp-controller="Stock" asp-action="CrearProducto">Nuevo Producto</a>
+    <a class="btn btn-kp" asp-controller="Stock" asp-action="CrearProducto"
+       asp-route-volverA="@Url.Action("Nueva", "Ventas")">Nuevo Producto</a>
 </div>
 
 @* --- Alta de renglones --- *@
-<form asp-action="AgregarItem" method="post" class="kp-filtros">
+<form asp-action="AgregarItem" method="post" class="kp-filtros" novalidate>
     @Html.AntiForgeryToken()
 
     <div class="row g-3 align-items-end">
-        <div class="col-md-6">
-            <label class="form-label" for="idProducto">Producto</label>
-            <input class="form-control" list="listaProductos" id="buscadorProducto"
-                   placeholder="Ingrese un producto" autocomplete="off" />
-            <datalist id="listaProductos">
-                @foreach (var p in Model.Productos)
-                {
-                    <option value="@p.Nombre - @p.Marca (stock @p.StockDisponible)" data-id="@p.IdProducto"></option>
-                }
-            </datalist>
-            <select class="form-select mt-2" id="idProducto" name="idProducto" required>
-                <option value="">— Elegí el producto —</option>
-                @foreach (var p in Model.Productos)
-                {
-                    <option value="@p.IdProducto" data-precio="@p.PrecioVenta.ToString(System.Globalization.CultureInfo.InvariantCulture)">
-                        @p.Nombre - @p.Marca — $@p.PrecioVenta.ToString("N2") (stock @p.StockDisponible)
-                    </option>
-                }
-            </select>
+        <div class="col-md-7">
+            <partial name="_Combo" model="Combos.Productos(Model.Productos, Model.IdProductoNuevo)" />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label class="form-label" for="cantidad">Cantidad</label>
             <input class="form-control" type="number" id="cantidad" name="cantidad" min="1" value="1" required />
         </div>
@@ -68,11 +52,25 @@ else
                 {
                     <tr>
                         <td>@item.Producto</td>
-                        <td class="text-center">@item.Cantidad</td>
+                        <td class="text-center">
+                            @* La cantidad se corrige sin rehacer la venta *@
+                            <form asp-action="ActualizarItem" method="post" class="kp-cantidad" novalidate>
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="idProducto" value="@item.IdProducto" />
+                                <input class="form-control form-control-sm" type="number" name="cantidad"
+                                       min="1" max="@Model.StockDisponible(item.IdProducto)"
+                                       value="@item.Cantidad" aria-label="Cantidad de @item.Producto" />
+                                <button type="submit" class="kp-icon-btn" title="Guardar la cantidad">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m5 13 4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
                         <td class="text-end">$@item.PrecioUnitario.ToString("N2")</td>
                         <td class="text-end">$@item.Subtotal.ToString("N2")</td>
                         <td>
-                            <form asp-action="QuitarItem" method="post">
+                            <form asp-action="QuitarItem" method="post" novalidate>
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="idProducto" value="@item.IdProducto" />
                                 <button type="submit" class="kp-icon-btn" title="Quitar de la venta">
@@ -93,12 +91,12 @@ else
 }
 
 @* --- Cierre de la venta --- *@
-<form asp-action="Finalizar" method="post" class="mt-4">
+<form asp-action="Finalizar" method="post" class="mt-4" novalidate>
     @Html.AntiForgeryToken()
 
     <div class="row g-4">
         <div class="col-md-4">
-            <h2 class="kp-section-title">Forma de pago</h2>
+            <label class="form-label" for="formaPago">Forma de pago</label>
             <select class="form-select" name="formaPago" id="formaPago">
                 <option value="@FormaDePago.PagadoAlMomento">Pagado al momento</option>
                 <option value="@FormaDePago.CuentaCorriente">Cuenta Corriente</option>
@@ -106,17 +104,8 @@ else
         </div>
 
         <div class="col-md-8">
-            <label class="form-label" for="idCliente">Cliente</label>
-            <select class="form-select" name="idCliente" id="idCliente">
-                @foreach (var c in Model.Clientes)
-                {
-                    var etiqueta = c.IdCuentaCorrienteCliente == CuentaCorrienteService.IdConsumidorFinal
-                        ? "Consumidor final"
-                        : $"{c.Dni} - {c.Nombre} {c.Apellido}";
-
-                    <option value="@c.IdCuentaCorrienteCliente">@etiqueta</option>
-                }
-            </select>
+            <partial name="_Combo"
+                     model="Combos.Clientes(Model.Clientes, Model.IdCliente, CuentaCorrienteService.IdConsumidorFinal)" />
             <div class="form-text">
                 Una venta en cuenta corriente necesita un cliente registrado distinto de Consumidor final.
             </div>
@@ -130,21 +119,3 @@ else
         <button type="submit" class="btn btn-kp">Finalizar venta</button>
     </div>
 </form>
-
-@section Scripts {
-    <script>
-        // El buscador con datalist es solo una ayuda visual: al elegir una opción
-        // sincroniza el select real, que es el que viaja en el formulario.
-        (function () {
-            const buscador = document.getElementById('buscadorProducto');
-            const select = document.getElementById('idProducto');
-            if (!buscador || !select) return;
-
-            buscador.addEventListener('input', function () {
-                const opcion = Array.from(document.querySelectorAll('#listaProductos option'))
-                    .find(o => o.value === buscador.value);
-                if (opcion) select.value = opcion.dataset.id;
-            });
-        })();
-    </script>
-}

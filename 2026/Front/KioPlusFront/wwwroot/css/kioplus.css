@@ -253,6 +253,25 @@ table.kp-table a {
     align-items: center;
 }
 
+/* Cantidad editable dentro de una fila de la tabla */
+.kp-cantidad {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+.kp-cantidad input {
+    width: 72px;
+    text-align: center;
+}
+
+/* El precio necesita más lugar que una cantidad */
+.kp-cantidad input[name="precioCompra"] {
+    width: 110px;
+    text-align: right;
+}
+
 .kp-icon-btn {
     background: none;
     border: none;
@@ -422,4 +441,124 @@ table.kp-table a {
         margin-left: 0;
         padding: 22px 18px 48px;
     }
+}
+
+
+/* ------------------------------------------------------------------
+   Buscador con lista desplegable (producto, cliente)
+   ------------------------------------------------------------------ */
+.kp-combo {
+    position: relative;
+}
+
+.kp-combo-lista {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    max-height: 260px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #cdd4dd;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(16, 32, 56, .14);
+}
+
+.kp-combo-lista li {
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .94rem;
+}
+
+.kp-combo-lista li:hover,
+.kp-combo-lista li.activa {
+    background: var(--kp-navy);
+    color: #fff;
+}
+
+.kp-combo-lista li.kp-combo-vacio,
+.kp-combo-lista li.kp-combo-vacio:hover {
+    background: none;
+    color: #6b7684;
+    cursor: default;
+    font-style: italic;
+}
+
+.kp-combo-sin-stock {
+    opacity: .55;
+}
+
+/* Ojo para mostrar u ocultar la contraseña */
+.kp-clave {
+    position: relative;
+}
+
+.kp-clave input {
+    padding-right: 42px;
+}
+
+.kp-ver-clave {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    color: #6b7684;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.kp-ver-clave:hover {
+    color: var(--kp-navy);
+}
+
+.kp-ver-clave svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Estado inicial del ojo, antes de que corra el script: se ve el abierto.
+   Se apunta al icono y no al boton que lo contiene, asi vale para el ojo de un
+   campo de contrasenia y para el de un listado por igual. */
+[data-kp-ojo-tachado] {
+    display: none;
+}
+
+
+/* Saldo de caja en el menú (solo administradores) */
+.kp-caja {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid #dde3ea;
+    border-left: 4px solid var(--kp-navy);
+    border-radius: 10px;
+}
+
+.kp-caja-rotulo {
+    font-weight: 600;
+    color: var(--kp-navy);
+}
+
+.kp-caja-monto {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--kp-navy);
+}
+
+.kp-caja-detalle {
+    flex-basis: 100%;
+    font-size: .85rem;
+    color: #6b7684;
 }

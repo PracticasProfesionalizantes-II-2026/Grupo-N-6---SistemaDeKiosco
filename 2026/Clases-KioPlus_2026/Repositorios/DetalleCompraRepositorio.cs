@@ -12,24 +12,32 @@ public class DetalleCompraRepositorio : IDetalleCompraRepositorio
     public async Task<bool> CompraExiste(int idCompra) =>
         await _db.Compras.AnyAsync(c => c.Id == idCompra);
 
+    public async Task<int?> ObtenerProveedorDeCompra(int idCompra)
+    {
+        var compra = await _db.Compras.FindAsync(idCompra);
+        return compra?.ProveedorId;
+    }
+
     public async Task<Producto?> ObtenerProducto(int idProducto) =>
         await _db.Productos.FindAsync(idProducto);
 
     public async Task<IEnumerable<DetalleCompra>> ObtenerPorCompra(int idCompra) =>
         await _db.DetallesCompras.Where(d => d.CompraProveedorId == idCompra).ToListAsync();
 
-    // Trae el detalle junto al nombre del producto para el listado del front
-    public async Task<IEnumerable<(DetalleCompra Detalle, string Producto)>> ObtenerPorCompraConProducto(int idCompra)
+    // Trae el detalle junto al nombre del producto y al lote que ingresó, para el listado del front
+    public async Task<IEnumerable<(DetalleCompra Detalle, string Producto, Lote? Lote)>> ObtenerPorCompraConProducto(int idCompra)
     {
         var filas = await (
             from d in _db.DetallesCompras
             join p in _db.Productos on d.ProductoId equals p.Id into gp
             from p in gp.DefaultIfEmpty()
+            join l in _db.Lotes on d.Id equals l.DetalleCompraId into gl
+            from l in gl.DefaultIfEmpty()
             where d.CompraProveedorId == idCompra
-            select new { Detalle = d, Nombre = p != null ? p.Nombre : "(producto eliminado)" }
+            select new { Detalle = d, Nombre = p != null ? p.Nombre : "(producto eliminado)", Lote = l }
         ).ToListAsync();
 
-        return filas.Select(f => (f.Detalle, f.Nombre));
+        return filas.Select(f => (f.Detalle, f.Nombre, (Lote?)f.Lote));
     }
 
     public async Task<DetalleCompra?> ObtenerPorId(int id) =>
@@ -63,16 +71,6 @@ public class DetalleCompraRepositorio : IDetalleCompraRepositorio
         compra.MontoTotal = await _db.DetallesCompras
             .Where(d => d.CompraProveedorId == idCompra)
             .SumAsync(d => d.Subtotal);
-        await _db.SaveChangesAsync();
-    }
-
-    // Mueve el stock disponible del producto. Nunca lo deja por debajo de cero.
-    public async Task AjustarStock(int idProducto, int delta)
-    {
-        var producto = await _db.Productos.FindAsync(idProducto);
-        if (producto is null) return;
-
-        producto.StockDisponible = Math.Max(0, producto.StockDisponible + delta);
         await _db.SaveChangesAsync();
     }
 }

@@ -32,10 +32,13 @@ public class VentasController : Controller
 
     // ---------- Nueva venta ----------
 
+    // idProductoNuevo llega cuando el usuario dio de alta un producto sin salir de
+    // esta venta: el carrito sigue en sesión y el producto vuelve preseleccionado.
     [HttpGet]
-    public async Task<IActionResult> Nueva()
+    public async Task<IActionResult> Nueva(int? idProductoNuevo)
     {
         var modelo = await ArmarNuevaVentaAsync();
+        modelo.IdProductoNuevo = idProductoNuevo;
         return View(modelo);
     }
 
@@ -90,6 +93,36 @@ public class VentasController : Controller
         return RedirectToAction(nameof(Nueva));
     }
 
+    // Cambio de cantidad de un producto ya cargado, antes de finalizar la venta
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ActualizarItem(int idProducto, int cantidad)
+    {
+        var carrito = LeerCarrito();
+        var item = carrito.FirstOrDefault(i => i.IdProducto == idProducto);
+        if (item is null) return RedirectToAction(nameof(Nueva));
+
+        if (cantidad <= 0)
+        {
+            TempData["Error"] = "La cantidad debe ser mayor a 0.";
+            return RedirectToAction(nameof(Nueva));
+        }
+
+        var producto = (await _productos.ObtenerTodosAsync())
+            .FirstOrDefault(p => p.IdProducto == idProducto);
+
+        if (producto is not null && producto.StockDisponible < cantidad)
+        {
+            TempData["Error"] =
+                $"Stock insuficiente para {producto.Nombre}: quedan {producto.StockDisponible} unidades.";
+            return RedirectToAction(nameof(Nueva));
+        }
+
+        item.Cantidad = cantidad;
+        GuardarCarrito(carrito);
+        return RedirectToAction(nameof(Nueva));
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult QuitarItem(int idProducto)
@@ -133,7 +166,7 @@ public class VentasController : Controller
         var ahora = DateTime.Now;
         var creada = await _ventas.CrearAsync(new VentaCreateDto(
             ahora, usuario.IdUsuario, cliente, formaPago,
-            formaPago == FormaDePago.PagadoAlMomento ? ahora : default));
+            formaPago == FormaDePago.PagadoAlMomento ? ahora : null));
 
         if (!creada.Ok || creada.Datos is null)
         {
@@ -159,6 +192,11 @@ public class VentasController : Controller
         var cierre = await _ventas.FinalizarAsync(idVenta);
         if (!cierre.Ok)
         {
+            // Se deshace la venta a medias: eliminarla devuelve las unidades a
+            // los lotes de los que salieron. Sin esto quedaba stock descontado
+            // por una venta que nunca se cerró, y el carrito seguía en sesión,
+            // así que un segundo intento la registraba dos veces.
+            await _ventas.EliminarAsync(idVenta);
             TempData["Error"] = cierre.Error ?? "No se pudo cerrar la venta.";
             return RedirectToAction(nameof(Nueva));
         }
@@ -174,8 +212,9 @@ public class VentasController : Controller
     public async Task<IActionResult> Listado(ListadoVentasViewModel filtros)
     {
         filtros.Ventas = await _ventas.ObtenerTodasAsync(
-            filtros.FechaDesde, filtros.FechaHasta, filtros.IdUsuario,
-            filtros.IdCliente, filtros.ImporteMayorA, filtros.ImporteMenorA);
+            Periodos.DesdeEfectiva(filtros), Periodos.HastaEfectiva(filtros),
+            filtros.IdUsuario, filtros.IdCliente,
+            filtros.ImporteMayorA, filtros.ImporteMenorA);
 
         filtros.Vendedores = await _usuarios.ObtenerTodosAsync();
         filtros.Clientes = await _cuentas.ObtenerTodasAsync();
@@ -198,22 +237,163 @@ public class VentasController : Controller
         return View(detalles);
     }
 
+    // Pantalla única de edición: la cabecera y los renglones de la venta se
+    // corrigen desde acá. Cada cambio de renglón mueve el stock por los lotes en
+    // el momento, así no queda una venta a medio aplicar.
+    [HttpGet]
+    public async Task<IActionResult> Editar(int id)
+    {
+        var modelo = await ArmarEdicionAsync(id);
+        if (modelo is null) return RedirectToAction(nameof(Listado));
+
+        return View(modelo);
+    }
+
+    private async Task<EditarVentaViewModel?> ArmarEdicionAsync(int id)
+    {
+        var venta = await _ventas.ObtenerPorIdAsync(id);
+        if (!venta.Ok || venta.Datos is null)
+        {
+            TempData["Error"] = venta.Error ?? "No se encontró la venta.";
+            return null;
+        }
+
+        var v = venta.Datos;
+        return new EditarVentaViewModel
+        {
+            IdVenta = v.IdVenta,
+            FechaHora = v.FechaHora,
+            MontoTotal = v.MontoTotal,
+            IdUsuario = v.IdUsuario,
+            Finalizada = v.Finalizada,
+            Estado = v.Estado,
+            MontoPagado = v.MontoPagado,
+            FormaPago = v.FormaPago,
+            IdCliente = v.IdCuentaCorrienteCliente,
+            Clientes = await _cuentas.ObtenerTodasAsync(),
+            Detalles = await _ventas.ObtenerDetallesAsync(id),
+            Productos = await _productos.ObtenerTodosAsync()
+        };
+    }
+
+    // Suma un producto a una venta ya registrada
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AgregarDetalle(int id, int idProducto, int cantidad)
+    {
+        if (idProducto <= 0)
+        {
+            TempData["Error"] = "Elegí un producto de la lista.";
+            return RedirectToAction(nameof(Editar), new { id });
+        }
+
+        if (cantidad <= 0)
+        {
+            TempData["Error"] = "La cantidad debe ser mayor a 0.";
+            return RedirectToAction(nameof(Editar), new { id });
+        }
+
+        var resultado = await _ventas.AgregarDetalleAsync(id, new DetalleVentaCreateDto(idProducto, cantidad));
+        if (resultado.Ok) TempData["Exito"] = "Producto agregado a la venta.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(Editar), new { id });
+    }
+
+    // Solo se corrigen los datos de cabecera. Los productos de la venta se
+    // ajustan desde su detalle, para que el stock siga los mismos caminos.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Editar(EditarVentaViewModel modelo)
+    {
+        if (modelo.FormaPago == FormaDePago.CuentaCorriente &&
+            modelo.IdCliente == CuentaCorrienteService.IdConsumidorFinal)
+        {
+            ModelState.AddModelError(string.Empty,
+                "Una venta en cuenta corriente necesita un cliente registrado.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(await ArmarEdicionAsync(modelo.IdVenta) ?? modelo);
+        }
+
+        var resultado = await _ventas.ActualizarAsync(modelo.IdVenta, new VentaCreateDto(
+            modelo.FechaHora, modelo.IdUsuario, modelo.IdCliente, modelo.FormaPago,
+            modelo.FormaPago == FormaDePago.PagadoAlMomento ? modelo.FechaHora : null));
+
+        if (!resultado.Ok)
+        {
+            TempData["Error"] = resultado.Error;
+            return RedirectToAction(nameof(Editar), new { id = modelo.IdVenta });
+        }
+
+        TempData["Exito"] = $"Venta #{modelo.IdVenta} actualizada.";
+        return RedirectToAction(nameof(Listado));
+    }
+
+    // Anular la venta devuelve la mercadería a sus lotes y deshace el impacto
+    // en la caja o en la cuenta corriente del cliente.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SoloAdministrador]
+    public async Task<IActionResult> Eliminar(int id)
+    {
+        var resultado = await _ventas.EliminarAsync(id);
+        if (resultado.Ok) TempData["Exito"] = $"Venta #{id} anulada. El stock volvió a sus lotes.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(Listado));
+    }
+
+    // Corrección de un renglón de una venta ya registrada. El stock se mueve
+    // por los lotes: subir la cantidad consume FEFO y bajarla devuelve unidades.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ActualizarDetalle(int id, int idDetalle, int cantidad)
+    {
+        if (cantidad <= 0)
+        {
+            TempData["Error"] = "La cantidad debe ser mayor a 0.";
+            return RedirectToAction(nameof(Editar), new { id });
+        }
+
+        var resultado = await _ventas.ActualizarDetalleAsync(id, idDetalle, new DetalleVentaUpdateDto(cantidad));
+        if (resultado.Ok) TempData["Exito"] = "Renglón actualizado.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(Editar), new { id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EliminarDetalle(int id, int idDetalle)
+    {
+        var resultado = await _ventas.EliminarDetalleAsync(id, idDetalle);
+        if (resultado.Ok) TempData["Exito"] = "Renglón quitado de la venta.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(Editar), new { id });
+    }
+
     // ---------- Productos más vendidos ----------
 
     [HttpGet]
+    [SoloAdministrador]
     public async Task<IActionResult> MasVendidos(MasVendidosViewModel modelo)
     {
-        if (modelo.FechaHasta < modelo.FechaDesde)
+        var desde = Periodos.DesdeEfectiva(modelo);
+        var hasta = Periodos.HastaEfectiva(modelo);
+
+        if (desde is not null && hasta is not null && hasta < desde)
             ModelState.AddModelError(nameof(modelo.FechaHasta), "La fecha final no puede ser anterior a la inicial.");
 
         if (ModelState.IsValid)
         {
             if (modelo.Criterio == "monto")
-                modelo.PorMonto = await _productos.MasVendidosPorMontoAsync(
-                    modelo.FechaDesde, modelo.FechaHasta, modelo.Limite);
+                modelo.PorMonto = await _productos.MasVendidosPorMontoAsync(desde, hasta, modelo.Limite);
             else
-                modelo.PorCantidad = await _productos.MasVendidosPorCantidadAsync(
-                    modelo.FechaDesde, modelo.FechaHasta, modelo.Limite);
+                modelo.PorCantidad = await _productos.MasVendidosPorCantidadAsync(desde, hasta, modelo.Limite);
         }
 
         return View(modelo);

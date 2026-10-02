@@ -10,8 +10,13 @@ namespace KioPlusFront.Controllers;
 public class CuentasCorrientesController : Controller
 {
     private readonly ICuentaCorrienteService _cuentas;
+    private readonly IVentaService _ventas;
 
-    public CuentasCorrientesController(ICuentaCorrienteService cuentas) => _cuentas = cuentas;
+    public CuentasCorrientesController(ICuentaCorrienteService cuentas, IVentaService ventas)
+    {
+        _cuentas = cuentas;
+        _ventas = ventas;
+    }
 
     [HttpGet]
     public async Task<IActionResult> Index(ListadoCuentasCorrientesViewModel filtros)
@@ -91,7 +96,52 @@ public class CuentasCorrientesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // Icono $ del listado: cancela total o parcialmente la deuda del cliente
+    // Ventas que el cliente todavía adeuda, con el detalle de cada una
+    [HttpGet]
+    public async Task<IActionResult> Deuda(int id)
+    {
+        var cuenta = await _cuentas.ObtenerPorIdAsync(id);
+        if (!cuenta.Ok || cuenta.Datos is null)
+        {
+            TempData["Error"] = cuenta.Error ?? "No se encontró la cuenta corriente.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var c = cuenta.Datos;
+        return View(new DeudaClienteViewModel
+        {
+            IdCuentaCorrienteCliente = c.IdCuentaCorrienteCliente,
+            Cliente = $"{c.Nombre} {c.Apellido}",
+            MontoAdeudado = c.MontoAdeudado,
+            Ventas = await _cuentas.ObtenerVentasAdeudadasAsync(id)
+        });
+    }
+
+    // Cobra una venta puntual: le pone la fecha de pago y la saca de la lista
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> PagarVenta(int id, int idVenta, DateTime? fechaPago)
+    {
+        var resultado = await _ventas.RegistrarPagoAsync(idVenta, fechaPago);
+        if (resultado.Ok) TempData["Exito"] = $"Venta #{idVenta} pagada.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(Deuda), new { id });
+    }
+
+    // Cancela la deuda completa del cliente de una sola vez
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> PagarTodo(int id, DateTime? fechaPago)
+    {
+        var resultado = await _cuentas.PagarDeudaTotalAsync(id, fechaPago);
+        if (resultado.Ok) TempData["Exito"] = "Deuda cancelada por completo.";
+        else TempData["Error"] = resultado.Error;
+
+        return RedirectToAction(nameof(Deuda), new { id });
+    }
+
+    // Icono $ del listado: registra un pago a cuenta por un monto libre
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RegistrarPago(int id, double monto)

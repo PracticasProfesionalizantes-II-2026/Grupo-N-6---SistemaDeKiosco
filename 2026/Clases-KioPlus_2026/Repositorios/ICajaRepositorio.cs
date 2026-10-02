@@ -7,5 +7,6 @@ namespace Clases_KioPlus.Repositorios;
 public interface ICajaRepositorio
 {
     Task<double> SaldoActual();
-    Task<double> SaldoAFecha(DateTime fecha);
+    Task RegistrarIngreso(double monto);
+    Task RegistrarEgreso(double monto);
 }

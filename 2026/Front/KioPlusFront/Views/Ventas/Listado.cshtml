@@ -1,6 +1,8 @@
+@using KioPlusFront.Services
 @model ListadoVentasViewModel
 @{
     ViewData["Title"] = "Listado de ventas";
+    var esAdministrador = Context.Session.ObtenerUsuario()?.EsAdministrador == true;
 }
 
 <div class="kp-page-header">
@@ -8,16 +10,15 @@
     <a class="btn btn-kp-outline" asp-action="Index">Volver</a>
 </div>
 
+@* Los mensajes de los filtros necesitan dónde mostrarse *@
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger py-2" role="alert"></div>
+}
+
 <form asp-action="Listado" method="get" class="kp-filtros">
     <div class="row g-3 align-items-end">
-        <div class="col-md-3">
-            <label asp-for="FechaDesde" class="form-label"></label>
-            <input asp-for="FechaDesde" type="date" class="form-control" />
-        </div>
-        <div class="col-md-3">
-            <label asp-for="FechaHasta" class="form-label"></label>
-            <input asp-for="FechaHasta" type="date" class="form-control" />
-        </div>
+        <partial name="_FiltroPeriodo" model="Model" />
         <div class="col-md-3">
             <label asp-for="IdUsuario" class="form-label"></label>
             <select asp-for="IdUsuario" class="form-select">
@@ -41,14 +42,15 @@
         <div class="col-md-3">
             <label asp-for="ImporteMayorA" class="form-label"></label>
             <input asp-for="ImporteMayorA" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="ImporteMayorA" class="text-danger small"></span>
         </div>
         <div class="col-md-3">
             <label asp-for="ImporteMenorA" class="form-label"></label>
             <input asp-for="ImporteMenorA" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="ImporteMenorA" class="text-danger small"></span>
         </div>
         <div class="col-md-6 d-flex gap-2">
             <button type="submit" class="btn btn-kp">Filtrar</button>
-            <a class="btn btn-kp-outline" asp-action="Listado">Histórico</a>
         </div>
     </div>
 </form>
@@ -63,6 +65,7 @@ else
         <table class="kp-table">
             <thead>
                 <tr>
+                    <th style="width:90px"></th>
                     <th>Fecha/Hora</th>
                     <th>Productos</th>
                     <th>Vendedor</th>
@@ -76,6 +79,31 @@ else
                 @foreach (var venta in Model.Ventas)
                 {
                     <tr>
+                        <td>
+                            <div class="kp-acciones">
+                                <a class="kp-icon-btn" asp-action="Editar" asp-route-id="@venta.IdVenta" title="Editar la venta">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 20h4l10-10-4-4L4 16z" />
+                                        <path d="m14 6 4 4" />
+                                    </svg>
+                                </a>
+
+                                @if (esAdministrador)
+                                {
+                                    @* Anular devuelve la mercadería a sus lotes *@
+                                    <form asp-action="Eliminar" method="post"
+                                          onsubmit="return confirm('¿Anular la venta #@venta.IdVenta? El stock vuelve a sus lotes.');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@venta.IdVenta" />
+                                        <button type="submit" class="kp-icon-btn" title="Anular la venta">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
                         <td>@venta.FechaHora.ToString("dd/MM/yy - HH:mm")</td>
                         <td>
                             <a asp-action="Detalle" asp-route-id="@venta.IdVenta">Productos de la venta</a>
@@ -96,4 +124,8 @@ else
     </div>
 
     <div class="kp-total">Total listado: $@Model.TotalListado.ToString("N2")</div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

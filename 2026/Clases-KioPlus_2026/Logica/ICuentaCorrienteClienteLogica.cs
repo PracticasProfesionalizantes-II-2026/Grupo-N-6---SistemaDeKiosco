@@ -14,4 +14,5 @@ public interface ICuentaCorrienteClienteLogica
     Task<bool> Actualizar(int id, CuentaCorrienteClienteCreateDto dto);
     Task<ResultadoOperacion> Eliminar(int id);
     Task<ResultadoOperacion> RegistrarPago(int id, PagoCuentaCorrienteDto dto);
+    Task<ResultadoOperacion> PagarDeudaTotal(int id, PagoDeudaTotalDto dto);
 }

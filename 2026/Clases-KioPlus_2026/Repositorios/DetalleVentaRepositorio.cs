@@ -12,6 +12,9 @@ public class DetalleVentaRepositorio : IDetalleVentaRepositorio
     public async Task<bool> VentaExiste(int idVenta) =>
         await _db.Ventas.AnyAsync(v => v.Id == idVenta);
 
+    public async Task<Venta?> ObtenerVenta(int idVenta) =>
+        await _db.Ventas.FindAsync(idVenta);
+
     public async Task<Producto?> ObtenerProducto(int idProducto) =>
         await _db.Productos.FindAsync(idProducto);
 
@@ -63,16 +66,6 @@ public class DetalleVentaRepositorio : IDetalleVentaRepositorio
         venta.MontoTotal = await _db.DetallesVentas
             .Where(d => d.VentaId == idVenta)
             .SumAsync(d => d.Subtotal);
-        await _db.SaveChangesAsync();
-    }
-
-    // Mueve el stock disponible del producto. Nunca lo deja por debajo de cero.
-    public async Task AjustarStock(int idProducto, int delta)
-    {
-        var producto = await _db.Productos.FindAsync(idProducto);
-        if (producto is null) return;
-
-        producto.StockDisponible = Math.Max(0, producto.StockDisponible + delta);
         await _db.SaveChangesAsync();
     }
 }

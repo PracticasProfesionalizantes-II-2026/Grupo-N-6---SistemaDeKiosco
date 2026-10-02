@@ -19,6 +19,17 @@ public static class UsuarioEndpoints
                 : Results.Ok(sesion);
         }).AddEndpointFilter<ValidationFilter<LoginDto>>();
 
+        // "¿Olvidaste tu contraseña?": restablece la clave sin pasar por el login
+        grupo.MapPost("/recuperar-contrasenia", async (CambiarContraseniaDto dto, IUsuarioLogica logica) =>
+        {
+            var resultado = await logica.CambiarContrasenia(dto);
+            if (resultado.Ok) return Results.Ok(new { mensaje = "contraseña actualizada" });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
+        }).AddEndpointFilter<ValidationFilter<CambiarContraseniaDto>>();
+
         grupo.MapGet("/", async (IUsuarioLogica logica) =>
             Results.Ok(await logica.ObtenerTodos()));
 

@@ -8,7 +8,21 @@ namespace Clases_KioPlus.Logica;
 public class CompraLogica : ICompraLogica
 {
     private readonly ICompraRepositorio _repo;
-    public CompraLogica(ICompraRepositorio repo) => _repo = repo;
+    private readonly IDetalleCompraRepositorio _repoDetalles;
+    private readonly ILoteRepositorio _repoLotes;
+    private readonly ICajaRepositorio _repoCaja;
+
+    public CompraLogica(
+        ICompraRepositorio repo,
+        IDetalleCompraRepositorio repoDetalles,
+        ILoteRepositorio repoLotes,
+        ICajaRepositorio repoCaja)
+    {
+        _repo = repo;
+        _repoDetalles = repoDetalles;
+        _repoLotes = repoLotes;
+        _repoCaja = repoCaja;
+    }
 
     private static CompraDto AMapa(CompraProveedor c) =>
         new(c.Id, c.FechaHora, c.ProveedorId, c.MontoTotal);
@@ -53,12 +67,23 @@ public class CompraLogica : ICompraLogica
         return true;
     }
 
+    // Anular una compra da de baja los lotes que había ingresado, recalcula el
+    // stock de los productos afectados y devuelve la plata a la caja.
     public async Task<bool> Eliminar(int id)
     {
         var compra = await _repo.ObtenerPorId(id);
         if (compra is null) return false;
 
+        var detalles = (await _repoDetalles.ObtenerPorCompra(id)).ToList();
+        var productos = detalles.Select(d => d.ProductoId).Distinct().ToList();
+
+        await _repoLotes.EliminarPorDetallesCompra(detalles.Select(d => d.Id));
         await _repo.Eliminar(compra);
+
+        foreach (var idProducto in productos)
+            await _repoLotes.RecalcularStockProducto(idProducto);
+
+        await _repoCaja.RegistrarIngreso(compra.MontoTotal);
         return true;
     }
 }

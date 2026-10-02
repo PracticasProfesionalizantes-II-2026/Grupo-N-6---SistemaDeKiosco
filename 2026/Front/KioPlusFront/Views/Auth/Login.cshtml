@@ -9,6 +9,8 @@
 <div class="kp-login-box">
     <h1 class="kp-login-title">Iniciar Sesión</h1>
 
+    <partial name="_Mensajes" />
+
     <form asp-action="Login" method="post">
         @Html.AntiForgeryToken()
 
@@ -22,7 +24,10 @@
 
         <div class="mb-4">
             <label asp-for="Contrasenia" class="form-label"></label>
+            <div class="kp-clave">
             <input asp-for="Contrasenia" type="password" class="form-control" autocomplete="current-password" />
+            <partial name="_OjoClave" model='"Contrasenia"' />
+        </div>
             <span asp-validation-for="Contrasenia" class="text-danger small"></span>
         </div>
 

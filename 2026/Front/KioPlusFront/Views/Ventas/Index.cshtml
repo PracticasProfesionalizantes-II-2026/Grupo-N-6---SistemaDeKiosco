@@ -1,5 +1,7 @@
+@using KioPlusFront.Services
 @{
     ViewData["Title"] = "Ventas";
+    var usuario = Context.Session.ObtenerUsuario();
 }
 
 <div class="kp-page-header">
@@ -9,5 +11,8 @@
 <div class="kp-menu-acciones">
     <a class="btn btn-kp" asp-action="Nueva">Nueva venta</a>
     <a class="btn btn-kp" asp-action="Listado">Listado de ventas</a>
-    <a class="btn btn-kp" asp-action="MasVendidos">Listado de productos más vendidos</a>
+    @if (usuario?.EsAdministrador == true)
+    {
+        <a class="btn btn-kp" asp-action="MasVendidos">Listado de productos más vendidos</a>
+    }
 </div>

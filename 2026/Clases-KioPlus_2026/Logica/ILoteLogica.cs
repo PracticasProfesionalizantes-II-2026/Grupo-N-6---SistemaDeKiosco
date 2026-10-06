@@ -7,7 +7,7 @@ public interface ILoteLogica
 {
     Task<IEnumerable<LoteDto>> ObtenerPorProducto(int idProducto);
     Task<LoteDto?> ObtenerPorId(int id);
-    Task<int?> Crear(int idProducto, LoteCreateDto dto);
-    Task<bool> Actualizar(int id, LoteCreateDto dto);
+    Task<ResultadoOperacion> Crear(int idProducto, LoteCreateDto dto);
+    Task<ResultadoOperacion> Actualizar(int id, LoteCreateDto dto);
     Task<bool> Eliminar(int id);
 }

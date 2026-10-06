@@ -41,8 +41,12 @@ public static class CuentaCorrienteClienteEndpoints
 
         grupo.MapPut("/{id:int}", async (int id, CuentaCorrienteClienteCreateDto dto, ICuentaCorrienteClienteLogica logica) =>
         {
-            var ok = await logica.Actualizar(id, dto);
-            return ok ? Results.Ok(new { mensaje = "cuenta corriente actualizada" }) : Results.NotFound();
+            var resultado = await logica.Actualizar(id, dto);
+            if (resultado.Ok) return Results.Ok(new { mensaje = "cuenta corriente actualizada" });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
         }).AddEndpointFilter<ValidationFilter<CuentaCorrienteClienteCreateDto>>();
 
         // Ventas en cuenta corriente que el cliente todavía no pagó

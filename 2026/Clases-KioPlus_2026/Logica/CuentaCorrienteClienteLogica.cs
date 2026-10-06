@@ -64,10 +64,14 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
         return cuenta.Id;
     }
 
-    public async Task<bool> Actualizar(int id, CuentaCorrienteClienteCreateDto dto)
+    // Consumidor Final es la cuenta por defecto de las ventas: no se puede modificar.
+    public async Task<ResultadoOperacion> Actualizar(int id, CuentaCorrienteClienteCreateDto dto)
     {
+        if (id == CuentaCorrienteCliente.IdConsumidorFinal)
+            return ResultadoOperacion.Invalido("no se puede modificar la cuenta Consumidor Final");
+
         var cuenta = await _repo.ObtenerPorId(id);
-        if (cuenta is null) return false;
+        if (cuenta is null) return ResultadoOperacion.NoEncontrado("cuenta corriente no encontrada");
 
         cuenta.Nombre = dto.Nombre;
         cuenta.Apellido = dto.Apellido;
@@ -80,7 +84,7 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
         cuenta.SaldoInicial = dto.MontoAdeudado;
         await _repo.Actualizar(cuenta);
         await _repo.RecalcularDeuda(id);
-        return true;
+        return ResultadoOperacion.Exito(id);
     }
 
     // Consumidor Final es la cuenta por defecto de las ventas: no se puede borrar.

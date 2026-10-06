@@ -26,6 +26,8 @@ public class StockController : Controller
         _proveedores = proveedores;
     }
 
+    private const string MensajeVencido = "La fecha de vencimiento no puede ser anterior a hoy.";
+
     public IActionResult Index() => View();
 
     // ---------- Productos ----------
@@ -53,6 +55,10 @@ public class StockController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CrearProducto(ProductoFormViewModel modelo)
     {
+        // Se controla antes de crear el producto para no dejarlo dado de alta sin su lote
+        if (modelo.CantidadInicial > 0 && modelo.FechaVencimiento?.Date < DateTime.Today)
+            ModelState.AddModelError(nameof(modelo.FechaVencimiento), MensajeVencido);
+
         if (!ModelState.IsValid)
         {
             await CompletarListasAsync(modelo);
@@ -258,6 +264,12 @@ public class StockController : Controller
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Revisá los datos del lote.";
+            return RedirectToAction(nameof(Lotes), new { id = modelo.IdProducto });
+        }
+
+        if (modelo.FechaVencimiento?.Date < DateTime.Today)
+        {
+            TempData["Error"] = MensajeVencido;
             return RedirectToAction(nameof(Lotes), new { id = modelo.IdProducto });
         }
 

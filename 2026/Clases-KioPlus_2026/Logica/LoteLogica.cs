@@ -26,10 +26,13 @@ public class LoteLogica : ILoteLogica
     }
 
     // Dar de alta un lote es la forma de ingresar mercadería al stock.
-    // Devuelve null si el producto no existe.
-    public async Task<int?> Crear(int idProducto, LoteCreateDto dto)
+    public async Task<ResultadoOperacion> Crear(int idProducto, LoteCreateDto dto)
     {
-        if (!await _repo.ProductoExiste(idProducto)) return null;
+        if (!await _repo.ProductoExiste(idProducto))
+            return ResultadoOperacion.NoEncontrado("producto no encontrado");
+
+        if (!Lote.VencimientoAdmitido(dto.FechaVencimiento))
+            return ResultadoOperacion.Invalido(Lote.MensajeVencido);
 
         var lote = new Lote
         {
@@ -41,15 +44,18 @@ public class LoteLogica : ILoteLogica
         };
         await _repo.Agregar(lote);
         await _repo.RecalcularStockProducto(idProducto);
-        return lote.Id;
+        return ResultadoOperacion.Exito(lote.Id);
     }
 
     // Editar un lote corrige la cantidad que queda disponible. La cantidad inicial
     // solo crece, para seguir sirviendo de tope cuando se anula una venta.
-    public async Task<bool> Actualizar(int id, LoteCreateDto dto)
+    public async Task<ResultadoOperacion> Actualizar(int id, LoteCreateDto dto)
     {
         var lote = await _repo.ObtenerPorId(id);
-        if (lote is null) return false;
+        if (lote is null) return ResultadoOperacion.NoEncontrado("lote no encontrado");
+
+        if (!Lote.VencimientoAdmitido(dto.FechaVencimiento, lote.FechaVencimiento))
+            return ResultadoOperacion.Invalido(Lote.MensajeVencido);
 
         lote.NroLote = dto.NroLote;
         lote.FechaVencimiento = dto.FechaVencimiento;
@@ -57,7 +63,7 @@ public class LoteLogica : ILoteLogica
         lote.CantidadInicial = Math.Max(lote.CantidadInicial, dto.Cantidad);
         await _repo.Actualizar(lote);
         await _repo.RecalcularStockProducto(lote.ProductoId);
-        return true;
+        return ResultadoOperacion.Exito(lote.Id);
     }
 
     public async Task<bool> Eliminar(int id)

@@ -58,6 +58,12 @@ public class ComprasController : Controller
             return RedirectToAction(nameof(Nueva));
         }
 
+        if (fechaVencimiento?.Date < DateTime.Today)
+        {
+            TempData["Error"] = "La fecha de vencimiento no puede ser anterior a hoy.";
+            return RedirectToAction(nameof(Nueva));
+        }
+
         var producto = (await _productos.ObtenerTodosAsync())
             .FirstOrDefault(p => p.IdProducto == idProducto);
 

@@ -12,6 +12,7 @@ public class ProveedorFormViewModel
     public string NombreRazonSocial { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Ingresá el teléfono")]
+    [RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
     [Display(Name = "Teléfono")]
     public string Telefono { get; set; } = string.Empty;
 
@@ -32,10 +33,12 @@ public class CuentaCorrienteFormViewModel
     public int IdCuentaCorrienteCliente { get; set; }
 
     [Required(ErrorMessage = "Ingresá el nombre")]
+    [RegularExpression(Formatos.SoloLetras, ErrorMessage = "El nombre " + Formatos.MensajeSoloLetras)]
     [Display(Name = "Nombre")]
     public string Nombre { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Ingresá el apellido")]
+    [RegularExpression(Formatos.SoloLetras, ErrorMessage = "El apellido " + Formatos.MensajeSoloLetras)]
     [Display(Name = "Apellido")]
     public string Apellido { get; set; } = string.Empty;
 
@@ -44,6 +47,7 @@ public class CuentaCorrienteFormViewModel
     public int Dni { get; set; }
 
     [Required(ErrorMessage = "Ingresá el teléfono")]
+    [RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
     [Display(Name = "Teléfono")]
     public string Telefono { get; set; } = string.Empty;
 
@@ -123,10 +127,12 @@ public class UsuarioFormViewModel
     public int IdUsuario { get; set; }
 
     [Required(ErrorMessage = "Ingresá el nombre y apellido")]
+    [RegularExpression(Formatos.SoloLetras, ErrorMessage = "El nombre y apellido " + Formatos.MensajeSoloLetras)]
     [Display(Name = "Nombre y Apellido")]
     public string NombreApellido { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Ingresá el teléfono")]
+    [RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
     [Display(Name = "Teléfono")]
     public string Telefono { get; set; } = string.Empty;
 

@@ -15,10 +15,16 @@ public record CuentaCorrienteClienteDto(
     CuentaCorrienteCliente.EstadoDeuda Estado);
 
 public record CuentaCorrienteClienteCreateDto(
-    [property: Required(ErrorMessage = "Ingresá el nombre")] string Nombre,
-    [property: Required(ErrorMessage = "Ingresá el apellido")] string Apellido,
+    [property: Required(ErrorMessage = "Ingresá el nombre")]
+    [property: RegularExpression(Formatos.SoloLetras, ErrorMessage = "El nombre " + Formatos.MensajeSoloLetras)]
+    string Nombre,
+    [property: Required(ErrorMessage = "Ingresá el apellido")]
+    [property: RegularExpression(Formatos.SoloLetras, ErrorMessage = "El apellido " + Formatos.MensajeSoloLetras)]
+    string Apellido,
     [property: Range(1, int.MaxValue, ErrorMessage = "El DNI tiene que ser un número positivo")] int Dni,
-    [property: Required(ErrorMessage = "Ingresá el teléfono")] string Telefono,
+    [property: Required(ErrorMessage = "Ingresá el teléfono")]
+    [property: RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
+    string Telefono,
     [property: Required(ErrorMessage = "Ingresá la dirección")] string Direccion,
     // El correo es opcional en el formulario; si viene, debe ser válido.
     [property: EmailAddress(ErrorMessage = "El correo electrónico no es válido")] string? CorreoElectronico,

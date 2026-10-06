@@ -37,7 +37,9 @@
 
         <div class="col-md-4">
             <label class="form-label" for="fechaVencimiento">Vencimiento</label>
-            <input class="form-control" type="date" id="fechaVencimiento" name="fechaVencimiento" />
+            <input class="form-control" type="date" id="fechaVencimiento" name="fechaVencimiento"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   data-msg-min="La fecha de vencimiento no puede ser anterior a hoy" />
         </div>
 
         <div class="col-md-4 d-flex align-items-start">

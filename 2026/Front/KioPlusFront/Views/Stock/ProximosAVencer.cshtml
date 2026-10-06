@@ -10,7 +10,7 @@
 
 @if (Model.Count == 0)
 {
-    <p class="kp-vacio">No hay lotes próximos a vencer según los días de aviso configurados.</p>
+    <p class="kp-vacio">No hay lotes vencidos ni próximos a vencer según los días de aviso configurados.</p>
 }
 else
 {
@@ -25,7 +25,8 @@ else
                 </tr>
             </thead>
             <tbody>
-                @* Solo aparecen lotes con unidades sin vender *@
+                @* Solo aparecen lotes con unidades sin vender. Un lote vencido sigue
+                   acá hasta que se lo elimine desde la pantalla de lotes del producto. *@
                 @foreach (var lote in Model)
                 {
                     <tr>
@@ -34,7 +35,9 @@ else
                         <td class="text-center">@lote.Cantidad</td>
                         <td class="text-center">
                             <span class="kp-badge @(lote.DiasParaQueVenza <= 3 ? "kp-badge-moroso" : "kp-badge-aldia")">
-                                @(lote.DiasParaQueVenza == 0 ? "Vence hoy" : $"{lote.DiasParaQueVenza} día(s)")
+                                @(lote.DiasParaQueVenza < 0 ? "Ya venció"
+                                    : lote.DiasParaQueVenza == 0 ? "Vence hoy"
+                                    : $"{lote.DiasParaQueVenza} día(s)")
                             </span>
                         </td>
                     </tr>

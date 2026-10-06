@@ -92,6 +92,9 @@ public class DetalleCompraLogica : IDetalleCompraLogica
         if (producto is null)
             return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
+        if (!Lote.VencimientoAdmitido(dto.FechaVencimiento))
+            return ResultadoOperacion.Invalido(Lote.MensajeVencido);
+
         var detalle = new DetalleCompra
         {
             CompraProveedorId = idCompra,
@@ -130,6 +133,10 @@ public class DetalleCompraLogica : IDetalleCompraLogica
         var producto = await _repo.ObtenerProducto(dto.IdProducto);
         if (producto is null) return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
+        var lote = await _repoLotes.ObtenerPorDetalleCompra(id);
+        if (!Lote.VencimientoAdmitido(dto.FechaVencimiento, lote?.FechaVencimiento))
+            return ResultadoOperacion.Invalido(Lote.MensajeVencido);
+
         var compraAnterior = detalle.CompraProveedorId;
         var productoAnterior = detalle.ProductoId;
         var subtotalAnterior = detalle.Subtotal;
@@ -141,7 +148,6 @@ public class DetalleCompraLogica : IDetalleCompraLogica
         detalle.Subtotal = dto.Cantidad * dto.PrecioUnitario;
         await _repo.Actualizar(detalle);
 
-        var lote = await _repoLotes.ObtenerPorDetalleCompra(id);
         if (lote is null)
         {
             await _repoLotes.Agregar(new Lote

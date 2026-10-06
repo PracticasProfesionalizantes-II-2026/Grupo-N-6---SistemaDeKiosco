@@ -21,17 +21,24 @@ public static class LoteEndpoints
 
         app.MapPost("/productos/{idProducto:int}/lotes", async (int idProducto, LoteCreateDto dto, ILoteLogica logica) =>
         {
-            var id = await logica.Crear(idProducto, dto);
-            return id is null
-                ? Results.NotFound(new { mensaje = "producto no encontrado" })
-                : Results.Created($"/productos/{idProducto}/lotes/{id}", new { idLote = id });
+            var resultado = await logica.Crear(idProducto, dto);
+            if (resultado.Ok)
+                return Results.Created($"/productos/{idProducto}/lotes/{resultado.Id}", new { idLote = resultado.Id });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
         }).WithTags("Lotes").AddEndpointFilter<ValidationFilter<LoteCreateDto>>();
 
         // Editar / eliminar lote directamente por su id
         app.MapPut("/lotes/{id:int}", async (int id, LoteCreateDto dto, ILoteLogica logica) =>
         {
-            var ok = await logica.Actualizar(id, dto);
-            return ok ? Results.Ok(new { mensaje = "lote actualizado" }) : Results.NotFound();
+            var resultado = await logica.Actualizar(id, dto);
+            if (resultado.Ok) return Results.Ok(new { mensaje = "lote actualizado" });
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
         }).WithTags("Lotes").AddEndpointFilter<ValidationFilter<LoteCreateDto>>();
 
         app.MapDelete("/lotes/{id:int}", async (int id, ILoteLogica logica) =>

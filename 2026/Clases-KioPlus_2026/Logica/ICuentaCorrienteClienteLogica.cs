@@ -11,7 +11,7 @@ public interface ICuentaCorrienteClienteLogica
         double? montoAdeudadoMin, double? montoAdeudadoMax);
     Task<CuentaCorrienteClienteDto?> ObtenerPorId(int id);
     Task<int> Crear(CuentaCorrienteClienteCreateDto dto);
-    Task<bool> Actualizar(int id, CuentaCorrienteClienteCreateDto dto);
+    Task<ResultadoOperacion> Actualizar(int id, CuentaCorrienteClienteCreateDto dto);
     Task<ResultadoOperacion> Eliminar(int id);
     Task<ResultadoOperacion> RegistrarPago(int id, PagoCuentaCorrienteDto dto);
     Task<ResultadoOperacion> PagarDeudaTotal(int id, PagoDeudaTotalDto dto);

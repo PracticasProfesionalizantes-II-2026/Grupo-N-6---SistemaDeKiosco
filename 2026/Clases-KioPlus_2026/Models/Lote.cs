@@ -31,6 +31,16 @@ namespace Clases_KioPlus.Models
         // se cargó a mano desde la pantalla de stock. Se resuelve por lógica y no
         // como clave foránea para no encadenar borrados en cascada sobre Producto.
         public int? DetalleCompraId { get; set; }
+
+        public const string MensajeVencido = "la fecha de vencimiento no puede ser anterior a hoy";
+
+        // Un lote no puede ingresar ya vencido. Al editar se admite conservar la
+        // fecha que ya tenía, para poder corregir otros datos de un lote que venció
+        // después de cargado.
+        public static bool VencimientoAdmitido(DateTime? fecha, DateTime? fechaActual = null) =>
+            fecha is null
+            || fecha.Value.Date >= DateTime.Now.Date
+            || fecha.Value.Date == fechaActual?.Date;
     }
 }
                                                      

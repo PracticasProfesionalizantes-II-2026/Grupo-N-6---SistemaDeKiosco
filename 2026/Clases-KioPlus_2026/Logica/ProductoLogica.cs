@@ -82,6 +82,8 @@ public class ProductoLogica : IProductoLogica
 
     // Solo avisa por lotes con unidades sin vender: lo ya vendido no puede vencer
     // en el kiosco. Los lotes sin fecha de vencimiento nunca entran al listado.
+    // Los ya vencidos siguen apareciendo (con días negativos) hasta que se elimine
+    // el lote: mientras tanto cuentan para el stock y son los primeros en venderse.
     public async Task<IEnumerable<ProximoVencimientoDto>> ObtenerProximosAVencer()
     {
         var hoy = DateTime.Now.Date;
@@ -94,7 +96,7 @@ public class ProductoLogica : IProductoLogica
                 Lote = l,
                 Dias = (l.FechaVencimiento!.Value.Date - hoy).Days
             })
-            .Where(x => x.Dias >= 0 && x.Dias <= x.Lote.Producto.DiasAvisoVencimiento)
+            .Where(x => x.Dias <= x.Lote.Producto.DiasAvisoVencimiento)
             .OrderBy(x => x.Dias)
             .Select(x => new ProximoVencimientoDto(
                 x.Lote.Producto.Nombre, x.Lote.NroLote, x.Lote.Cantidad, x.Dias))

@@ -10,13 +10,17 @@ public static class UsuarioEndpoints
     {
         var grupo = app.MapGroup("/usuarios").WithTags("Usuarios");
 
-        // Inicio de sesión. 401 si las credenciales no coinciden o el usuario está bloqueado.
+        // Inicio de sesión. 401 si las credenciales no coinciden, 403 si el usuario está bloqueado.
         grupo.MapPost("/login", async (LoginDto dto, IUsuarioLogica logica) =>
         {
-            var sesion = await logica.Login(dto);
-            return sesion is null
+            var resultado = await logica.Login(dto);
+            if (resultado.Bloqueado)
+                return Results.Json(new { mensaje = "este usuario se encuentra bloqueado" },
+                    statusCode: StatusCodes.Status403Forbidden);
+
+            return resultado.Sesion is null
                 ? Results.Unauthorized()
-                : Results.Ok(sesion);
+                : Results.Ok(resultado.Sesion);
         }).AddEndpointFilter<ValidationFilter<LoginDto>>();
 
         // "¿Olvidaste tu contraseña?": restablece la clave sin pasar por el login

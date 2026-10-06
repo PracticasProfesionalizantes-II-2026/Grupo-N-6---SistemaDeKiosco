@@ -83,15 +83,16 @@ else
                     <tr>
                         <td>
                             <div class="kp-acciones">
-                                <a class="kp-icon-btn" asp-action="Editar" asp-route-id="@c.IdCuentaCorrienteCliente" title="Editar">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 20h4l10-10-4-4L4 16z" />
-                                        <path d="m14 6 4 4" />
-                                    </svg>
-                                </a>
-
+                                @* Consumidor Final es la cuenta por defecto de las ventas: no se edita ni se borra *@
                                 @if (!esConsumidorFinal)
                                 {
+                                    <a class="kp-icon-btn" asp-action="Editar" asp-route-id="@c.IdCuentaCorrienteCliente" title="Editar">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 20h4l10-10-4-4L4 16z" />
+                                            <path d="m14 6 4 4" />
+                                        </svg>
+                                    </a>
+
                                     <a class="kp-icon-btn" asp-action="Deuda" asp-route-id="@c.IdCuentaCorrienteCliente"
                                        title="Ver las ventas que adeuda">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">

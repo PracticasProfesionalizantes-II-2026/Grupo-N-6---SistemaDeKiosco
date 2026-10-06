@@ -13,8 +13,12 @@ public record UsuarioDto(
     bool Estado);
 
 public record UsuarioCreateDto(
-    [property: Required(ErrorMessage = "Ingresá el nombre y apellido")] string NombreApellido,
-    [property: Required(ErrorMessage = "Ingresá el teléfono")] string Telefono,
+    [property: Required(ErrorMessage = "Ingresá el nombre y apellido")]
+    [property: RegularExpression(Formatos.SoloLetras, ErrorMessage = "El nombre y apellido " + Formatos.MensajeSoloLetras)]
+    string NombreApellido,
+    [property: Required(ErrorMessage = "Ingresá el teléfono")]
+    [property: RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
+    string Telefono,
     [property: Required(ErrorMessage = "Ingresá el nombre de usuario")] string NombreUsuario,
     [property: Required(ErrorMessage = "Ingresá la contraseña")] string ContraseniaUsuario,
     Usuario.TipoDeUsuario TipoUsuario,
@@ -31,6 +35,10 @@ public record LoginResultadoDto(
     string NombreApellido,
     string NombreUsuario,
     Usuario.TipoDeUsuario TipoUsuario);
+
+// Resultado del intento de inicio de sesión. Sesion queda en null cuando las
+// credenciales no coinciden o el usuario está bloqueado (Bloqueado = true).
+public record ResultadoLoginDto(LoginResultadoDto? Sesion, bool Bloqueado = false);
 
 // Alta/baja lógica del usuario (candado en el listado)
 public record CambiarEstadoUsuarioDto(bool Estado);

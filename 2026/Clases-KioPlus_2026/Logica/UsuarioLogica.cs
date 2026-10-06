@@ -96,15 +96,16 @@ public class UsuarioLogica : IUsuarioLogica
         return ResultadoOperacion.Exito(usuario.Id);
     }
 
-    // Devuelve null si las credenciales no coinciden o el usuario está bloqueado
-    public async Task<LoginResultadoDto?> Login(LoginDto dto)
+    // Sin sesión si las credenciales no coinciden. Un usuario bloqueado se informa
+    // como tal, igual que en "¿Olvidaste tu contraseña?".
+    public async Task<ResultadoLoginDto> Login(LoginDto dto)
     {
         var usuario = await _repo.ObtenerPorNombreUsuario(dto.NombreUsuario);
-        if (usuario is null) return null;
-        if (!usuario.Estado) return null;
-        if (usuario.ContraseniaUsuario != dto.ContraseniaUsuario) return null;
+        if (usuario is null) return new ResultadoLoginDto(null);
+        if (!usuario.Estado) return new ResultadoLoginDto(null, Bloqueado: true);
+        if (usuario.ContraseniaUsuario != dto.ContraseniaUsuario) return new ResultadoLoginDto(null);
 
-        return new LoginResultadoDto(
-            usuario.Id, usuario.NombreApellido, usuario.NombreUsuario, usuario.TipoUsuario);
+        return new ResultadoLoginDto(new LoginResultadoDto(
+            usuario.Id, usuario.NombreApellido, usuario.NombreUsuario, usuario.TipoUsuario));
     }
 }

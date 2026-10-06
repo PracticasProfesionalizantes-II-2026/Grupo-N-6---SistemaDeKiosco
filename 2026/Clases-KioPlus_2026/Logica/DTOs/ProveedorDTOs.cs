@@ -12,7 +12,9 @@ public record ProveedorDto(
 
 public record ProveedorCreateDto(
     [property: Required(ErrorMessage = "Ingresá el nombre o razón social")] string NombreRazonSocial,
-    [property: Required(ErrorMessage = "Ingresá el teléfono")] string Telefono,
+    [property: Required(ErrorMessage = "Ingresá el teléfono")]
+    [property: RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
+    string Telefono,
     [property: Required(ErrorMessage = "Ingresá la dirección")] string Direccion,
     [property: EmailAddress(ErrorMessage = "El correo electrónico no es válido")] string? CorreoElectronico,
     string? Observaciones);

@@ -93,7 +93,9 @@
         </div>
         <div class="col-md-4">
             <label asp-for="FechaVencimiento" class="form-label"></label>
-            <input asp-for="FechaVencimiento" type="date" class="form-control" />
+            <input asp-for="FechaVencimiento" type="date" class="form-control"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   data-msg-min="La fecha de vencimiento no puede ser anterior a hoy" />
         </div>
         <div class="col-md-4">
             <label asp-for="CantidadInicial" class="form-label"></label>

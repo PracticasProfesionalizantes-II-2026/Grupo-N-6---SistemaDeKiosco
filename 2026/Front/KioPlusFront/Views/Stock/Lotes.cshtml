@@ -20,7 +20,9 @@
         </div>
         <div class="col-md-3">
             <label asp-for="FechaVencimiento" class="form-label"></label>
-            <input asp-for="FechaVencimiento" type="date" class="form-control" />
+            <input asp-for="FechaVencimiento" type="date" class="form-control"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   data-msg-min="La fecha de vencimiento no puede ser anterior a hoy" />
             <span asp-validation-for="FechaVencimiento" class="text-danger small"></span>
         </div>
         <div class="col-md-3">
@@ -70,7 +72,13 @@ else
                             </form>
                         </td>
                         <td>@lote.NroLote</td>
-                        <td>@(lote.FechaVencimiento?.ToString("dd/MM/yyyy") ?? "No vence")</td>
+                        <td>
+                            @(lote.FechaVencimiento?.ToString("dd/MM/yyyy") ?? "No vence")
+                            @if (lote.FechaVencimiento?.Date < DateTime.Today)
+                            {
+                                <span class="kp-badge kp-badge-moroso">Vencido</span>
+                            }
+                        </td>
                         <td class="text-center">@lote.CantidadInicial</td>
                         <td class="text-center">
                             @if (lote.Cantidad == 0)

@@ -54,6 +54,12 @@ public class CuentasCorrientesController : Controller
     [HttpGet]
     public async Task<IActionResult> Editar(int id)
     {
+        if (id == CuentaCorrienteService.IdConsumidorFinal)
+        {
+            TempData["Error"] = "La cuenta Consumidor Final no se puede modificar.";
+            return RedirectToAction(nameof(Index));
+        }
+
         var cuenta = await _cuentas.ObtenerPorIdAsync(id);
         if (!cuenta.Ok || cuenta.Datos is null)
         {
@@ -79,6 +85,12 @@ public class CuentasCorrientesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(CuentaCorrienteFormViewModel modelo)
     {
+        if (modelo.IdCuentaCorrienteCliente == CuentaCorrienteService.IdConsumidorFinal)
+        {
+            TempData["Error"] = "La cuenta Consumidor Final no se puede modificar.";
+            return RedirectToAction(nameof(Index));
+        }
+
         if (!ModelState.IsValid) return View(modelo);
 
         var resultado = await _cuentas.ActualizarAsync(modelo.IdCuentaCorrienteCliente,

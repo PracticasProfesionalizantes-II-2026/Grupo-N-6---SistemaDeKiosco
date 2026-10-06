@@ -12,5 +12,5 @@ public interface IUsuarioLogica
     Task<bool> Eliminar(int id);
     Task<bool> CambiarEstado(int id, bool estado);
     Task<ResultadoOperacion> CambiarContrasenia(CambiarContraseniaDto dto);
-    Task<LoginResultadoDto?> Login(LoginDto dto);
+    Task<ResultadoLoginDto> Login(LoginDto dto);
 }

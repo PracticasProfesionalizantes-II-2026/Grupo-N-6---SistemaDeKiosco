@@ -23,7 +23,7 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
 
     private static CuentaCorrienteClienteDto AMapa(CuentaCorrienteCliente c) =>
         new(c.Id, c.Nombre, c.Apellido, c.Dni, c.Telefono, c.Direccion,
-            c.CorreoElectronico, c.MontoAdeudado, c.Estado);
+            c.CorreoElectronico, c.MontoAdeudado, c.Estado, c.FechaAlta);
 
     // El estado nunca se carga a mano: se deduce del saldo adeudado.
     private static CuentaCorrienteCliente.EstadoDeuda EstadoSegunDeuda(double monto) =>
@@ -58,7 +58,8 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
             CorreoElectronico = dto.CorreoElectronico,
             SaldoInicial = dto.MontoAdeudado,
             MontoAdeudado = dto.MontoAdeudado,
-            Estado = EstadoSegunDeuda(dto.MontoAdeudado)
+            Estado = EstadoSegunDeuda(dto.MontoAdeudado),
+            FechaAlta = DateTime.Now
         };
         await _repo.Agregar(cuenta);
         return cuenta.Id;
@@ -156,7 +157,8 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
 
     // Cancela la deuda completa: marca como pagadas todas las ventas adeudadas y
     // deja el saldo del cliente en cero. La fecha de pago no puede ser futura ni
-    // anterior a la de la última venta que el cliente adeuda.
+    // anterior a la de la última venta que el cliente adeuda, ni al alta de la
+    // cuenta (que es cuando se registró el saldo inicial).
     public async Task<ResultadoOperacion> PagarDeudaTotal(int id, PagoDeudaTotalDto dto)
     {
         var cuenta = await _repo.ObtenerPorId(id);
@@ -176,6 +178,10 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
             fechaPago.Date < adeudadas.Max(a => a.Venta.FechaHora).Date)
             return ResultadoOperacion.Invalido(
                 "la fecha de pago debe ser posterior a la fecha en la que se realizó la última venta adeudada");
+
+        if (fechaPago.Date < cuenta.FechaAlta.Date)
+            return ResultadoOperacion.Invalido(
+                "la fecha de pago no puede ser anterior a la fecha de alta de la cuenta");
 
         foreach (var (venta, _) in adeudadas)
         {

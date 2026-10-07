@@ -30,6 +30,10 @@ namespace Clases_KioPlus.Models
         // ninguna venta registrada en el sistema.
         [Required] public double SaldoInicial { get; set; }
 
+        // Día en que se dio de alta la cuenta (y con ella su saldo inicial). Un
+        // pago de la deuda no puede tener una fecha anterior a esta.
+        [Required] public DateTime FechaAlta { get; set; }
+
         // Estado actual de la deuda del cliente (Moroso o Al Día)
         [Required] public EstadoDeuda Estado { get; set; }
         public enum EstadoDeuda

@@ -12,7 +12,8 @@ public record CuentaCorrienteClienteDto(
     string Direccion,
     string? CorreoElectronico,
     double MontoAdeudado,
-    CuentaCorrienteCliente.EstadoDeuda Estado);
+    CuentaCorrienteCliente.EstadoDeuda Estado,
+    DateTime FechaAlta);
 
 public record CuentaCorrienteClienteCreateDto(
     [property: Required(ErrorMessage = "Ingresá el nombre")]

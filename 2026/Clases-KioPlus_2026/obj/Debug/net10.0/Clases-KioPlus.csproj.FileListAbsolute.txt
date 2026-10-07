@@ -318,3 +318,11 @@ C:\Users\buffa\AppData\Local\Temp\claude\C--DesarrollodeSoftware-Grupo-N-6---Sis
 C:\Users\buffa\AppData\Local\Temp\claude\C--DesarrollodeSoftware-Grupo-N-6---SistemaDeKiosco-2026\55e3120d-7456-44fc-8d52-f8165f50396e\scratchpad\api-out\Clases-KioPlus.runtimeconfig.json
 C:\Users\buffa\AppData\Local\Temp\claude\C--DesarrollodeSoftware-Grupo-N-6---SistemaDeKiosco-2026\55e3120d-7456-44fc-8d52-f8165f50396e\scratchpad\api-out\Clases-KioPlus.dll
 C:\Users\buffa\AppData\Local\Temp\claude\C--DesarrollodeSoftware-Grupo-N-6---SistemaDeKiosco-2026\55e3120d-7456-44fc-8d52-f8165f50396e\scratchpad\api-out\Clases-KioPlus.pdb
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\appsettings.Development.json
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\appsettings.json
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\Clases-KioPlus.staticwebassets.endpoints.json
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\Clases-KioPlus.exe
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\Clases-KioPlus.deps.json
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\Clases-KioPlus.runtimeconfig.json
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\Clases-KioPlus.dll
+C:\DesarrollodeSoftware\Grupo-N-6---SistemaDeKiosco\_x\Clases-KioPlus.pdb

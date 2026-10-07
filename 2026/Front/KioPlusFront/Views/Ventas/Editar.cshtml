@@ -23,6 +23,10 @@
             {
                 <strong>Cobrado:</strong> <text>$@Model.MontoPagado.ToString("N2")</text>
             }
+            else if (Model.Estado == EstadoVenta.Pagado && Model.FechaPago is not null)
+            {
+                <strong>Fecha de pago:</strong> <text>@Model.FechaPago.Value.ToString("dd/MM/yyyy")</text>
+            }
         </div>
     </div>
 </div>

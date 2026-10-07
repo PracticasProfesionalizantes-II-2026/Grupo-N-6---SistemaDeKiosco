@@ -47,6 +47,9 @@ public class EditarVentaViewModel
     public EstadoVenta Estado { get; set; }
     public double MontoPagado { get; set; }
 
+    // Solo informativa: se muestra cuando la venta ya está pagada
+    public DateTime? FechaPago { get; set; }
+
     [Display(Name = "Forma de pago")]
     public FormaDePago FormaPago { get; set; }
 

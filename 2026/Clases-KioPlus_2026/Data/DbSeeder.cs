@@ -26,8 +26,8 @@ public static class DbSeeder
         await db.Database.ExecuteSqlRawAsync(@"
             SET IDENTITY_INSERT CuentasCorrientesClientes ON;
             INSERT INTO CuentasCorrientesClientes
-                (Id, Nombre, Apellido, Dni, Telefono, Direccion, CorreoElectronico, MontoAdeudado, Estado)
-            VALUES ({0}, 'Consumidor', 'Final', 0, '-', '-', '', 0, {1});
+                (Id, Nombre, Apellido, Dni, Telefono, Direccion, CorreoElectronico, MontoAdeudado, Estado, FechaAlta)
+            VALUES ({0}, 'Consumidor', 'Final', 0, '-', '-', '', 0, {1}, GETDATE());
             SET IDENTITY_INSERT CuentasCorrientesClientes OFF;",
             id, (int)CuentaCorrienteCliente.EstadoDeuda.AlDia);
 

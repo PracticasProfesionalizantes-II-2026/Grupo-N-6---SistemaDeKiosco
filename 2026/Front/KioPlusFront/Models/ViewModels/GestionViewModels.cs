@@ -116,6 +116,7 @@ public class DeudaClienteViewModel
     public int IdCuentaCorrienteCliente { get; set; }
     public string Cliente { get; set; } = string.Empty;
     public double MontoAdeudado { get; set; }
+    public DateTime FechaAlta { get; set; }
     public IReadOnlyList<VentaAdeudadaDto> Ventas { get; set; } = Array.Empty<VentaAdeudadaDto>();
 
     // Lo que se debe por fuera de las ventas registradas (saldo cargado al alta)

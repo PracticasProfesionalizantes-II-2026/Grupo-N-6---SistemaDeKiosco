@@ -2,10 +2,13 @@
 @{
     ViewData["Title"] = $"Deuda de {Model.Cliente}";
     var hoy = DateTime.Today.ToString("yyyy-MM-dd");
-    // La fecha de pago no puede ser anterior a la última venta que el cliente adeuda
-    var minimoParaPagarTodo = Model.Ventas.Count == 0
-        ? null
-        : Model.Ventas.Max(v => v.FechaHora).ToString("yyyy-MM-dd");
+    // La fecha de pago no puede ser anterior a la última venta que el cliente
+    // adeuda ni al alta de la cuenta, que es cuando se registró su saldo inicial
+    var minimoParaPagarTodo = Model.Ventas
+        .Select(v => v.FechaHora)
+        .Append(Model.FechaAlta)
+        .Max()
+        .ToString("yyyy-MM-dd");
     var hayPagosParciales = Model.Ventas.Any(v => v.MontoPagado > 0);
 }
 
@@ -138,7 +141,7 @@ else
     </div>
 }
 
-@* Pago de toda la deuda: la fecha no puede ser anterior a la última venta adeudada *@
+@* Pago de toda la deuda: la fecha no puede ser anterior a la última venta adeudada ni al alta de la cuenta *@
 @if (Model.MontoAdeudado > 0)
 {
     <div class="modal fade" id="pago-deuda" tabindex="-1" aria-hidden="true">
@@ -161,7 +164,8 @@ else
                     <input class="form-control" id="fecha-deuda" name="fechaPago" type="date"
                            value="@hoy" min="@minimoParaPagarTodo" max="@hoy" required />
                     <div class="form-text">
-                        No puede ser anterior a la fecha de la última venta adeudada ni posterior a hoy.
+                        No puede ser anterior a la última venta adeudada ni al alta de la cuenta
+                        (@Model.FechaAlta.ToString("dd/MM/yyyy")), ni posterior a hoy.
                     </div>
                 </div>
 

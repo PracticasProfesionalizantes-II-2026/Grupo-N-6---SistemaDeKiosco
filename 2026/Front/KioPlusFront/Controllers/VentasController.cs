@@ -268,6 +268,7 @@ public class VentasController : Controller
             Finalizada = v.Finalizada,
             Estado = v.Estado,
             MontoPagado = v.MontoPagado,
+            FechaPago = v.FechaPago,
             FormaPago = v.FormaPago,
             IdCliente = v.IdCuentaCorrienteCliente,
             Clientes = await _cuentas.ObtenerTodasAsync(),

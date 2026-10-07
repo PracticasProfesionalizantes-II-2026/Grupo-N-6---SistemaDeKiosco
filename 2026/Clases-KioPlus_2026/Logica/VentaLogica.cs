@@ -101,31 +101,45 @@ public class VentaLogica : IVentaLogica
     // Editar una venta cerrada puede cambiar el cliente o la forma de pago. Se
     // deshace primero lo que la venta le debía al cliente anterior y lo que había
     // entrado a la caja, y recién después se aplica el estado nuevo.
+    //
+    // Si sigue siendo una venta en cuenta corriente del mismo cliente, los pagos
+    // que ya se le imputaron (lo cobrado, el estado y la fecha de pago) se respetan.
     public async Task<bool> Actualizar(int id, VentaCreateDto dto)
     {
         var venta = await _repo.ObtenerPorId(id);
         if (venta is null) return false;
 
         var clienteAnterior = venta.CuentaCorrienteClienteId;
-        var cobradoAnterior = venta.Finalizada ? venta.MontoPagado : 0;
+        var clienteNuevo = dto.IdCuentaCorrienteCliente <= 0
+            ? CuentaCorrienteCliente.IdConsumidorFinal
+            : dto.IdCuentaCorrienteCliente;
+
+        var conservaPagos = venta.Finalizada
+            && venta.FormaPago == Venta.FormaDePago.CuentaCorriente
+            && dto.FormaPago == Venta.FormaDePago.CuentaCorriente
+            && clienteNuevo == clienteAnterior;
+
+        var cobradoAnterior = venta.Finalizada && !conservaPagos ? venta.MontoPagado : 0;
 
         if (cobradoAnterior > 0)
             await _repoCaja.RegistrarEgreso(cobradoAnterior);
 
         venta.FechaHora = dto.FechaHora;
         venta.UsuarioId = dto.IdUsuario;
-        venta.CuentaCorrienteClienteId = dto.IdCuentaCorrienteCliente <= 0
-            ? CuentaCorrienteCliente.IdConsumidorFinal
-            : dto.IdCuentaCorrienteCliente;
+        venta.CuentaCorrienteClienteId = clienteNuevo;
         venta.FormaPago = dto.FormaPago;
-        venta.FechaPago = dto.FechaPago;
-        venta.Estado = EstadoSegunPago(dto.FormaPago);
-        venta.MontoPagado = venta.Finalizada && dto.FormaPago == Venta.FormaDePago.PagadoAlMomento
-            ? venta.MontoTotal
-            : 0;
+
+        if (!conservaPagos)
+        {
+            venta.FechaPago = dto.FechaPago;
+            venta.Estado = EstadoSegunPago(dto.FormaPago);
+            venta.MontoPagado = venta.Finalizada && dto.FormaPago == Venta.FormaDePago.PagadoAlMomento
+                ? venta.MontoTotal
+                : 0;
+        }
         await _repo.Actualizar(venta);
 
-        if (venta.MontoPagado > 0)
+        if (!conservaPagos && venta.MontoPagado > 0)
             await _repoCaja.RegistrarIngreso(venta.MontoPagado);
 
         await _repoCuentas.RecalcularDeuda(clienteAnterior);

@@ -125,6 +125,7 @@ public class CuentasCorrientesController : Controller
             IdCuentaCorrienteCliente = c.IdCuentaCorrienteCliente,
             Cliente = $"{c.Nombre} {c.Apellido}",
             MontoAdeudado = c.MontoAdeudado,
+            FechaAlta = c.FechaAlta,
             Ventas = await _cuentas.ObtenerVentasAdeudadasAsync(id)
         });
     }

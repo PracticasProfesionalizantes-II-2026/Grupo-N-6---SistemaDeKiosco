@@ -35,7 +35,7 @@ public class UsuarioLogica : IUsuarioLogica
             NombreApellido = dto.NombreApellido,
             Telefono = dto.Telefono,
             NombreUsuario = dto.NombreUsuario,
-            ContraseniaUsuario = dto.ContraseniaUsuario,
+            ContraseniaUsuario = HashContrasenia.Calcular(dto.ContraseniaUsuario),
             TipoUsuario = dto.TipoUsuario,
             Estado = dto.Estado
         };
@@ -54,7 +54,10 @@ public class UsuarioLogica : IUsuarioLogica
         usuario.NombreApellido = dto.NombreApellido;
         usuario.Telefono = dto.Telefono;
         usuario.NombreUsuario = dto.NombreUsuario;
-        usuario.ContraseniaUsuario = dto.ContraseniaUsuario;
+        // Al editar sin cambiar la contraseña, el front reenvía el hash que ya estaba
+        // guardado: en ese caso se conserva para no hashear dos veces.
+        if (dto.ContraseniaUsuario != usuario.ContraseniaUsuario)
+            usuario.ContraseniaUsuario = HashContrasenia.Calcular(dto.ContraseniaUsuario);
         usuario.TipoUsuario = dto.TipoUsuario;
         usuario.Estado = dto.Estado;
         await _repo.Actualizar(usuario);
@@ -91,7 +94,7 @@ public class UsuarioLogica : IUsuarioLogica
         if (!usuario.Estado)
             return ResultadoOperacion.Invalido("este usuario se encuentra bloqueado");
 
-        usuario.ContraseniaUsuario = dto.NuevaContrasenia;
+        usuario.ContraseniaUsuario = HashContrasenia.Calcular(dto.NuevaContrasenia);
         await _repo.Actualizar(usuario);
         return ResultadoOperacion.Exito(usuario.Id);
     }
@@ -103,7 +106,8 @@ public class UsuarioLogica : IUsuarioLogica
         var usuario = await _repo.ObtenerPorNombreUsuario(dto.NombreUsuario);
         if (usuario is null) return new ResultadoLoginDto(null);
         if (!usuario.Estado) return new ResultadoLoginDto(null, Bloqueado: true);
-        if (usuario.ContraseniaUsuario != dto.ContraseniaUsuario) return new ResultadoLoginDto(null);
+        if (usuario.ContraseniaUsuario != HashContrasenia.Calcular(dto.ContraseniaUsuario))
+            return new ResultadoLoginDto(null);
 
         return new ResultadoLoginDto(new LoginResultadoDto(
             usuario.Id, usuario.NombreApellido, usuario.NombreUsuario, usuario.TipoUsuario));

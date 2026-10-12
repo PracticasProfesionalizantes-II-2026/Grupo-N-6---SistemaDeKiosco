@@ -1,3 +1,4 @@
+using Clases_KioPlus.Logica;
 using Clases_KioPlus.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ public static class DbSeeder
         await db.Database.MigrateAsync();
         await SembrarConsumidorFinal(db, logger);
         await SembrarUsuarioInicial(db, logger);
+        await HashearContraseniasEnTextoPlano(db, logger);
     }
 
     // Se inserta con id explícito porque toda venta sin cliente apunta a este registro.
@@ -44,7 +46,7 @@ public static class DbSeeder
             NombreApellido = "Administrador",
             Telefono = "-",
             NombreUsuario = UsuarioInicial,
-            ContraseniaUsuario = ContraseniaInicial,
+            ContraseniaUsuario = HashContrasenia.Calcular(ContraseniaInicial),
             TipoUsuario = Usuario.TipoDeUsuario.SuperAdmin,
             Estado = true
         });
@@ -53,5 +55,22 @@ public static class DbSeeder
         logger.LogWarning(
             "Usuario inicial creado: {Usuario} / {Contrasenia}. Cambialo antes de usar el sistema en serio.",
             UsuarioInicial, ContraseniaInicial);
+    }
+
+    // Las contraseñas cargadas antes de usar el hash quedaron en texto plano.
+    // Se hashean una sola vez al arrancar, así esos usuarios siguen entrando
+    // con la misma contraseña de siempre.
+    private static async Task HashearContraseniasEnTextoPlano(ApplicationDbContext db, ILogger logger)
+    {
+        var pendientes = (await db.Usuarios.ToListAsync())
+            .Where(u => !HashContrasenia.EsHash(u.ContraseniaUsuario))
+            .ToList();
+        if (pendientes.Count == 0) return;
+
+        foreach (var usuario in pendientes)
+            usuario.ContraseniaUsuario = HashContrasenia.Calcular(usuario.ContraseniaUsuario);
+        await db.SaveChangesAsync();
+
+        logger.LogInformation("Contraseñas hasheadas con SHA-256: {Cantidad}", pendientes.Count);
     }
 }

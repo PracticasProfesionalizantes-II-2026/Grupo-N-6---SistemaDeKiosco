@@ -1,6 +1,7 @@
 @model CategoriaFormViewModel
 @{
     ViewData["Title"] = "Categorías";
+    var esAdministrador = Context.Session.ObtenerUsuario()?.EsAdministrador == true;
 }
 
 <div class="kp-page-header">
@@ -48,16 +49,20 @@ else
                 {
                     <tr>
                         <td>
-                            <form asp-action="EliminarCategoria" method="post"
-                                  onsubmit="return confirm('¿Eliminar la categoría @categoria.Nombre?');">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@categoria.IdCategoria" />
-                                <button type="submit" class="kp-icon-btn" title="Eliminar categoría">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
-                                    </svg>
-                                </button>
-                            </form>
+                            @* Eliminar es solo para administradores *@
+                            @if (esAdministrador)
+                            {
+                                <form asp-action="EliminarCategoria" method="post"
+                                      onsubmit="return confirm('¿Eliminar la categoría @categoria.Nombre?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@categoria.IdCategoria" />
+                                    <button type="submit" class="kp-icon-btn" title="Eliminar categoría">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            }
                         </td>
                         <td>@categoria.Nombre</td>
                         <td>@categoria.Descripcion</td>

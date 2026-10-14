@@ -1,6 +1,7 @@
 @model IReadOnlyList<ProveedorDto>
 @{
     ViewData["Title"] = "Proveedores";
+    var esAdministrador = Context.Session.ObtenerUsuario()?.EsAdministrador == true;
     var busqueda = ViewBag.Busqueda as string;
 }
 
@@ -43,16 +44,20 @@ else
                                         <path d="m14 6 4 4" />
                                     </svg>
                                 </a>
-                                <form asp-action="Eliminar" method="post"
-                                      onsubmit="return confirm('¿Eliminar el proveedor @p.NombreRazonSocial?');">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@p.IdProveedor" />
-                                    <button type="submit" class="kp-icon-btn" title="Eliminar">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                @* Eliminar es solo para administradores *@
+                                @if (esAdministrador)
+                                {
+                                    <form asp-action="Eliminar" method="post"
+                                          onsubmit="return confirm('¿Eliminar el proveedor @p.NombreRazonSocial?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@p.IdProveedor" />
+                                        <button type="submit" class="kp-icon-btn" title="Eliminar">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                }
                             </div>
                         </td>
                         <td>

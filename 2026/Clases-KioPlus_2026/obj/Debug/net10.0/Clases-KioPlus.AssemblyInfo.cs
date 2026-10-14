@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Clases-KioPlus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f47571e67d1d5f5d45266a54ac01d64125aa705")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7581398578c1eb69abf05a4ae7711b6751888567")]
 [assembly: System.Reflection.AssemblyProductAttribute("Clases-KioPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Clases-KioPlus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

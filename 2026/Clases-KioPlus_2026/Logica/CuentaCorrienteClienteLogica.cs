@@ -95,7 +95,11 @@ public class CuentaCorrienteClienteLogica : ICuentaCorrienteClienteLogica
             return ResultadoOperacion.Invalido("no se puede eliminar la cuenta Consumidor Final");
 
         var cuenta = await _repo.ObtenerPorId(id);
-        if (cuenta is null) return ResultadoOperacion.NoEncontrado("cuenta corriente no encontrada");
+        if (cuenta is null || !cuenta.Activo)
+            return ResultadoOperacion.NoEncontrado("cuenta corriente no encontrada");
+
+        if (cuenta.MontoAdeudado > 0)
+            return ResultadoOperacion.Invalido("no se puede eliminar un cliente con deuda pendiente");
 
         await _repo.Eliminar(cuenta);
         return ResultadoOperacion.Exito(id);

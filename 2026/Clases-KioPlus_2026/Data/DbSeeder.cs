@@ -28,8 +28,8 @@ public static class DbSeeder
         await db.Database.ExecuteSqlRawAsync(@"
             SET IDENTITY_INSERT CuentasCorrientesClientes ON;
             INSERT INTO CuentasCorrientesClientes
-                (Id, Nombre, Apellido, Dni, Telefono, Direccion, CorreoElectronico, MontoAdeudado, Estado, FechaAlta)
-            VALUES ({0}, 'Consumidor', 'Final', 0, '-', '-', '', 0, {1}, GETDATE());
+                (Id, Nombre, Apellido, Dni, Telefono, Direccion, CorreoElectronico, MontoAdeudado, Estado, FechaAlta, Activo)
+            VALUES ({0}, 'Consumidor', 'Final', 0, '-', '-', '', 0, {1}, GETDATE(), 1);
             SET IDENTITY_INSERT CuentasCorrientesClientes OFF;",
             id, (int)CuentaCorrienteCliente.EstadoDeuda.AlDia);
 
@@ -39,7 +39,7 @@ public static class DbSeeder
     // Sin al menos un usuario activo nadie podría entrar a la aplicación.
     private static async Task SembrarUsuarioInicial(ApplicationDbContext db, ILogger logger)
     {
-        if (await db.Usuarios.AnyAsync()) return;
+        if (await db.Usuarios.AnyAsync(u => u.Activo)) return;
 
         db.Usuarios.Add(new Usuario
         {

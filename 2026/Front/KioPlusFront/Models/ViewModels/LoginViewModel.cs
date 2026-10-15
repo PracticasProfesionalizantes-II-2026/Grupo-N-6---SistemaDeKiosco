@@ -22,6 +22,7 @@ public class RecuperarContraseniaViewModel
     public string NombreUsuario { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Ingresá la nueva contraseña")]
+    [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
     [DataType(DataType.Password)]
     [Display(Name = "Nueva contraseña")]
     public string NuevaContrasenia { get; set; } = string.Empty;

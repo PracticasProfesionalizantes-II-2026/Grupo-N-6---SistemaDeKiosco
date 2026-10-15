@@ -10,10 +10,10 @@ public class ProductoProveedorRepositorio : IProductoProveedorRepositorio
     public ProductoProveedorRepositorio(ApplicationDbContext db) => _db = db;
 
     public async Task<bool> ProductoExiste(int idProducto) =>
-        await _db.Productos.AnyAsync(p => p.Id == idProducto);
+        await _db.Productos.AnyAsync(p => p.Id == idProducto && p.Activo);
 
     public async Task<bool> ProveedorExiste(int idProveedor) =>
-        await _db.Proveedores.AnyAsync(p => p.Id == idProveedor);
+        await _db.Proveedores.AnyAsync(p => p.Id == idProveedor && p.Activo);
 
     // Mismo vínculo que ObtenerPorProducto, recorrido al revés
     public async Task<IEnumerable<(ProductoProveedor Asociacion, string Producto, string Marca)>> ObtenerPorProveedor(int idProveedor)
@@ -23,6 +23,8 @@ public class ProductoProveedorRepositorio : IProductoProveedorRepositorio
             join p in _db.Productos on pp.ProductoId equals p.Id into gp
             from p in gp.DefaultIfEmpty()
             where pp.ProveedorId == idProveedor
+                  && (p == null || p.Activo)
+                  && pp.Proveedor.Activo
             orderby p.Nombre
             select new
             {
@@ -36,7 +38,9 @@ public class ProductoProveedorRepositorio : IProductoProveedorRepositorio
     }
 
     public async Task<IEnumerable<ProductoProveedor>> ObtenerPorProducto(int idProducto) =>
-        await _db.ProductoProveedores.Where(pp => pp.ProductoId == idProducto).ToListAsync();
+        await _db.ProductoProveedores
+            .Where(pp => pp.ProductoId == idProducto && pp.Producto.Activo && pp.Proveedor.Activo)
+            .ToListAsync();
 
     public async Task<ProductoProveedor?> ObtenerPorProductoYProveedor(int idProducto, int idProveedor) =>
         await _db.ProductoProveedores

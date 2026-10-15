@@ -12,7 +12,7 @@ public class LoteRepositorio : ILoteRepositorio
     public LoteRepositorio(ApplicationDbContext db) => _db = db;
 
     public async Task<bool> ProductoExiste(int idProducto) =>
-        await _db.Productos.AnyAsync(p => p.Id == idProducto);
+        await _db.Productos.AnyAsync(p => p.Id == idProducto && p.Activo);
 
     public async Task<IEnumerable<Lote>> ObtenerPorProducto(int idProducto) =>
         await OrdenadosFefo(idProducto).ToListAsync();

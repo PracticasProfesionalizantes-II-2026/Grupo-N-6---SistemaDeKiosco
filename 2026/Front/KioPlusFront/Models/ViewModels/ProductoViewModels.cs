@@ -3,7 +3,7 @@ using KioPlusFront.Models.Api;
 
 namespace KioPlusFront.Models.ViewModels;
 
-public class ProductoFormViewModel
+public class ProductoFormViewModel : IValidatableObject
 {
     public int IdProducto { get; set; }
 
@@ -24,8 +24,8 @@ public class ProductoFormViewModel
     public double PrecioVenta { get; set; }
 
     [Range(0, int.MaxValue, ErrorMessage = "Los días de aviso no pueden ser negativos")]
-    [Display(Name = "Días de aviso por vencimiento")]
-    public int DiasAvisoVencimiento { get; set; }
+    [Display(Name = "Días de aviso por vencimiento (Opcional)")]
+    public int? DiasAvisoVencimiento { get; set; }
 
     // Solo informativo al editar: el stock es la suma de los lotes del producto
     public int StockDisponible { get; set; }
@@ -42,18 +42,16 @@ public class ProductoFormViewModel
     [Display(Name = "Fecha de vencimiento")]
     public DateTime? FechaVencimiento { get; set; }
 
-    [Range(0, int.MaxValue, ErrorMessage = "La cantidad no puede ser negativa")]
     [Display(Name = "Cantidad inicial")]
-    public int CantidadInicial { get; set; }
+    public int? CantidadInicial { get; set; }
 
     // --- Primer proveedor, opcional ---
 
     [Display(Name = "Proveedor")]
     public int IdProveedor { get; set; }
 
-    [Range(0, double.MaxValue, ErrorMessage = "El precio no puede ser negativo")]
     [Display(Name = "Precio de compra")]
-    public double PrecioCompra { get; set; }
+    public double? PrecioCompra { get; set; }
 
     // Alta rápida de categoría desde esta misma pantalla, para no perder lo cargado
     [Display(Name = "Nueva categoría")]
@@ -62,6 +60,36 @@ public class ProductoFormViewModel
     // Pantalla a la que hay que volver al terminar. La usa el botón "Nuevo Producto"
     // de una venta o de una compra en curso para no perder lo que se estaba armando.
     public string? VolverA { get; set; }
+
+    // El lote y el proveedor iniciales son opcionales, pero si se completa algún
+    // dato de uno hay que completar el resto. Al editar esos campos no se envían,
+    // así que ninguna de las dos condiciones se dispara.
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        var hayLote = !string.IsNullOrWhiteSpace(NroLote)
+            || FechaVencimiento.HasValue
+            || CantidadInicial.HasValue;
+
+        if (hayLote)
+        {
+            if (string.IsNullOrWhiteSpace(NroLote))
+                yield return new ValidationResult("Ingresá el número de lote", new[] { nameof(NroLote) });
+
+            if (CantidadInicial is null or <= 0)
+                yield return new ValidationResult("Ingresá la cantidad inicial del lote", new[] { nameof(CantidadInicial) });
+        }
+
+        var hayProveedor = IdProveedor > 0 || PrecioCompra.HasValue;
+
+        if (hayProveedor)
+        {
+            if (IdProveedor <= 0)
+                yield return new ValidationResult("Elegí el proveedor", new[] { nameof(IdProveedor) });
+
+            if (PrecioCompra is null or <= 0)
+                yield return new ValidationResult("Ingresá el precio de compra", new[] { nameof(PrecioCompra) });
+        }
+    }
 }
 
 public class ListadoProductosViewModel

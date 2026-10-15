@@ -20,7 +20,9 @@ public record UsuarioCreateDto(
     [property: RegularExpression(Formatos.Telefono, ErrorMessage = Formatos.MensajeTelefono)]
     string Telefono,
     [property: Required(ErrorMessage = "Ingresá el nombre de usuario")] string NombreUsuario,
-    [property: Required(ErrorMessage = "Ingresá la contraseña")] string ContraseniaUsuario,
+    [property: Required(ErrorMessage = "Ingresá la contraseña")]
+    [property: MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
+    string ContraseniaUsuario,
     Usuario.TipoDeUsuario TipoUsuario,
     bool Estado);
 
@@ -37,8 +39,9 @@ public record LoginResultadoDto(
     Usuario.TipoDeUsuario TipoUsuario);
 
 // Resultado del intento de inicio de sesión. Sesion queda en null cuando las
-// credenciales no coinciden o el usuario está bloqueado (Bloqueado = true).
-public record ResultadoLoginDto(LoginResultadoDto? Sesion, bool Bloqueado = false);
+// credenciales no coinciden, el usuario está bloqueado (Bloqueado = true) o hay
+// que esperar por demasiados intentos fallidos (DemasiadosIntentos = true).
+public record ResultadoLoginDto(LoginResultadoDto? Sesion, bool Bloqueado = false, bool DemasiadosIntentos = false);
 
 // Alta/baja lógica del usuario (candado en el listado)
 public record CambiarEstadoUsuarioDto(bool Estado);
@@ -47,4 +50,6 @@ public record CambiarEstadoUsuarioDto(bool Estado);
 // La confirmación se valida en la pantalla antes de llegar acá.
 public record CambiarContraseniaDto(
     [property: Required(ErrorMessage = "Ingresá el nombre de usuario")] string NombreUsuario,
-    [property: Required(ErrorMessage = "Ingresá la contraseña nueva")] string NuevaContrasenia);
+    [property: Required(ErrorMessage = "Ingresá la contraseña nueva")]
+    [property: MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
+    string NuevaContrasenia);

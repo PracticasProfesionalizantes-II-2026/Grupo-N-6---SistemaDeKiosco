@@ -89,7 +89,7 @@ public class DetalleCompraLogica : IDetalleCompraLogica
             return ResultadoOperacion.NoEncontrado("compra no encontrada");
 
         var producto = await _repo.ObtenerProducto(dto.IdProducto);
-        if (producto is null)
+        if (producto is null || !producto.Activo)
             return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
         if (!Lote.VencimientoAdmitido(dto.FechaVencimiento))
@@ -131,7 +131,7 @@ public class DetalleCompraLogica : IDetalleCompraLogica
         if (detalle is null) return ResultadoOperacion.NoEncontrado("detalle no encontrado");
 
         var producto = await _repo.ObtenerProducto(dto.IdProducto);
-        if (producto is null) return ResultadoOperacion.NoEncontrado("producto no encontrado");
+        if (producto is null || !producto.Activo) return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
         var lote = await _repoLotes.ObtenerPorDetalleCompra(id);
         if (!Lote.VencimientoAdmitido(dto.FechaVencimiento, lote?.FechaVencimiento))

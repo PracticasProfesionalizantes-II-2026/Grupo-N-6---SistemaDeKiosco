@@ -11,7 +11,7 @@ public class ProveedorRepositorio : IProveedorRepositorio
 
     public async Task<IEnumerable<Proveedor>> ObtenerTodos(string? busqueda)
     {
-        var query = _db.Proveedores.AsQueryable();
+        var query = _db.Proveedores.Where(p => p.Activo);
         if (!string.IsNullOrWhiteSpace(busqueda))
             query = query.Where(p => p.NombreRazonSocial.Contains(busqueda));
         return await query.ToListAsync();
@@ -35,7 +35,12 @@ public class ProveedorRepositorio : IProveedorRepositorio
 
     public async Task Eliminar(Proveedor proveedor)
     {
-        _db.Proveedores.Remove(proveedor);
+        // Las asociaciones con productos son vínculos vigentes; las compras conservan el ProveedorId
+        var asociaciones = await _db.ProductoProveedores
+            .Where(pp => pp.ProveedorId == proveedor.Id).ToListAsync();
+        _db.ProductoProveedores.RemoveRange(asociaciones);
+
+        proveedor.Activo = false;
         await _db.SaveChangesAsync();
     }
 }

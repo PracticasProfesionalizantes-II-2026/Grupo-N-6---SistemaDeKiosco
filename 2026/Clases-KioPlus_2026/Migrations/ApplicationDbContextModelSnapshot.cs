@@ -46,6 +46,9 @@ namespace Clases_KioPlus.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
@@ -89,6 +92,9 @@ namespace Clases_KioPlus.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Apellido")
                         .IsRequired()
@@ -258,6 +264,9 @@ namespace Clases_KioPlus.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
@@ -320,6 +329,9 @@ namespace Clases_KioPlus.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("CorreoElectronico")
                         .HasColumnType("nvarchar(max)");
 
@@ -350,6 +362,9 @@ namespace Clases_KioPlus.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ContraseniaUsuario")
                         .IsRequired()
@@ -427,7 +442,7 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.Proveedor", "Proveedor")
                         .WithMany()
                         .HasForeignKey("ProveedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Proveedor");
@@ -444,7 +459,7 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.Producto", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CompraProveedor");
@@ -457,7 +472,7 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.Producto", "Producto")
                         .WithMany("DetallesVentas")
                         .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Clases_KioPlus.Models.Venta", "Venta")
@@ -476,7 +491,7 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.Producto", "Producto")
                         .WithMany("Lotes")
                         .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Producto");
@@ -487,7 +502,7 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.Categoria", "Categoria")
                         .WithMany("Productos")
                         .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Categoria");
@@ -498,13 +513,13 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.Producto", "Producto")
                         .WithMany("ProductoProveedores")
                         .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Clases_KioPlus.Models.Proveedor", "Proveedor")
                         .WithMany("ProductoProveedores")
                         .HasForeignKey("ProveedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Producto");
@@ -517,13 +532,13 @@ namespace Clases_KioPlus.Migrations
                     b.HasOne("Clases_KioPlus.Models.CuentaCorrienteCliente", "CuentaCorrienteCliente")
                         .WithMany("Ventas")
                         .HasForeignKey("CuentaCorrienteClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Clases_KioPlus.Models.Usuario", "Usuario")
                         .WithMany("Ventas")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CuentaCorrienteCliente");

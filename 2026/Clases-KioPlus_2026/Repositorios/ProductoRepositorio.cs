@@ -11,7 +11,7 @@ public class ProductoRepositorio : IProductoRepositorio
 
     public async Task<IEnumerable<Producto>> ObtenerTodos(string? nombre, int? idCategoria, string? marca)
     {
-        var query = _db.Productos.AsQueryable();
+        var query = _db.Productos.Where(p => p.Activo);
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(p => p.Nombre.Contains(nombre));
         if (idCategoria.HasValue)
@@ -43,19 +43,24 @@ public class ProductoRepositorio : IProductoRepositorio
 
     public async Task Eliminar(Producto producto)
     {
-        _db.Productos.Remove(producto);
+        // Las asociaciones con proveedores son vínculos vigentes, no historial
+        var asociaciones = await _db.ProductoProveedores
+            .Where(pp => pp.ProductoId == producto.Id).ToListAsync();
+        _db.ProductoProveedores.RemoveRange(asociaciones);
+
+        producto.Activo = false;
         await _db.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Producto>> ObtenerConStockCritico(int umbral) =>
         await _db.Productos
-            .Where(p => p.StockDisponible < umbral)
+            .Where(p => p.Activo && p.StockDisponible < umbral)
             .OrderBy(p => p.StockDisponible)
             .ThenBy(p => p.Nombre)
             .ToListAsync();
 
     public async Task<IEnumerable<Lote>> ObtenerLotesConProducto() =>
-        await _db.Lotes.Include(l => l.Producto).ToListAsync();
+        await _db.Lotes.Include(l => l.Producto).Where(l => l.Producto.Activo).ToListAsync();
 
     // Sin fechas el ranking se arma sobre todo el historial de ventas
     public async Task<IEnumerable<(string Nombre, int Cantidad, double Monto)>> MasVendidos(DateTime? desde, DateTime? hasta)

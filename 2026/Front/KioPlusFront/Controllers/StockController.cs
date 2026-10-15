@@ -56,7 +56,7 @@ public class StockController : Controller
     public async Task<IActionResult> CrearProducto(ProductoFormViewModel modelo)
     {
         // Se controla antes de crear el producto para no dejarlo dado de alta sin su lote
-        if (modelo.CantidadInicial > 0 && modelo.FechaVencimiento?.Date < DateTime.Today)
+        if (modelo.FechaVencimiento?.Date < DateTime.Today)
             ModelState.AddModelError(nameof(modelo.FechaVencimiento), MensajeVencido);
 
         if (!ModelState.IsValid)
@@ -67,7 +67,7 @@ public class StockController : Controller
 
         var resultado = await _productos.CrearAsync(new ProductoCreateDto(
             modelo.Nombre, modelo.Marca, modelo.IdCategoria,
-            modelo.PrecioVenta, modelo.DiasAvisoVencimiento));
+            modelo.PrecioVenta, modelo.DiasAvisoVencimiento ?? 0));
 
         if (!resultado.Ok || resultado.Datos is null)
         {
@@ -80,11 +80,12 @@ public class StockController : Controller
         var avisos = new List<string>();
 
         // El stock nace del primer lote. Sin lote el producto queda en cero.
-        if (modelo.CantidadInicial > 0)
+        var conLote = modelo.CantidadInicial > 0;
+        if (conLote)
         {
             var lote = await _lotes.CrearAsync(idProducto, new LoteCreateDto(
-                string.IsNullOrWhiteSpace(modelo.NroLote) ? "L1" : modelo.NroLote,
-                modelo.FechaVencimiento, modelo.CantidadInicial));
+                modelo.NroLote!.Trim(),
+                modelo.FechaVencimiento, modelo.CantidadInicial!.Value));
 
             if (!lote.Ok) avisos.Add($"El producto se creó pero no se pudo cargar el lote: {lote.Error}");
         }
@@ -92,14 +93,14 @@ public class StockController : Controller
         if (modelo.IdProveedor > 0)
         {
             var asociacion = await _proveedores.AsociarProductoAsync(idProducto,
-                new ProductoProveedorCreateDto(modelo.IdProveedor, modelo.PrecioCompra));
+                new ProductoProveedorCreateDto(modelo.IdProveedor, modelo.PrecioCompra!.Value));
 
             if (!asociacion.Ok) avisos.Add($"No se pudo asociar el proveedor: {asociacion.Error}");
         }
 
         if (avisos.Count > 0) TempData["Error"] = string.Join(" ", avisos);
 
-        TempData["Exito"] = modelo.CantidadInicial > 0
+        TempData["Exito"] = conLote
             ? "Producto agregado con su primer lote."
             : "Producto agregado. Cargá una compra o un lote para darle stock.";
 
@@ -198,7 +199,7 @@ public class StockController : Controller
 
         var resultado = await _productos.ActualizarAsync(modelo.IdProducto, new ProductoCreateDto(
             modelo.Nombre, modelo.Marca, modelo.IdCategoria,
-            modelo.PrecioVenta, modelo.DiasAvisoVencimiento));
+            modelo.PrecioVenta, modelo.DiasAvisoVencimiento ?? 0));
 
         if (!resultado.Ok)
         {

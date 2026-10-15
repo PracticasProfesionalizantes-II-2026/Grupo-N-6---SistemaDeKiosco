@@ -9,5 +9,5 @@ public interface ICategoriaLogica
     Task<CategoriaDto?> ObtenerPorId(int id);
     Task<int> Crear(CategoriaCreateDto dto);
     Task<bool> Actualizar(int id, CategoriaCreateDto dto);
-    Task<bool> Eliminar(int id);
+    Task<ResultadoOperacion> Eliminar(int id);
 }

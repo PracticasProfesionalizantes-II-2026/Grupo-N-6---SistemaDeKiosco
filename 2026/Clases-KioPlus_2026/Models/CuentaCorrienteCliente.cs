@@ -34,6 +34,9 @@ namespace Clases_KioPlus.Models
         // pago de la deuda no puede tener una fecha anterior a esta.
         [Required] public DateTime FechaAlta { get; set; }
 
+        // Baja lógica: al eliminar queda en false y se conserva el historial
+        public bool Activo { get; set; } = true;
+
         // Estado actual de la deuda del cliente (Moroso o Al Día)
         [Required] public EstadoDeuda Estado { get; set; }
         public enum EstadoDeuda

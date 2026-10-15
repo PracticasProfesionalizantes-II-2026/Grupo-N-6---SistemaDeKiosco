@@ -11,4 +11,5 @@ public interface ICategoriaRepositorio
     Task<Categoria> Agregar(Categoria categoria);
     Task Actualizar(Categoria categoria);
     Task Eliminar(Categoria categoria);
+    Task<bool> TieneProductosActivos(int id);
 }

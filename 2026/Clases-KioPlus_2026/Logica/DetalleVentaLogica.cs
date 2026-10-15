@@ -56,7 +56,7 @@ public class DetalleVentaLogica : IDetalleVentaLogica
             return ResultadoOperacion.NoEncontrado("venta no encontrada");
 
         var producto = await _repo.ObtenerProducto(dto.IdProducto);
-        if (producto is null)
+        if (producto is null || !producto.Activo)
             return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
         if (!await _repoLotes.ConsumirFefo(dto.IdProducto, dto.Cantidad))
@@ -89,7 +89,7 @@ public class DetalleVentaLogica : IDetalleVentaLogica
         if (diferencia > 0)
         {
             var producto = await _repo.ObtenerProducto(detalle.ProductoId);
-            if (producto is null)
+            if (producto is null || !producto.Activo)
                 return ResultadoOperacion.NoEncontrado("producto no encontrado");
 
             if (!await _repoLotes.ConsumirFefo(detalle.ProductoId, diferencia))

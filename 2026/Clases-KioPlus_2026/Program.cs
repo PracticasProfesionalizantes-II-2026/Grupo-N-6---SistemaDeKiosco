@@ -23,6 +23,7 @@ builder.Services.AddScoped<ICategoriaLogica, CategoriaLogica>();
 
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IUsuarioLogica, UsuarioLogica>();
+builder.Services.AddSingleton<ControlIntentosLogin>();
 
 builder.Services.AddScoped<IProveedorRepositorio, ProveedorRepositorio>();
 builder.Services.AddScoped<IProveedorLogica, ProveedorLogica>();

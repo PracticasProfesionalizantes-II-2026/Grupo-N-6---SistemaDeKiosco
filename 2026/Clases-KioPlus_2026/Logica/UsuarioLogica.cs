@@ -8,7 +8,13 @@ namespace Clases_KioPlus.Logica;
 public class UsuarioLogica : IUsuarioLogica
 {
     private readonly IUsuarioRepositorio _repo;
-    public UsuarioLogica(IUsuarioRepositorio repo) => _repo = repo;
+    private readonly ControlIntentosLogin _intentos;
+
+    public UsuarioLogica(IUsuarioRepositorio repo, ControlIntentosLogin intentos)
+    {
+        _repo = repo;
+        _intentos = intentos;
+    }
 
     private static UsuarioDto AMapa(Usuario u) =>
         new(u.Id, u.NombreApellido, u.Telefono, u.NombreUsuario, u.ContraseniaUsuario, u.TipoUsuario, u.Estado);
@@ -67,7 +73,7 @@ public class UsuarioLogica : IUsuarioLogica
     public async Task<bool> Eliminar(int id)
     {
         var usuario = await _repo.ObtenerPorId(id);
-        if (usuario is null) return false;
+        if (usuario is null || !usuario.Activo) return false;
 
         await _repo.Eliminar(usuario);
         return true;
@@ -100,15 +106,27 @@ public class UsuarioLogica : IUsuarioLogica
     }
 
     // Sin sesión si las credenciales no coinciden. Un usuario bloqueado se informa
-    // como tal, igual que en "¿Olvidaste tu contraseña?".
+    // como tal, igual que en "¿Olvidaste tu contraseña?", y no cuenta como intento
+    // fallido. Tras 5 fallos seguidos hay que esperar 1 minuto antes de reintentar.
     public async Task<ResultadoLoginDto> Login(LoginDto dto)
     {
+        if (_intentos.EstaEsperando(dto.NombreUsuario))
+            return new ResultadoLoginDto(null, DemasiadosIntentos: true);
+
         var usuario = await _repo.ObtenerPorNombreUsuario(dto.NombreUsuario);
-        if (usuario is null) return new ResultadoLoginDto(null);
+        if (usuario is null)
+        {
+            _intentos.RegistrarFallo(dto.NombreUsuario);
+            return new ResultadoLoginDto(null);
+        }
         if (!usuario.Estado) return new ResultadoLoginDto(null, Bloqueado: true);
         if (usuario.ContraseniaUsuario != HashContrasenia.Calcular(dto.ContraseniaUsuario))
+        {
+            _intentos.RegistrarFallo(dto.NombreUsuario);
             return new ResultadoLoginDto(null);
+        }
 
+        _intentos.Reiniciar(dto.NombreUsuario);
         return new ResultadoLoginDto(new LoginResultadoDto(
             usuario.Id, usuario.NombreApellido, usuario.NombreUsuario, usuario.TipoUsuario));
     }

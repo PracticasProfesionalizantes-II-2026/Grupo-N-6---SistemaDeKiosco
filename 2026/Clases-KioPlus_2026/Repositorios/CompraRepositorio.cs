@@ -10,7 +10,7 @@ public class CompraRepositorio : ICompraRepositorio
     public CompraRepositorio(ApplicationDbContext db) => _db = db;
 
     public async Task<bool> ProveedorExiste(int idProveedor) =>
-        await _db.Proveedores.AnyAsync(p => p.Id == idProveedor);
+        await _db.Proveedores.AnyAsync(p => p.Id == idProveedor && p.Activo);
 
     public async Task<IEnumerable<CompraProveedor>> ObtenerTodas() =>
         await _db.Compras.ToListAsync();

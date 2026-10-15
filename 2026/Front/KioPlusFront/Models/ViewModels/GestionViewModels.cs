@@ -143,8 +143,16 @@ public class UsuarioFormViewModel
 
     // Al editar se deja vacía para no cambiarla; al crear es obligatoria y eso
      // se valida en el controlador, porque el mismo formulario sirve para los dos.
+    // Solo espacios cuenta como vacía: al editar significa "no cambiar la contraseña".
+    private string? _contraseniaUsuario;
+
+    [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")]
     [Display(Name = "Contraseña")]
-    public string? ContraseniaUsuario { get; set; }
+    public string? ContraseniaUsuario
+    {
+        get => _contraseniaUsuario;
+        set => _contraseniaUsuario = string.IsNullOrWhiteSpace(value) ? null : value;
+    }
 
     [Display(Name = "Tipo de usuario")]
     public TipoDeUsuario TipoUsuario { get; set; } = TipoDeUsuario.Empleado;

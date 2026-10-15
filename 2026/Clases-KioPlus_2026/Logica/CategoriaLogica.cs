@@ -40,12 +40,17 @@ public class CategoriaLogica : ICategoriaLogica
         return true;
     }
 
-    public async Task<bool> Eliminar(int id)
+    // Baja lógica: una categoría con productos activos no se puede dar de baja
+    public async Task<ResultadoOperacion> Eliminar(int id)
     {
         var categoria = await _repo.ObtenerPorId(id);
-        if (categoria is null) return false;
+        if (categoria is null || !categoria.Activo)
+            return ResultadoOperacion.NoEncontrado("categoría no encontrada");
+
+        if (await _repo.TieneProductosActivos(id))
+            return ResultadoOperacion.Invalido("no se puede eliminar una categoría que tiene productos activos");
 
         await _repo.Eliminar(categoria);
-        return true;
+        return ResultadoOperacion.Exito(id);
     }
 }

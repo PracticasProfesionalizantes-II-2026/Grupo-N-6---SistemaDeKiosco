@@ -68,7 +68,7 @@ public class ProductoLogica : IProductoLogica
     public async Task<bool> Eliminar(int id)
     {
         var producto = await _repo.ObtenerPorId(id);
-        if (producto is null) return false;
+        if (producto is null || !producto.Activo) return false;
 
         await _repo.Eliminar(producto);
         return true;

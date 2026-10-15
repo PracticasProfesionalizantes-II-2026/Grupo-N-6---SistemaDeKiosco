@@ -10,7 +10,7 @@ public class CategoriaRepositorio : ICategoriaRepositorio
     public CategoriaRepositorio(ApplicationDbContext db) => _db = db;
 
     public async Task<IEnumerable<Categoria>> ObtenerTodas() =>
-        await _db.Categorias.ToListAsync();
+        await _db.Categorias.Where(c => c.Activo).ToListAsync();
 
     public async Task<Categoria?> ObtenerPorId(int id) =>
         await _db.Categorias.FindAsync(id);
@@ -30,7 +30,10 @@ public class CategoriaRepositorio : ICategoriaRepositorio
 
     public async Task Eliminar(Categoria categoria)
     {
-        _db.Categorias.Remove(categoria);
+        categoria.Activo = false;
         await _db.SaveChangesAsync();
     }
+
+    public async Task<bool> TieneProductosActivos(int id) =>
+        await _db.Productos.AnyAsync(p => p.CategoriaId == id && p.Activo);
 }

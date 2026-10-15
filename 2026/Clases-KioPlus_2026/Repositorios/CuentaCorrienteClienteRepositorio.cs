@@ -16,7 +16,7 @@ public class CuentaCorrienteClienteRepositorio : ICuentaCorrienteClienteReposito
         CuentaCorrienteCliente.EstadoDeuda? estado,
         double? montoAdeudadoMin, double? montoAdeudadoMax)
     {
-        var query = _db.CuentasCorrientesClientes.AsQueryable();
+        var query = _db.CuentasCorrientesClientes.Where(c => c.Activo);
 
         if (!string.IsNullOrWhiteSpace(nombre))
             query = query.Where(c => c.Nombre.Contains(nombre));
@@ -52,7 +52,7 @@ public class CuentaCorrienteClienteRepositorio : ICuentaCorrienteClienteReposito
 
     public async Task Eliminar(CuentaCorrienteCliente cuenta)
     {
-        _db.CuentasCorrientesClientes.Remove(cuenta);
+        cuenta.Activo = false;
         await _db.SaveChangesAsync();
     }
 

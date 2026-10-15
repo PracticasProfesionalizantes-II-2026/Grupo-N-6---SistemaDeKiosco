@@ -56,7 +56,7 @@ public class ProveedorLogica : IProveedorLogica
     public async Task<bool> Eliminar(int id)
     {
         var proveedor = await _repo.ObtenerPorId(id);
-        if (proveedor is null) return false;
+        if (proveedor is null || !proveedor.Activo) return false;
 
         await _repo.Eliminar(proveedor);
         return true;

@@ -24,6 +24,9 @@ namespace Clases_KioPlus.Models
         // Estado del usuario (activo/inactivo)
         [Required] public bool Estado { get; set; }
 
+        // Baja lógica: al eliminar queda en false y se conserva el historial
+        public bool Activo { get; set; } = true;
+
         // Relación uno a muchos con ventas realizadas por el usuario
         public List<Venta> Ventas { get; set; }
 

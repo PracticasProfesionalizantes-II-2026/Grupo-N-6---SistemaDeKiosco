@@ -10,10 +10,10 @@ public class VentaRepositorio : IVentaRepositorio
     public VentaRepositorio(ApplicationDbContext db) => _db = db;
 
     public async Task<bool> UsuarioExiste(int idUsuario) =>
-        await _db.Usuarios.AnyAsync(u => u.Id == idUsuario);
+        await _db.Usuarios.AnyAsync(u => u.Id == idUsuario && u.Activo);
 
     public async Task<bool> CuentaExiste(int idCuenta) =>
-        await _db.CuentasCorrientesClientes.AnyAsync(c => c.Id == idCuenta);
+        await _db.CuentasCorrientesClientes.AnyAsync(c => c.Id == idCuenta && c.Activo);
 
     public async Task<IEnumerable<Venta>> ObtenerTodas() =>
         await _db.Ventas.ToListAsync();

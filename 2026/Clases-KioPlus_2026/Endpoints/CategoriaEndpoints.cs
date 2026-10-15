@@ -33,8 +33,12 @@ public static class CategoriaEndpoints
 
         grupo.MapDelete("/{id:int}", async (int id, ICategoriaLogica logica) =>
         {
-            var ok = await logica.Eliminar(id);
-            return ok ? Results.NoContent() : Results.NotFound();
+            var resultado = await logica.Eliminar(id);
+            if (resultado.Ok) return Results.NoContent();
+
+            return resultado.Error!.Contains("no encontrad")
+                ? Results.NotFound(new { mensaje = resultado.Error })
+                : Results.BadRequest(new { mensaje = resultado.Error });
         });
     }
 }

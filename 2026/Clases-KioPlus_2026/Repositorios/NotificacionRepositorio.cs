@@ -18,10 +18,10 @@ public class NotificacionRepositorio : INotificacionRepositorio
     }
 
     public async Task<IEnumerable<Producto>> ObtenerProductosConStockCritico(int umbral) =>
-        await _db.Productos.Where(p => p.StockDisponible < umbral).ToListAsync();
+        await _db.Productos.Where(p => p.Activo && p.StockDisponible < umbral).ToListAsync();
 
     public async Task<IEnumerable<Lote>> ObtenerLotesConProducto() =>
-        await _db.Lotes.Include(l => l.Producto).ToListAsync();
+        await _db.Lotes.Include(l => l.Producto).Where(l => l.Producto.Activo).ToListAsync();
 
     // Los avisos son un reflejo del estado actual: se recalculan enteros en cada consulta
     // para que no queden alertas viejas de productos que ya se repusieron.

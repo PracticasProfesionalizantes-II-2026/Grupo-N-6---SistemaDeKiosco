@@ -20,6 +20,9 @@ namespace Clases_KioPlus.Models
         // Opcional: notas sueltas sobre el proveedor
         public string? Observaciones { get; set; }
 
+        // Baja lógica: al eliminar queda en false y se conserva el historial
+        public bool Activo { get; set; } = true;
+
         // Relación uno a muchos con los productos que provee
         public List<ProductoProveedor> ProductoProveedores { get; set; }
     }

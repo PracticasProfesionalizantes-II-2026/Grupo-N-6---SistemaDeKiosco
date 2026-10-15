@@ -10,10 +10,15 @@ public static class UsuarioEndpoints
     {
         var grupo = app.MapGroup("/usuarios").WithTags("Usuarios");
 
-        // Inicio de sesión. 401 si las credenciales no coinciden, 403 si el usuario está bloqueado.
+        // Inicio de sesión. 401 si las credenciales no coinciden, 403 si el usuario está bloqueado
+        // y 429 si hubo demasiados intentos fallidos seguidos.
         grupo.MapPost("/login", async (LoginDto dto, IUsuarioLogica logica) =>
         {
             var resultado = await logica.Login(dto);
+            if (resultado.DemasiadosIntentos)
+                return Results.Json(new { mensaje = "Demasiados intentos fallidos. Esperá 1 minuto y volvé a intentar." },
+                    statusCode: StatusCodes.Status429TooManyRequests);
+
             if (resultado.Bloqueado)
                 return Results.Json(new { mensaje = "este usuario se encuentra bloqueado" },
                     statusCode: StatusCodes.Status403Forbidden);

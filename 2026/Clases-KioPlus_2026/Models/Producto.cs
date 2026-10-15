@@ -22,6 +22,9 @@ namespace Clases_KioPlus.Models
         // Días previos al vencimiento en que se debe generar una alerta
         [Required] public int DiasAvisoVencimiento { get; set; }
 
+        // Baja lógica: al eliminar queda en false y se conserva el historial
+        public bool Activo { get; set; } = true;
+
         // Relación uno a muchos con los lotes del producto
         public List<Lote> Lotes { get; set; }
 

@@ -18,6 +18,9 @@ namespace Clases_KioPlus.Models
         // el nombre ya alcanza para clasificar el producto.
         public string? Descripcion { get; set; }
 
+        // Baja lógica: al eliminar queda en false y se conserva el historial
+        public bool Activo { get; set; } = true;
+
         // Relación uno a muchos con productos
         public List<Producto> Productos { get; set; }
     }

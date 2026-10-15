@@ -90,6 +90,7 @@
         <div class="col-md-4">
             <label asp-for="NroLote" class="form-label"></label>
             <input asp-for="NroLote" class="form-control" placeholder="L1" />
+            <span asp-validation-for="NroLote" class="text-danger small"></span>
         </div>
         <div class="col-md-4">
             <label asp-for="FechaVencimiento" class="form-label"></label>
@@ -116,6 +117,7 @@
                     <option value="@p.IdProveedor">@p.NombreRazonSocial</option>
                 }
             </select>
+            <span asp-validation-for="IdProveedor" class="text-danger small"></span>
         </div>
         <div class="col-md-6">
             <label asp-for="PrecioCompra" class="form-label"></label>

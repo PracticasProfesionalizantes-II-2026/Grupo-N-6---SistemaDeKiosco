@@ -125,7 +125,8 @@ else
     </div>
 
     <div class="kp-form-acciones">
-        <button type="submit" class="btn btn-kp-outline" formaction="@Url.Action("Cancelar")">
+        @* formnovalidate: cancelar no exige elegir proveedor *@
+        <button type="submit" class="btn btn-kp-outline" formaction="@Url.Action("Cancelar")" formnovalidate>
             Cancelar compra
         </button>
         <button type="submit" class="btn btn-kp">Registrar compra</button>

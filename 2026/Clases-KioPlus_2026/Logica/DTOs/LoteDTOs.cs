@@ -11,8 +11,9 @@ public record LoteDto(
     int Cantidad);
 
 // fechaVencimiento es opcional: sin fecha el lote se toma como "no vence"
-// y queda último en el orden de consumo.
+// y queda último en el orden de consumo. nroLote también es opcional: sin
+// número se asigna el siguiente de la forma L1, L2, L3...
 public record LoteCreateDto(
-    [property: Required(ErrorMessage = "Ingresá el número de lote")] string NroLote,
+    string? NroLote,
     DateTime? FechaVencimiento,
     [property: Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")] int Cantidad);

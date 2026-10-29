@@ -37,7 +37,9 @@ public class LoteLogica : ILoteLogica
         var lote = new Lote
         {
             ProductoId = idProducto,
-            NroLote = dto.NroLote,
+            NroLote = string.IsNullOrWhiteSpace(dto.NroLote)
+                ? await SiguienteNumero(idProducto)
+                : dto.NroLote.Trim(),
             FechaVencimiento = dto.FechaVencimiento,
             CantidadInicial = dto.Cantidad,
             Cantidad = dto.Cantidad
@@ -45,6 +47,20 @@ public class LoteLogica : ILoteLogica
         await _repo.Agregar(lote);
         await _repo.RecalcularStockProducto(idProducto);
         return ResultadoOperacion.Exito(lote.Id);
+    }
+
+    // Siguiente número automático del producto: L1, L2, L3... Toma el mayor ya
+    // usado con ese formato, así no se repite aunque se hayan borrado lotes.
+    private async Task<string> SiguienteNumero(int idProducto)
+    {
+        var lotes = await _repo.ObtenerPorProducto(idProducto);
+        var mayor = lotes
+            .Select(l => l.NroLote)
+            .Select(n => n is { Length: > 1 } && (n[0] == 'L' || n[0] == 'l')
+                         && int.TryParse(n[1..], out var numero) ? numero : 0)
+            .DefaultIfEmpty(0)
+            .Max();
+        return $"L{mayor + 1}";
     }
 
     // Editar un lote corrige la cantidad que queda disponible. La cantidad inicial
@@ -57,7 +73,9 @@ public class LoteLogica : ILoteLogica
         if (!Lote.VencimientoAdmitido(dto.FechaVencimiento, lote.FechaVencimiento))
             return ResultadoOperacion.Invalido(Lote.MensajeVencido);
 
-        lote.NroLote = dto.NroLote;
+        // Sin número nuevo se conserva el que ya tenía
+        if (!string.IsNullOrWhiteSpace(dto.NroLote))
+            lote.NroLote = dto.NroLote.Trim();
         lote.FechaVencimiento = dto.FechaVencimiento;
         lote.Cantidad = dto.Cantidad;
         lote.CantidadInicial = Math.Max(lote.CantidadInicial, dto.Cantidad);

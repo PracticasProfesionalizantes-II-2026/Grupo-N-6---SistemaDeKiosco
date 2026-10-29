@@ -35,7 +35,8 @@ public class ProductoFormViewModel : IValidatableObject
 
     // --- Primer lote, opcional: es la forma de que el producto nazca con stock ---
 
-    [Display(Name = "Número de lote")]
+    // Sin número, la API le asigna L1
+    [Display(Name = "Número de lote (Opcional)")]
     public string? NroLote { get; set; }
 
     [DataType(DataType.Date)]
@@ -70,11 +71,10 @@ public class ProductoFormViewModel : IValidatableObject
             || FechaVencimiento.HasValue
             || CantidadInicial.HasValue;
 
+        // El número y la fecha son opcionales, pero si se carga cualquiera de los
+        // dos hace falta la cantidad. La cantidad sola sí alcanza.
         if (hayLote)
         {
-            if (string.IsNullOrWhiteSpace(NroLote))
-                yield return new ValidationResult("Ingresá el número de lote", new[] { nameof(NroLote) });
-
             if (CantidadInicial is null or <= 0)
                 yield return new ValidationResult("Ingresá la cantidad inicial del lote", new[] { nameof(CantidadInicial) });
         }
@@ -116,9 +116,9 @@ public class LotesProductoViewModel
     public string NombreProducto { get; set; } = string.Empty;
     public IReadOnlyList<LoteDto> Lotes { get; set; } = Array.Empty<LoteDto>();
 
-    [Required(ErrorMessage = "Ingresá el número de lote")]
-    [Display(Name = "Número de lote")]
-    public string NroLote { get; set; } = string.Empty;
+    // Sin número, la API asigna el siguiente (L1, L2, L3...)
+    [Display(Name = "Número de lote (Opcional)")]
+    public string? NroLote { get; set; }
 
     // Vacía significa que el producto no vence (encendedores, pilas, etc.)
     [DataType(DataType.Date)]

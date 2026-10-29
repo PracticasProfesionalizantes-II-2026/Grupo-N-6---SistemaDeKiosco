@@ -53,4 +53,4 @@ public record LoteDto(
     int CantidadInicial,
     int Cantidad);
 
-public record LoteCreateDto(string NroLote, DateTime? FechaVencimiento, int Cantidad);
+public record LoteCreateDto(string? NroLote, DateTime? FechaVencimiento, int Cantidad);

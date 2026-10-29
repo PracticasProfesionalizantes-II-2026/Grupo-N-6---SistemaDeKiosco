@@ -84,7 +84,7 @@ public class StockController : Controller
         if (conLote)
         {
             var lote = await _lotes.CrearAsync(idProducto, new LoteCreateDto(
-                modelo.NroLote!.Trim(),
+                modelo.NroLote,
                 modelo.FechaVencimiento, modelo.CantidadInicial!.Value));
 
             if (!lote.Ok) avisos.Add($"El producto se creó pero no se pudo cargar el lote: {lote.Error}");

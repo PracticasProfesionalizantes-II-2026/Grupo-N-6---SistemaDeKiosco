@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1636 >>
+stream
+0.8 w 40 700 515 100 re S
+BT /F2 16 Tf 55 770 Td (Distribuidora El Sol S.A.) Tj ET
+BT /F1 9 Tf 55 752 Td (Av. Colón 1234, Córdoba) Tj ET
+BT /F1 9 Tf 55 739 Td (Tel: 351-4567890) Tj ET
+BT /F1 9 Tf 55 726 Td (CUIT: 30-71234567-8) Tj ET
+BT /F1 9 Tf 55 713 Td (IVA Responsable Inscripto) Tj ET
+0.8 w 282 760 30 30 re S
+BT /F2 20 Tf 290 768 Td (B) Tj ET
+BT /F2 16 Tf 380 775 Td (FACTURA) Tj ET
+BT /F1 10 Tf 380 755 Td (N.º 0003-00012398) Tj ET
+BT /F1 10 Tf 380 740 Td (Fecha de emisión: 29/10/2026) Tj ET
+0.8 w 40 650 515 45 re S
+BT /F2 10 Tf 55 678 Td (Cliente: KioPlus - Kiosco) Tj ET
+BT /F1 9 Tf 55 662 Td (Condición de venta: Contado) Tj ET
+0.9 g 40 615 515 20 re f 0 g
+BT /F2 10 Tf 50 620 Td (Cant.) Tj ET
+BT /F2 10 Tf 100 620 Td (Descripción) Tj ET
+BT /F2 10 Tf 400.0 620 Td (P. Unitario) Tj ET
+BT /F2 10 Tf 510.0 620 Td (Subtotal) Tj ET
+BT /F1 10 Tf 55 598 Td (12) Tj ET
+BT /F1 10 Tf 100 598 Td (COCA COLA 500CC) Tj ET
+BT /F1 10 Tf 415.0 598 Td ($ 960,00) Tj ET
+BT /F1 10 Tf 495.0 598 Td ($ 11.520,00) Tj ET
+0.3 w 40 592 m 555 592 l S
+BT /F1 10 Tf 55 576 Td (24) Tj ET
+BT /F1 10 Tf 100 576 Td (GALLETITAS OREO 118G) Tj ET
+BT /F1 10 Tf 405.0 576 Td ($ 1.350,00) Tj ET
+BT /F1 10 Tf 495.0 576 Td ($ 32.400,00) Tj ET
+0.3 w 40 570 m 555 570 l S
+BT /F1 10 Tf 55 554 Td (6) Tj ET
+BT /F1 10 Tf 100 554 Td (FANTA NARANJA 500) Tj ET
+BT /F1 10 Tf 415.0 554 Td ($ 880,00) Tj ET
+BT /F1 10 Tf 500.0 554 Td ($ 5.280,00) Tj ET
+0.3 w 40 548 m 555 548 l S
+0.8 w 40 542 m 555 542 l S
+BT /F2 12 Tf 380 520 Td (TOTAL) Tj ET
+BT /F2 12 Tf 484.0 520 Td ($ 49.200,00) Tj ET
+BT /F1 8 Tf 40 60 Td (Documento generado para pruebas. No válido como factura.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000001939 00000 n 
+0000002036 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2138
+%%EOF

@@ -57,6 +57,13 @@ builder.Services.AddHttpClient<ApiClient>(http =>
     http.Timeout = TimeSpan.FromSeconds(15);
 });
 
+// La lectura de facturas con IA espera más: la API le da hasta 90 s a Gemini
+builder.Services.AddHttpClient<ILectorFacturaService, LectorFacturaService>(http =>
+{
+    http.BaseAddress = new Uri(urlApi);
+    http.Timeout = TimeSpan.FromSeconds(120);
+});
+
 // Un servicio por recurso de la API, en espejo con la capa Logica del back
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();

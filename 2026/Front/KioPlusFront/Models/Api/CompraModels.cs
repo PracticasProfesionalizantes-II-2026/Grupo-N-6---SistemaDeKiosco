@@ -21,6 +21,20 @@ public record DetalleCompraListadoDto(
     string? NroLote,
     DateTime? FechaVencimiento);
 
+// Borrador de compra que la IA leyó de una factura en PDF
+public record FacturaInterpretadaDto(
+    int? IdProveedor,
+    string? Proveedor,
+    DateTime? Fecha,
+    IReadOnlyList<RenglonFacturaDto> Renglones);
+
+// IdProducto en null: el renglón no coincide con ningún producto del sistema
+public record RenglonFacturaDto(
+    int? IdProducto,
+    string Descripcion,
+    int Cantidad,
+    double PrecioUnitario);
+
 // Cada renglón de compra ingresa mercadería, así que genera un lote
 public record DetalleCompraCreateDto(
     int IdProducto,

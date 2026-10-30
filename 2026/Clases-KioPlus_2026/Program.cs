@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Clases_KioPlus.Data;
 using Clases_KioPlus.Endpoints;
+using Clases_KioPlus.Integraciones;
 using Clases_KioPlus.Logica;
 using Clases_KioPlus.Middleware;
 using Clases_KioPlus.Repositorios;
@@ -57,6 +58,12 @@ builder.Services.AddScoped<IDetalleCompraLogica, DetalleCompraLogica>();
 
 builder.Services.AddScoped<ICajaRepositorio, CajaRepositorio>();
 builder.Services.AddScoped<ICajaLogica, CajaLogica>();
+
+// Lectura de facturas con IA (Gemini). Leer un PDF puede tardar bastante más que
+// un pedido común, por eso el cliente tiene su propio timeout.
+builder.Services.AddHttpClient<IGeminiCliente, GeminiCliente>(http =>
+    http.Timeout = TimeSpan.FromSeconds(90));
+builder.Services.AddScoped<ILectorFacturaLogica, LectorFacturaLogica>();
 
 // 4. Documentación OpenAPI
 builder.Services.AddOpenApi();

@@ -8,6 +8,14 @@
     </div>
 }
 
+@if (TempData["Aviso"] is string aviso && !string.IsNullOrWhiteSpace(aviso))
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @aviso
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
 @if (TempData["Error"] is string error && !string.IsNullOrWhiteSpace(error))
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">

@@ -9,6 +9,28 @@
        asp-route-volverA="@Url.Action("Nueva", "Compras")">Nuevo Producto</a>
 </div>
 
+@* --- Carga automática: la IA lee la factura del proveedor y precarga la compra --- *@
+<form asp-action="CargarFactura" method="post" enctype="multipart/form-data"
+      class="kp-filtros" id="formFactura" novalidate>
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3 align-items-end">
+        <div class="col-md-8">
+            <label class="form-label" for="archivo">Cargar desde factura (PDF)</label>
+            <input class="form-control" type="file" id="archivo" name="archivo"
+                   accept=".pdf,application/pdf" required />
+            <div class="form-text">
+                La IA completa los productos, cantidades, precios, proveedor y fecha.
+                Revisalos antes de registrar la compra.
+            </div>
+        </div>
+
+        <div class="col-md-4 align-self-start">
+            <button type="submit" class="btn btn-kp w-100 mt-4" id="btnFactura">Leer factura con IA</button>
+        </div>
+    </div>
+</form>
+
 @* --- Alta de renglones: cada uno ingresa su propio lote --- *@
 <form asp-action="AgregarItem" method="post" class="kp-filtros" novalidate>
     @Html.AntiForgeryToken()
@@ -135,4 +157,16 @@ else
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Leer la factura tarda unos segundos: se avisa y se evita el doble envío
+        document.getElementById('formFactura').addEventListener('submit', function (e) {
+            if (!document.getElementById('archivo').value) {
+                e.preventDefault();
+                return;
+            }
+            const boton = document.getElementById('btnFactura');
+            boton.disabled = true;
+            boton.textContent = 'Leyendo factura...';
+        });
+    </script>
 }

@@ -11,19 +11,23 @@ namespace KioPlusFront.Controllers;
 public class ComprasController : Controller
 {
     private const string ClaveCarrito = "kioplus.carrito.compra";
+    private const string ClaveSugerida = "kioplus.compra.sugerida";
 
     private readonly ICompraService _compras;
     private readonly IProductoService _productos;
     private readonly IProveedorService _proveedores;
+    private readonly ILectorFacturaService _lectorFacturas;
 
     public ComprasController(
         ICompraService compras,
         IProductoService productos,
-        IProveedorService proveedores)
+        IProveedorService proveedores,
+        ILectorFacturaService lectorFacturas)
     {
         _compras = compras;
         _productos = productos;
         _proveedores = proveedores;
+        _lectorFacturas = lectorFacturas;
     }
 
     [HttpGet]
@@ -90,6 +94,80 @@ public class ComprasController : Controller
         return RedirectToAction(nameof(Nueva));
     }
 
+    // La IA lee la factura del proveedor y precarga la compra: renglones, proveedor
+    // y fecha. No la registra; el usuario revisa y confirma con "Registrar compra".
+    // Los renglones no traen vencimiento: la factura no lo informa.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CargarFactura(IFormFile? archivo)
+    {
+        if (archivo is null || archivo.Length == 0)
+        {
+            TempData["Error"] = "Elegí el PDF de la factura.";
+            return RedirectToAction(nameof(Nueva));
+        }
+
+        if (!string.Equals(Path.GetExtension(archivo.FileName), ".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            TempData["Error"] = "El archivo tiene que ser un PDF.";
+            return RedirectToAction(nameof(Nueva));
+        }
+
+        var resultado = await _lectorFacturas.InterpretarAsync(archivo);
+        if (!resultado.Ok || resultado.Datos is null)
+        {
+            TempData["Error"] = resultado.Error ?? "No se pudo leer la factura.";
+            return RedirectToAction(nameof(Nueva));
+        }
+
+        var factura = resultado.Datos;
+        var productos = (await _productos.ObtenerTodosAsync()).ToDictionary(p => p.IdProducto);
+
+        var carrito = new List<ItemCompra>();
+        var sinCargar = new List<string>();
+
+        foreach (var renglon in factura.Renglones)
+        {
+            if (renglon.IdProducto is int id && productos.TryGetValue(id, out var producto)
+                && renglon.Cantidad > 0 && renglon.PrecioUnitario > 0)
+            {
+                carrito.Add(new ItemCompra
+                {
+                    IdProducto = producto.IdProducto,
+                    Producto = $"{producto.Nombre} ({producto.Marca})",
+                    Cantidad = renglon.Cantidad,
+                    PrecioUnitario = renglon.PrecioUnitario
+                });
+            }
+            else
+            {
+                sinCargar.Add(renglon.Descripcion);
+            }
+        }
+
+        // La factura reemplaza lo que hubiera en la compra en curso
+        GuardarCarrito(carrito);
+        HttpContext.Session.GuardarObjeto(ClaveSugerida, new CompraSugerida
+        {
+            IdProveedor = factura.IdProveedor,
+            Fecha = factura.Fecha
+        });
+
+        if (carrito.Count > 0)
+            TempData["Exito"] = $"La IA cargó {carrito.Count} producto(s) de la factura. Revisá los datos y tocá \"Registrar compra\" para confirmarla.";
+
+        var avisos = new List<string>();
+        if (carrito.Count == 0)
+            avisos.Add("La IA no encontró en la factura ningún producto que exista en el sistema.");
+        if (sinCargar.Count > 0 && carrito.Count > 0)
+            avisos.Add($"No se cargaron porque no existen en el sistema: {string.Join(", ", sinCargar)}. Dalos de alta o agregalos a mano.");
+        if (factura.IdProveedor is null)
+            avisos.Add($"No se reconoció el proveedor \"{factura.Proveedor}\". Elegilo de la lista.");
+
+        if (avisos.Count > 0) TempData["Aviso"] = string.Join(" ", avisos);
+        return RedirectToAction(nameof(Nueva));
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult QuitarItem(int indice)
@@ -108,6 +186,7 @@ public class ComprasController : Controller
     public IActionResult Cancelar()
     {
         HttpContext.Session.Remove(ClaveCarrito);
+        HttpContext.Session.Remove(ClaveSugerida);
         return RedirectToAction(nameof(Index));
     }
 
@@ -162,6 +241,7 @@ public class ComprasController : Controller
         }
 
         HttpContext.Session.Remove(ClaveCarrito);
+        HttpContext.Session.Remove(ClaveSugerida);
         TempData["Exito"] = $"Compra #{idCompra} registrada. Cada renglón ingresó como un lote nuevo.";
         return RedirectToAction(nameof(Index));
     }
@@ -199,10 +279,20 @@ public class ComprasController : Controller
     private void GuardarCarrito(List<ItemCompra> carrito) =>
         HttpContext.Session.GuardarObjeto(ClaveCarrito, carrito);
 
-    private async Task<NuevaCompraViewModel> ArmarNuevaCompraAsync() => new()
+    private async Task<NuevaCompraViewModel> ArmarNuevaCompraAsync()
     {
-        Items = LeerCarrito(),
-        Productos = await _productos.ObtenerTodosAsync(),
-        Proveedores = await _proveedores.ObtenerTodosAsync()
-    };
+        var modelo = new NuevaCompraViewModel
+        {
+            Items = LeerCarrito(),
+            Productos = await _productos.ObtenerTodosAsync(),
+            Proveedores = await _proveedores.ObtenerTodosAsync()
+        };
+
+        // Si la compra vino de una factura leída por IA, se preseleccionan sus datos
+        var sugerida = HttpContext.Session.ObtenerObjeto<CompraSugerida>(ClaveSugerida);
+        if (sugerida?.IdProveedor is int idProveedor) modelo.IdProveedor = idProveedor;
+        if (sugerida?.Fecha is DateTime fecha) modelo.FechaHora = fecha;
+
+        return modelo;
+    }
 }

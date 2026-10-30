@@ -99,6 +99,31 @@ public class ApiClient
         }
     }
 
+    // Sube un archivo como multipart/form-data en el campo "archivo"
+    public async Task<ApiResultado<TRespuesta>> PostArchivoAsync<TRespuesta>(string url, IFormFile archivo)
+    {
+        try
+        {
+            using var contenido = new MultipartFormDataContent();
+            await using var flujo = archivo.OpenReadStream();
+            var parte = new StreamContent(flujo);
+            parte.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(
+                string.IsNullOrWhiteSpace(archivo.ContentType) ? "application/octet-stream" : archivo.ContentType);
+            contenido.Add(parte, "archivo", archivo.FileName);
+
+            var respuesta = await _http.PostAsync(url, contenido);
+            if (!respuesta.IsSuccessStatusCode)
+                return ApiResultado<TRespuesta>.Fallo(await LeerErrorAsync(respuesta));
+
+            var datos = await respuesta.Content.ReadFromJsonAsync<TRespuesta>(Json);
+            return ApiResultado<TRespuesta>.Exito(datos);
+        }
+        catch (Exception ex)
+        {
+            return ApiResultado<TRespuesta>.Fallo(DescribirFalla(ex, url));
+        }
+    }
+
     private static HttpRequestMessage ArmarPedido(HttpMethod metodo, string url, object? cuerpo)
     {
         var pedido = new HttpRequestMessage(metodo, url);

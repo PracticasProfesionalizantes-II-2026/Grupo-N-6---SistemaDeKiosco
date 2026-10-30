@@ -18,6 +18,14 @@ public class ItemCompra
     public double Subtotal => Cantidad * PrecioUnitario;
 }
 
+// Proveedor y fecha que la IA leyó de la factura: quedan preseleccionados
+// en la pantalla hasta que la compra se registra o se cancela.
+public class CompraSugerida
+{
+    public int? IdProveedor { get; set; }
+    public DateTime? Fecha { get; set; }
+}
+
 public class NuevaCompraViewModel
 {
     public List<ItemCompra> Items { get; set; } = new();

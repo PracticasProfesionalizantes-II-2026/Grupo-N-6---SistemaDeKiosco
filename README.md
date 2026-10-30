@@ -22,3 +22,6 @@ Buffa Tomás, Busso Mateo, Cravero Agustín.
 [Diagrama de clases V2](https://miro.com/app/board/uXjVHhgoiUk=/)
 
 [Mockups Figma V2](https://www.figma.com/design/JpbQxmfW68KuHxXXxHUyDL/KioPlus-V2?node-id=2008-123&p=f&t=mFqEOSksrjg6TCNA-0)
+
+[Azure](https://kioplusfront-f6f3h0d3hhevh5b8.mexicocentral-01.azurewebsites.net/)
+
